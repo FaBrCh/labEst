@@ -9,14 +9,73 @@ library(readxl)
 library(tidyverse)
 library(psych)      # Para análises estatísticas descritivas
 library(gtsummary)  # Para tabelas de resumo
+library(stringr)    # Para manipulação de strings (já usado, garantir carregamento)
 
 # Definir o caminho para os arquivos
 caminho_respostas <- "data/respostas.xlsx"
 caminho_municipios <- "data/MUNICÍPIOS E SALAS DE VACINAÇÃO SELECIONADOS.xlsx"
 
+# >>> MOVER DEFINIÇÃO DA FUNÇÃO limpar_nomes PARA CÁ <<<
+limpar_nomes <- function(nomes) {
+  nomes <- stringr::str_to_upper(nomes)
+  # Se tiver abjutils: nomes <- abjutils::rm_accent(nomes)
+  # Alternativa simples sem abjutils (remove acentos comuns):
+  nomes <- iconv(nomes, from = 'UTF-8', to = 'ASCII//TRANSLIT')
+  nomes <- stringr::str_trim(nomes)
+  return(nomes)
+}
+
 # ==============================================================================
 # 2. CARREGAMENTO E LIMPEZA INICIAL DOS DADOS
 # ==============================================================================
+
+# Ler a planilha "AMOSTRA" do arquivo de municípios, pulando as 4 primeiras linhas
+tryCatch({
+  df_municipios_amostra <- read_excel(caminho_municipios, sheet = "AMOSTRA", skip = 4)
+  
+  # Renomear as colunas para nomes limpos
+  df_municipios_amostra <- df_municipios_amostra %>%
+    rename(
+      NUMERO = 1,
+      PARTICIPANTE = 2,
+      COLETA_FINALIZADA = 3,
+      MACRORREGIOES = 4,
+      URS = 5, # Unidade Regional de Saúde (Microrregião)
+      MUNICIPIO = 6,
+      PORTE_IBGE = 7,
+      POPULACAO_2021 = 8,
+      N_SALAS_VACINA = 9,
+      AREA_KM2_2021 = 10,
+      DENSIDADE_2010 = 11,
+      ESCOLARIZACAO_6A14_2010 = 12,
+      IDHM_2010 = 13,
+      MORTALIDADE_INF_2020 = 14,
+      PIB_PER_CAPITA_2020 = 15
+    )
+
+  # Selecionar e limpar colunas relevantes
+  df_municipios_info <- df_municipios_amostra %>% 
+    select(MUNICIPIO, MACRORREGIOES, URS, PORTE_IBGE) %>% 
+    mutate(
+      # <<< REMOVER CÓDIGO NUMÉRICO DO NOME DO MUNICÍPIO >>>
+      MUNICIPIO = str_replace(MUNICIPIO, "^[0-9]+-", ""),
+      # Limpar nome do município para junção (agora sem o código)
+      Municipio_join = limpar_nomes(MUNICIPIO), 
+      # Limpar possíveis espaços extras nas outras colunas
+      MACRORREGIOES = str_trim(MACRORREGIOES),
+      URS = str_trim(URS),
+      PORTE_IBGE = str_trim(PORTE_IBGE)
+    ) %>% 
+    # Remover duplicatas baseadas no nome limpo do município, mantendo a primeira ocorrência
+    distinct(Municipio_join, .keep_all = TRUE)
+
+  cat("Informações de municípios carregadas e limpas com sucesso.\n")
+  # glimpse(df_municipios_info) # Descomentar para verificar a estrutura
+
+}, error = function(e) {
+  warning(paste("Erro ao carregar ou processar a planilha 'AMOSTRA' do arquivo de municípios:", e$message))
+  df_municipios_info <- NULL # Define como NULL se houver erro
+})
 
 # Carregar os dados dos arquivos Excel
 dados_respostas <- read_excel(caminho_respostas, sheet = "Respostas ao formulário 1")
@@ -645,6 +704,31 @@ dados_mapeados <- dados_mapeados %>%
     )
   )
 
+# >>> JUNÇÃO COM DADOS DOS MUNICÍPIOS <<<
+if (!is.null(df_municipios_info)) {
+  # Preparar coluna de junção em dados_mapeados (usando a mesma limpeza)
+  dados_mapeados <- dados_mapeados %>% 
+    mutate(Municipio_join = limpar_nomes(Município))
+  
+  # Realizar a junção (left_join para manter todos os respondentes)
+  dados_mapeados <- left_join(dados_mapeados, 
+                              df_municipios_info %>% select(Municipio_join, MACRORREGIOES, URS, PORTE_IBGE), 
+                              by = "Municipio_join")
+  
+  # Verificar quantos NAs foram introduzidos (municípios sem correspondência na planilha)
+  nas_macro <- sum(is.na(dados_mapeados$MACRORREGIOES))
+  nas_porte <- sum(is.na(dados_mapeados$PORTE_IBGE))
+  cat(paste("\nApós junção com dados municipais:", 
+            nas_macro, "registros sem MACRORREGIOES,",
+            nas_porte, "registros sem PORTE_IBGE.\n"))
+  
+  # Remover coluna auxiliar de junção, se desejar
+  # dados_mapeados <- dados_mapeados %>% select(-Municipio_join)
+  
+} else {
+  warning("Não foi possível realizar a junção com os dados dos municípios devido a erro no carregamento.")
+}
+
 # Apresentar resultados da classificação e das pontuações finais em tabelas formatadas
 
 # Tabela 1: Distribuição da Classificação do Clima (Baseada na Média das 36 Questões)
@@ -750,8 +834,178 @@ write_xlsx(dados_mapeados, path = caminho_saida_xlsx)
 cat("DataFrame 'dados_mapeados' exportado com sucesso para:", caminho_saida_xlsx, "\n")
 
 # ==============================================================================
-# 7. VISUALIZAÇÕES INICIAIS
+# 7. GRÁFICOS LIKERT POR DOMÍNIO
 # ==============================================================================
+
+# Instalar e carregar pacotes necessários
+if (!require("likert")) install.packages("likert")
+if (!require("RColorBrewer")) install.packages("RColorBrewer")
+if (!require("patchwork")) install.packages("patchwork") # Adicionar patchwork
+library(likert)
+library(RColorBrewer)
+library(dplyr) # Certificar que dplyr está carregado
+library(patchwork) # Carregar patchwork
+
+# Definir os níveis da escala Likert em português
+likert_levels <- c("Discordo Totalmente", "Discordo Pouco", "Neutro", "Concordo Pouco", "Concordo Totalmente")
+
+# >>> Definir nomes das perguntas com pontuação invertida <<<
+# (Mantido caso seja útil para referência, mas não usado para formatação abaixo)
+perguntas_invertidas <- c(
+  "2. É difícil falar abertamente se eu percebo um problema com o cuidado ao paciente relacionado a vacinação",
+  "11. Nesta unidade, é difícil discutir sobre erros",
+  "20. Quando minha carga de trabalho é excessiva, meu desempenho é prejudicado",
+  "21. Eu sou menos eficiente no trabalho quando estou cansado (a)",
+  "22. Eu tenho maior probabilidade de cometer erros em situações tensas ou hostis",
+  "23. O cansaço prejudica meu desempenho durante situações de stress (ex: interrupções, inquietude do vacinado, choro)",
+  "36. Falhas na comunicação que levam a atrasos no atendimento são comuns" 
+)
+
+# Função para preparar os dados para o pacote likert
+prepare_likert_data <- function(df, columns) {
+  df_subset <- df %>% select(all_of(columns))
+  df_likert <- df_subset %>%
+    mutate(across(everything(), ~factor(.x, levels = 1:5, labels = likert_levels, ordered = TRUE)))
+  return(as.data.frame(df_likert))
+}
+
+# Definir colunas por domínio
+# ... (código existente cols_clima_equipe, etc.) ...
+
+# Preparar os dados para cada domínio
+# ... (código existente data_likert_equipe, etc.) ...
+
+# Criar objetos likert
+# ... (código existente likert_equipe, etc.) ...
+
+# Definir uma paleta de cores divergente personalizada
+# ... (código existente cores_personalizadas) ...
+
+# Gerar os gráficos de barras divergentes (salvar objetos, ajustar temas para patchwork)
+
+# --- Clima de Trabalho em Equipe ---
+p_equipe <- plot(likert_equipe, centered = TRUE, center = 3, colors = cores_personalizadas, 
+                 group.order = cols_clima_equipe) + 
+  ggtitle("Clima de Trabalho em Equipe") + # Título mais curto
+  # guides(fill = guide_legend(title = "Nível de Concordância")) + # Guia será coletado pelo patchwork
+  theme(plot.title = element_text(hjust = 0.5, size=10), 
+        legend.position = "none", # Remover legenda individual
+        axis.text.y = element_text(size = 8, face = "plain")) # Tamanho reduzido e face normal
+# Modificar rótulos do eixo Y para marcar perguntas invertidas
+labels_equipe <- ifelse(cols_clima_equipe %in% perguntas_invertidas,
+                       paste0(cols_clima_equipe, " (R)"),
+                       cols_clima_equipe)
+wrapped_labels_equipe <- stringr::str_wrap(labels_equipe, width = 60) # Ajustar largura conforme necessário
+p_equipe <- p_equipe + scale_y_discrete(labels = wrapped_labels_equipe)
+
+# --- Clima de Segurança ---
+p_seguranca <- plot(likert_seguranca, centered = TRUE, center = 3, colors = cores_personalizadas, 
+                   group.order = cols_clima_seguranca) + 
+  ggtitle("Clima de Segurança") + # Título mais curto
+  # guides(fill = guide_legend(title = "Nível de Concordância")) + 
+  theme(plot.title = element_text(hjust = 0.5, size=10), 
+        legend.position = "none", # Remover legenda individual
+        axis.text.y = element_text(size = 8, face = "plain")) # Tamanho reduzido e face normal
+# Modificar rótulos do eixo Y
+labels_seguranca <- ifelse(cols_clima_seguranca %in% perguntas_invertidas,
+                          paste0(cols_clima_seguranca, " (R)"),
+                          cols_clima_seguranca)
+wrapped_labels_seguranca <- stringr::str_wrap(labels_seguranca, width = 60)
+p_seguranca <- p_seguranca + scale_y_discrete(labels = wrapped_labels_seguranca)
+
+# --- Satisfação no Trabalho ---
+p_satisfacao <- plot(likert_satisfacao, centered = TRUE, center = 3, colors = cores_personalizadas, 
+                    group.order = cols_satisfacao) + 
+  ggtitle("Satisfação no Trabalho") + # Título mais curto
+  # guides(fill = guide_legend(title = "Nível de Concordância")) + 
+  theme(plot.title = element_text(hjust = 0.5, size=10), 
+        legend.position = "none", # Remover legenda individual
+        axis.text.y = element_text(size = 8, face = "plain")) # Tamanho reduzido e face normal
+# Apenas quebrar linhas
+wrapped_labels_satisfacao <- stringr::str_wrap(cols_satisfacao, width = 60)
+p_satisfacao <- p_satisfacao + scale_y_discrete(labels = wrapped_labels_satisfacao)
+
+# --- Percepção do Estresse ---
+p_estresse <- plot(likert_estresse, centered = TRUE, center = 3, colors = cores_personalizadas, 
+                  group.order = cols_estresse) + 
+  ggtitle("Percepção do Estresse") + # Título mais curto
+  # guides(fill = guide_legend(title = "Nível de Concordância")) + 
+  theme(plot.title = element_text(hjust = 0.5, size=10), 
+        legend.position = "none", # Remover legenda individual
+        axis.text.y = element_text(size = 8, face = "plain")) # Tamanho reduzido e face normal
+# Modificar rótulos do eixo Y
+labels_estresse <- ifelse(cols_estresse %in% perguntas_invertidas,
+                          paste0(cols_estresse, " (R)"),
+                          cols_estresse)
+wrapped_labels_estresse <- stringr::str_wrap(labels_estresse, width = 60)
+p_estresse <- p_estresse + scale_y_discrete(labels = wrapped_labels_estresse)
+
+# --- Percepção da Gestão ---
+p_gestao <- plot(likert_gestao, centered = TRUE, center = 3, colors = cores_personalizadas, 
+                group.order = cols_gestao) + 
+  ggtitle("Percepção da Gestão") + # Título mais curto
+  # guides(fill = guide_legend(title = "Nível de Concordância")) + 
+  theme(plot.title = element_text(hjust = 0.5, size=10), 
+        legend.position = "none", # Remover legenda individual
+        axis.text.y = element_text(size = 8, face = "plain")) # Tamanho reduzido e face normal
+# Apenas quebrar linhas
+wrapped_labels_gestao <- stringr::str_wrap(cols_gestao, width = 60)
+p_gestao <- p_gestao + scale_y_discrete(labels = wrapped_labels_gestao)
+
+# --- Condições de Trabalho ---
+p_condicoes <- plot(likert_condicoes, centered = TRUE, center = 3, colors = cores_personalizadas, 
+                   group.order = cols_condicoes) + 
+  ggtitle("Condições de Trabalho") + # Título mais curto
+  # guides(fill = guide_legend(title = "Nível de Concordância")) + 
+  theme(plot.title = element_text(hjust = 0.5, size=10), 
+        legend.position = "none", # Remover legenda individual
+        axis.text.y = element_text(size = 8, face = "plain")) # Tamanho reduzido e face normal
+# Apenas quebrar linhas
+wrapped_labels_condicoes <- stringr::str_wrap(cols_condicoes, width = 60)
+p_condicoes <- p_condicoes + scale_y_discrete(labels = wrapped_labels_condicoes)
+
+# <<< COMBINAR GRÁFICOS COM PATCHWORK (LEGENDA EMBAIXO) >>>
+combined_likert_plot <- (p_equipe + p_seguranca + p_satisfacao) / 
+                        (p_estresse + p_gestao + p_condicoes) + 
+                        plot_layout(guides = 'collect', legend.position = 'bottom') + # Coletar legendas E posicionar embaixo
+                        plot_annotation(title = 'Distribuição das Respostas por Domínio', 
+                                        theme = theme(plot.title = element_text(hjust = 0.5, size=14)))
+
+# Imprimir o gráfico combinado
+print(combined_likert_plot)
+
+# Nota sobre o centramento e cores:
+# Estes gráficos estão centrados no nível 'Neutro' (nível 3 da escala 1-5). 
+# As cores ajudam a identificar a direção (ex: azul para concordância, vermelho para discordância).
+
+# ==============================================================================
+# 8. VISUALIZAÇÕES DOS ESCORES DOS DOMÍNIOS (BOXPLOT)
+# ==============================================================================
+
+# Gráfico da pontuação média por domínio
+medias_dominios <- dados_mapeados %>%
+  summarise(
+    "Clima de Trabalho em Equipe" = mean(clima_trabalho_equipe, na.rm = TRUE),
+    "Clima de Segurança" = mean(clima_seguranca, na.rm = TRUE),
+    "Satisfação no Trabalho" = mean(satisfacao_trabalho, na.rm = TRUE),
+    "Percepção do Estresse" = mean(percepcao_estresse, na.rm = TRUE),
+    "Percepção da Gestão" = mean(percepcao_gestao, na.rm = TRUE),
+    "Condições de Trabalho" = mean(condicoes_trabalho, na.rm = TRUE)
+  ) %>%
+  pivot_longer(everything(), names_to = "dominio", values_to = "media")
+
+ggplot(medias_dominios, aes(x = reorder(dominio, -media), y = media, fill = media >= 75)) +
+  geom_bar(stat = "identity") +
+  scale_fill_manual(values = c("lightblue", "lightgreen"), 
+                    labels = c("< 75", "≥ 75"),
+                    name = "Avaliação") +
+  theme_minimal() +
+  labs(title = "Pontuação Média por Domínio", 
+       x = "Domínio", 
+       y = "Pontuação Média (0-100)") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  geom_hline(yintercept = 75, linetype = "dashed", color = "green", size = 1) +
+  geom_hline(yintercept = 50, linetype = "dashed", color = "orange", size = 1)
 
 # Gráfico de boxplot para os domínios na escala 0-100
 dados_dominios_long <- dados_mapeados %>%
@@ -767,27 +1021,16 @@ ggplot(dados_dominios_long, aes(x = dominio, y = escore)) +
   labs(title = "Distribuição dos escores por domínio (Escala 0-100)",
        x = "Domínio", 
        y = "Escore") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10), # Manter ou ajustar tamanho aqui
+        axis.title.x = element_text(size = 12), # Aumentar título eixo X
+        axis.title.y = element_text(size = 12), # Aumentar título eixo Y
+        plot.title = element_text(hjust = 0.5, size = 14)) + # Aumentar e centralizar título
   geom_hline(yintercept = 75, linetype = "dashed", color = "green", size = 1.5) +
   geom_hline(yintercept = 50, linetype = "dashed", color = "orange", size = 1.5)
 
-# Verificar linhas onde a percepção de estresse é positiva, somente as questões do domínio percepção de estresse
-estresse_positivo <- dados_mapeados %>%
-  filter(percepcao_estresse >= 75) %>%  # Filtra apenas percepção de estresse positiva (>=75)
-  select(matches("^2[0-4]\\."), q20_inv, q21_inv, q22_inv, q23_inv) %>%  # Seleciona questões 20 a 24 e suas versões inversas
-  head(10)
-
-# pegar uma linha especifica, com municipio "Água Boa" e com idade de 38
-agua_boa <- dados_mapeados %>%
-  filter(Municipio == "Água Boa") %>%
-  filter(idade_num == 38)
-
-# mostrar as questões do domínio percepção de estresse
-percepcao_estresse_agua_boa <- agua_boa %>%
-  select(matches("^2[0-4]\\."), q20_inv, q21_inv, q22_inv, q23_inv, percepcao_estresse)
 
 # ==============================================================================
-# 8. ANÁLISES DESCRITIVAS POR VARIÁVEIS DEMOGRÁFICAS E PROFISSIONAIS
+# 9. ANÁLISES DESCRITIVAS POR VARIÁVEIS DEMOGRÁFICAS E PROFISSIONAIS
 # ==============================================================================
 
 # Análise por características demográficas e profissionais
@@ -954,6 +1197,196 @@ gt::gt(resumo_por_municipio) %>%
   gt::fmt_number(columns = c(media, dp, mediana, pct_positivo), decimals = 1) %>%
   gt::tab_header(title = "Clima de Segurança por Município")
 
+# 6. Análise por Porte do Município (NOVO)
+if ("PORTE_IBGE" %in% names(dados_mapeados)) {
+  resumo_por_porte <- dados_mapeados %>% 
+    filter(!is.na(PORTE_IBGE)) %>% # Filtrar NAs se houver
+    group_by(PORTE_IBGE) %>% 
+    summarise(
+      n = n(),
+      media = mean(clima_seguranca_total, na.rm = TRUE),
+      dp = sd(clima_seguranca_total, na.rm = TRUE),
+      mediana = median(clima_seguranca_total, na.rm = TRUE),
+      positivo = sum(classificacao_clima == "Positivo", na.rm = TRUE),
+      pct_positivo = 100 * sum(classificacao_clima == "Positivo", na.rm = TRUE) / n()
+    ) %>% 
+    arrange(PORTE_IBGE) # Ordenar por porte
+  
+  print(
+    gt::gt(resumo_por_porte) %>% 
+      gt::cols_label(
+        PORTE_IBGE = "Porte IBGE",
+        n = "N",
+        media = "Média",
+        dp = "DP",
+        mediana = "Mediana",
+        positivo = "Clima Positivo (n)",
+        pct_positivo = "% Positivo"
+      ) %>% 
+      gt::fmt_number(columns = c(media, dp, mediana, pct_positivo), decimals = 1) %>% 
+      gt::tab_header(title = "Clima de Segurança por Porte do Município (IBGE)")
+  )
+} else {
+  cat("\nColuna 'PORTE_IBGE' não encontrada para análise por porte.\n")
+}
+
+# 7. Análise por Macrorregião (NOVO)
+if ("MACRORREGIOES" %in% names(dados_mapeados)) {
+  resumo_por_macro <- dados_mapeados %>% 
+    filter(!is.na(MACRORREGIOES)) %>% # Filtrar NAs
+    group_by(MACRORREGIOES) %>% 
+    summarise(
+      n = n(),
+      media = mean(clima_seguranca_total, na.rm = TRUE),
+      dp = sd(clima_seguranca_total, na.rm = TRUE),
+      mediana = median(clima_seguranca_total, na.rm = TRUE),
+      positivo = sum(classificacao_clima == "Positivo", na.rm = TRUE),
+      pct_positivo = 100 * sum(classificacao_clima == "Positivo", na.rm = TRUE) / n()
+    ) %>% 
+    arrange(MACRORREGIOES)
+  
+  print(
+    gt::gt(resumo_por_macro) %>% 
+      gt::cols_label(
+        MACRORREGIOES = "Macrorregião",
+        n = "N",
+        media = "Média",
+        dp = "DP",
+        mediana = "Mediana",
+        positivo = "Clima Positivo (n)",
+        pct_positivo = "% Positivo"
+      ) %>% 
+      gt::fmt_number(columns = c(media, dp, mediana, pct_positivo), decimals = 1) %>% 
+      gt::tab_header(title = "Clima de Segurança por Macrorregião")
+  )
+} else {
+  cat("\nColuna 'MACRORREGIOES' não encontrada para análise por macrorregião.\n")
+}
+
+# 8. Análise por URS (Microrregião) (NOVO) - Pode gerar muitas linhas
+if ("URS" %in% names(dados_mapeados)) {
+  resumo_por_urs <- dados_mapeados %>% 
+    filter(!is.na(URS)) %>% 
+    group_by(URS) %>% 
+    summarise(
+      n = n(),
+      media = mean(clima_seguranca_total, na.rm = TRUE),
+      dp = sd(clima_seguranca_total, na.rm = TRUE),
+      mediana = median(clima_seguranca_total, na.rm = TRUE),
+      positivo = sum(classificacao_clima == "Positivo", na.rm = TRUE),
+      pct_positivo = 100 * sum(classificacao_clima == "Positivo", na.rm = TRUE) / n()
+    ) %>% 
+    arrange(URS)
+  
+  # cat("\n--- Análise por URS (Microrregião) ---\n") # Comentado ou removido
+  # print(resumo_por_urs, n = Inf) # Removido
+  
+  # <<< Criar tabela GT para URS >>>
+  print(
+    gt::gt(resumo_por_urs) %>% 
+      gt::cols_label(
+        URS = "URS (Microrregião)",
+        n = "N",
+        media = "Média",
+        dp = "DP",
+        mediana = "Mediana",
+        positivo = "Clima Positivo (n)",
+        pct_positivo = "% Positivo"
+      ) %>% 
+      gt::fmt_number(columns = c(media, dp, mediana, pct_positivo), decimals = 1) %>% 
+      gt::tab_header(title = "Clima de Segurança por URS (Microrregião)") %>% 
+      # Adicionar opção para ajustar tamanho da fonte se a tabela for muito grande
+      gt::tab_options(table.font.size = "small") 
+  )
+  
+  # cat("--- Fim Análise por URS ---\n") # Comentado ou removido
+  
+} else {
+  cat("\nColuna 'URS' não encontrada para análise por URS/Microrregião.\n")
+}
+
+# 9. Análise Cruzada: Clima de Segurança por Porte do Município e Cargo (NOVO)
+col_cargo_analise <- "Cargo na Atenção Primária à Saúde (APS) / Unidade Básica de Saúde (UBS)"
+if ("PORTE_IBGE" %in% names(dados_mapeados) && col_cargo_analise %in% names(dados_mapeados)) {
+  
+  resumo_porte_cargo <- dados_mapeados %>% 
+    filter(!is.na(PORTE_IBGE) & !is.na(.data[[col_cargo_analise]])) %>% # Filtrar NAs em ambas as colunas
+    group_by(PORTE_IBGE, .data[[col_cargo_analise]]) %>% 
+    summarise(
+      n = n(),
+      media = mean(clima_seguranca_total, na.rm = TRUE),
+      dp = sd(clima_seguranca_total, na.rm = TRUE),
+      mediana = median(clima_seguranca_total, na.rm = TRUE),
+      positivo = sum(classificacao_clima == "Positivo", na.rm = TRUE),
+      pct_positivo = 100 * sum(classificacao_clima == "Positivo", na.rm = TRUE) / n(),
+      .groups = 'drop' # Evita agrupamento residual
+    ) %>% 
+    # <<< CONVERTER PORTE PARA FATOR PARA ORDENAÇÃO CORRETA >>>
+    mutate(PORTE_IBGE = factor(PORTE_IBGE, levels = c("Pequeno Porte", "Médio Porte", "Grande Porte"))) %>% 
+    # Ordenar por Porte (fator), depois por Cargo
+    arrange(PORTE_IBGE, .data[[col_cargo_analise]]) 
+
+  print(
+    gt::gt(resumo_porte_cargo) %>% 
+      gt::cols_label(
+        PORTE_IBGE = "Porte IBGE",
+        !!sym(col_cargo_analise) := "Cargo", # Renomeia dinamicamente
+        n = "N",
+        media = "Média",
+        dp = "DP",
+        mediana = "Mediana",
+        positivo = "Clima Positivo (n)",
+        pct_positivo = "% Positivo"
+      ) %>% 
+      gt::fmt_number(columns = c(media, dp, mediana, pct_positivo), decimals = 1) %>% 
+      gt::tab_header(title = "Clima de Segurança por Porte do Município e Cargo") %>% 
+      # <<< REMOVER AGRUPAMENTO VISUAL >>>
+      # gt::tab_row_group(group = "PORTE_IBGE") %>% 
+      # gt::row_group_order(groups = c("Pequeno Porte", "Médio Porte", "Grande Porte")) %>% 
+      gt::tab_options(table.font.size = "small")
+  )
+  
+  # <<< Adicionar Gráfico Boxplot Cruzado: Porte vs Cargo >>>
+  print(
+    ggplot(dados_mapeados %>% 
+             filter(!is.na(PORTE_IBGE) & !is.na(.data[[col_cargo_analise]])) %>% 
+             # Ordenar Porte para o gráfico
+             mutate(PORTE_IBGE = factor(PORTE_IBGE, levels = c("Pequeno Porte", "Médio Porte", "Grande Porte"))), 
+           aes(x = PORTE_IBGE, y = clima_seguranca_total, fill = .data[[col_cargo_analise]])) +
+      geom_boxplot(position = position_dodge(preserve = 'single')) + # position_dodge para separar cargos
+      theme_minimal() +
+      labs(title = "Clima de Segurança por Porte do Município e Cargo",
+           x = "Porte IBGE", 
+           y = "Pontuação (0-100)",
+           fill = "Cargo") + # Título da legenda
+      theme(axis.text.x = element_text(angle = 45, hjust = 1),
+            legend.position = "top") + # Legenda no topo
+      geom_hline(yintercept = 75, linetype = "dashed", color = "green", size = 1) +
+      geom_hline(yintercept = 50, linetype = "dashed", color = "orange", size = 1)
+  )
+  
+  # <<< Adicionar Gráfico de Barras Médias Cruzado: Porte vs Cargo >>>
+  print(
+    ggplot(resumo_porte_cargo, # Usar o dataframe já sumarizado
+           aes(x = PORTE_IBGE, y = media, fill = .data[[col_cargo_analise]])) +
+      # Usar stat="identity" pois 'media' já é a altura desejada
+      # Usar position="dodge" para barras lado a lado
+      geom_bar(stat = "identity", position = position_dodge(preserve = 'single')) +
+      theme_minimal() +
+      labs(title = "Média do Clima de Segurança por Porte do Município e Cargo",
+           x = "Porte IBGE", 
+           y = "Pontuação Média (0-100)",
+           fill = "Cargo") + # Título da legenda
+      theme(axis.text.x = element_text(angle = 45, hjust = 1),
+            legend.position = "top") + # Legenda no topo
+      geom_hline(yintercept = 75, linetype = "dashed", color = "green", size = 1) +
+      geom_hline(yintercept = 50, linetype = "dashed", color = "orange", size = 1)
+  )
+  
+} else {
+  cat("\nColunas 'PORTE_IBGE' ou 'Cargo...' não encontradas para análise cruzada.\n")
+}
+
 # ==============================================================================
 # 10. VISUALIZAÇÕES GRÁFICAS DAS ANÁLISES DESCRITIVAS
 # ==============================================================================
@@ -1009,132 +1442,42 @@ ggplot(dominio_cargo, aes(x = dominio, y = media, fill = `Cargo na Atenção Pri
   geom_hline(yintercept = 75, linetype = "dashed", color = "green", size = 1) +
   geom_hline(yintercept = 50, linetype = "dashed", color = "orange", size = 1)
 
-# ==============================================================================
-# 11. APRESENTAÇÃO DOS RESULTADOS DAS ANÁLISES DESCRITIVAS (TABELAS)
-# ==============================================================================
+  # 5. Boxplot por Porte (NOVO)
+if ("PORTE_IBGE" %in% names(dados_mapeados)) {
+  print(
+    ggplot(dados_mapeados %>% filter(!is.na(PORTE_IBGE)), 
+           aes(x = PORTE_IBGE, y = clima_seguranca_total, fill = PORTE_IBGE)) +
+      geom_boxplot() +
+      theme_minimal() +
+      labs(title = "Clima de Segurança por Porte do Município (IBGE)",
+           x = "Porte IBGE", 
+           y = "Pontuação (0-100)") +
+      theme(legend.position = "none") +
+      geom_hline(yintercept = 75, linetype = "dashed", color = "green", size = 1.5) +
+      geom_hline(yintercept = 50, linetype = "dashed", color = "orange", size = 1.5)
+  )
+}
 
-# 1. Tabela resumo com percentual de clima Positivo, Neutro e Negativo
-resumo_geral <- dados_mapeados %>%
-  count(classificacao_clima) %>%
-  mutate(pct = n / sum(n) * 100) %>%
-  arrange(desc(classificacao_clima))
-
-gt::gt(resumo_geral) %>%
-  gt::cols_label(
-    classificacao_clima = "Classificação do Clima",
-    n = "Quantidade",
-    pct = "Percentual (%)"
-  ) %>%
-  gt::fmt_number(columns = pct, decimals = 1) %>%
-  gt::tab_header(title = "Distribuição Geral do Clima de Segurança")
-
-# 2. Visualizar as tabelas já criadas
-# Tabela por cargo
-gt::gt(resumo_por_cargo) %>%
-  gt::cols_label(
-    `Cargo na Atenção Primária à Saúde (APS) / Unidade Básica de Saúde (UBS)` = "Cargo",
-    n = "N",
-    media = "Média",
-    dp = "Desvio Padrão",
-    mediana = "Mediana",
-    min = "Mínimo",
-    max = "Máximo",
-    positivo = "Clima Positivo (n)",
-    pct_positivo = "% Positivo"
-  ) %>%
-  gt::fmt_number(columns = c(media, dp, mediana, min, max, pct_positivo), decimals = 1) %>%
-  gt::tab_header(title = "Clima de Segurança por Cargo")
-
-# Tabela por formação
-gt::gt(resumo_por_formacao) %>%
-  gt::cols_label(
-    `Formação` = "Formação",
-    n = "N",
-    media = "Média",
-    dp = "Desvio Padrão",
-    mediana = "Mediana",
-    positivo = "Clima Positivo (n)",
-    pct_positivo = "% Positivo"
-  ) %>%
-  gt::fmt_number(columns = c(media, dp, mediana, pct_positivo), decimals = 1) %>%
-  gt::tab_header(title = "Clima de Segurança por Formação")
-
-# Tabela por faixa etária
-gt::gt(resumo_por_idade) %>%
-  gt::cols_label(
-    faixa_etaria = "Faixa Etária",
-    n = "N",
-    media = "Média",
-    dp = "Desvio Padrão",
-    mediana = "Mediana",
-    positivo = "Clima Positivo (n)",
-    pct_positivo = "% Positivo"
-  ) %>%
-  gt::fmt_number(columns = c(media, dp, mediana, pct_positivo), decimals = 1) %>%
-  gt::tab_header(title = "Clima de Segurança por Faixa Etária")
-
-# Tabela por sexo
-gt::gt(resumo_por_sexo) %>%
-  gt::cols_label(
-    Sexo = "Sexo",
-    n = "N",
-    media = "Média",
-    dp = "Desvio Padrão",
-    mediana = "Mediana",
-    positivo = "Clima Positivo (n)",
-    pct_positivo = "% Positivo"
-  ) %>%
-  gt::fmt_number(columns = c(media, dp, mediana, pct_positivo), decimals = 1) %>%
-  gt::tab_header(title = "Clima de Segurança por Sexo")
-
-# Tabela por Município
-gt::gt(resumo_por_municipio) %>%
-  gt::cols_label(
-    Município = "Município",
-    n = "N",
-    media = "Média",
-    dp = "Desvio Padrão",
-    mediana = "Mediana",
-    positivo = "Clima Positivo (n)",
-    pct_positivo = "% Positivo"
-  ) %>%
-  gt::fmt_number(columns = c(media, dp, mediana, pct_positivo), decimals = 1) %>%
-  gt::tab_options(table.font.size = "small") %>%
-  gt::tab_header(title = "Clima de Segurança por Município")
+# 6. Boxplot por Macrorregião (NOVO)
+if ("MACRORREGIOES" %in% names(dados_mapeados)) {
+  print(
+    ggplot(dados_mapeados %>% filter(!is.na(MACRORREGIOES)), 
+           aes(x = reorder(MACRORREGIOES, clima_seguranca_total, FUN = median), 
+               y = clima_seguranca_total, fill = MACRORREGIOES)) +
+      geom_boxplot() +
+      theme_minimal() +
+      labs(title = "Clima de Segurança por Macrorregião",
+           x = "Macrorregião", 
+           y = "Pontuação (0-100)") +
+      theme(axis.text.x = element_text(angle = 45, hjust = 1),
+            legend.position = "none") +
+      geom_hline(yintercept = 75, linetype = "dashed", color = "green", size = 1.5) +
+      geom_hline(yintercept = 50, linetype = "dashed", color = "orange", size = 1.5)
+  )
+}
 
 # ==============================================================================
-# 12. VISUALIZAÇÕES ADICIONAIS (MÉDIAS POR DOMÍNIO E HEATMAP)
-# ==============================================================================
-
-# 5. Gráficos para análise visual
-
-# Gráfico da pontuação média por domínio
-medias_dominios <- dados_mapeados %>%
-  summarise(
-    "Clima de Trabalho em Equipe" = mean(clima_trabalho_equipe, na.rm = TRUE),
-    "Clima de Segurança" = mean(clima_seguranca, na.rm = TRUE),
-    "Satisfação no Trabalho" = mean(satisfacao_trabalho, na.rm = TRUE),
-    "Percepção do Estresse" = mean(percepcao_estresse, na.rm = TRUE),
-    "Percepção da Gestão" = mean(percepcao_gestao, na.rm = TRUE),
-    "Condições de Trabalho" = mean(condicoes_trabalho, na.rm = TRUE)
-  ) %>%
-  pivot_longer(everything(), names_to = "dominio", values_to = "media")
-
-ggplot(medias_dominios, aes(x = reorder(dominio, -media), y = media, fill = media >= 75)) +
-  geom_bar(stat = "identity") +
-  scale_fill_manual(values = c("lightblue", "lightgreen"), 
-                    labels = c("< 75", "≥ 75"),
-                    name = "Avaliação") +
-  theme_minimal() +
-  labs(title = "Pontuação Média por Domínio", 
-       x = "Domínio", 
-       y = "Pontuação Média (0-100)") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  geom_hline(yintercept = 75, linetype = "dashed", color = "green", size = 1) +
-  geom_hline(yintercept = 50, linetype = "dashed", color = "orange", size = 1)
-
-# ==============================================================================
-# 13. MAPA ESTÁTICO (CENTROIDES) DO CLIMA DE SEGURANÇA POR MUNICÍPIO E REGIÃO
+# 11. MAPA ESTÁTICO (CENTROIDES) DO CLIMA DE SEGURANÇA POR MUNICÍPIO E REGIÃO
 # ==============================================================================
 
 # Instalar pacotes necessários se não estiverem instalados
@@ -1181,17 +1524,18 @@ if (is.null(mg_regions) || nrow(mg_regions) == 0) {
 # plot(mg_regions$geom)
 
 # 2. Preparar os dados para junção (Mantido)
-limpar_nomes <- function(nomes) {
-  nomes <- stringr::str_to_upper(nomes)
-  # Se tiver abjutils: nomes <- abjutils::rm_accent(nomes)
-  # Alternativa simples sem abjutils (remove acentos comuns):
-  nomes <- iconv(nomes, from = 'UTF-8', to = 'ASCII//TRANSLIT')
-  nomes <- stringr::str_trim(nomes)
-  return(nomes)
-}
+# <<< REMOVER DEFINIÇÃO ANTIGA DA FUNÇÃO limpar_nomes DAQUI >>>
+# limpar_nomes <- function(nomes) {
+#   nomes <- stringr::str_to_upper(nomes)
+#   # Se tiver abjutils: nomes <- abjutils::rm_accent(nomes)
+#   # Alternativa simples sem abjutils (remove acentos comuns):
+#   nomes <- iconv(nomes, from = 'UTF-8', to = 'ASCII//TRANSLIT')
+#   nomes <- stringr::str_trim(nomes)
+#   return(nomes)
+# }
 
 # Limpar nomes no resumo e nos dados geográficos
-resumo_por_municipio_mapa <- resumo_por_municipio %>%
+resumo_por_municipio_mapa <- resumo_por_municipio %>% 
   mutate(Municipio_limpo = limpar_nomes(Município))
 
 mg_mun_mapa <- mg_mun %>%
@@ -1202,7 +1546,7 @@ mg_mun_mapa <- mg_mun %>%
 # head(mg_mun_mapa$Municipio_limpo)
 
 # 3. Juntar os dados de pontuação aos dados geográficos (Mantido)
-mg_map_data <- left_join(mg_mun_mapa,
+mg_map_data <- left_join(mg_mun_mapa, 
                          resumo_por_municipio_mapa %>% select(Municipio_limpo, Município, media, n),
                          by = "Municipio_limpo")
 
@@ -1232,7 +1576,7 @@ p <- p +
           shape = 16, # Círculo sólido
           alpha = 0.7) + # Adicionar transparência
   # Escala de cores para a pontuação média
-  scale_color_viridis_c(option = "plasma", name = "Pontuação Média\n(0-100)") +
+  scale_color_viridis_c(option = "plasma", name = "Pontuação Média\n(0-100)") + 
   # Escala de tamanho para o número de respondentes (ajuste 'range' para aumentar o tamanho)
   scale_size_continuous(name = "Nº Respondentes", range = c(2, 10)) + # Ajuste range (min, max size)
   # Títulos e tema
@@ -1253,80 +1597,68 @@ p <- p +
 print(p)
 
 # ==============================================================================
-# 14. ANÁLISES ADICIONAIS AO NÍVEL MUNICIPAL
+# 13. MAPA ESTÁTICO POR MACRORREGIÃO DE SAÚDE
 # ==============================================================================
 
-# 1. Estatísticas Descritivas das Pontuações Médias Municipais
-summary_stats_municipios <- resumo_por_municipio %>% 
-  summarise(
-    num_municipios = n(),
-    media_das_medias = mean(media, na.rm = TRUE),
-    mediana_das_medias = median(media, na.rm = TRUE),
-    dp_das_medias = sd(media, na.rm = TRUE),
-    min_media = min(media, na.rm = TRUE),
-    max_media = max(media, na.rm = TRUE)
-  )
+# Verificar se os dados das regiões e os resumos estão disponíveis
+if (!is.null(mg_regions) && exists("resumo_por_macro") && !is.null(resumo_por_macro)) {
+  
+  cat("\nIniciando criação do mapa por macrorregião...\n")
+  
+  # 1. Preparar dados geográficos das macrorregiões
+  mg_regions_map <- mg_regions %>% 
+    mutate(Macro_limpo = limpar_nomes(name_health_region)) %>% 
+    # Selecionar colunas relevantes para evitar conflitos de nome
+    select(code_health_region, Macro_limpo, geom) 
+  
+  # 2. Preparar dados de resumo por macrorregião
+  resumo_macro_map <- resumo_por_macro %>% 
+    mutate(Macro_limpo = limpar_nomes(MACRORREGIOES)) %>% 
+    # Selecionar colunas relevantes
+    select(Macro_limpo, MACRORREGIOES, media, n) # Manter nome original para rótulos
+    
+  # 3. Juntar dados geográficos e de resumo
+  mg_map_macro_data <- left_join(mg_regions_map, resumo_macro_map, by = "Macro_limpo")
+  
+  # Verificar NAs após junção (macrorregiões sem dados de respondentes)
+  nas_mapa_macro <- sum(is.na(mg_map_macro_data$media))
+  if (nas_mapa_macro > 0) {
+    cat(paste("Aviso: Encontradas", nas_mapa_macro, "macrorregiões geográficas sem dados de pontuação correspondentes.\n"))
+  }
+  
+  # Calcular centroides para rótulos (APENAS das regiões COM dados)
+  mg_macro_centroids <- mg_map_macro_data %>% 
+    filter(!is.na(media)) %>% 
+    st_centroid() 
 
-cat("\n--- Estatísticas das Pontuações Médias Municipais ---\n")
-print(summary_stats_municipios)
-
-# Histograma da distribuição das médias municipais
-ggplot(resumo_por_municipio, aes(x = media)) +
-  geom_histogram(binwidth = 5, fill = "skyblue", color = "black") +
-  labs(title = "Distribuição das Pontuações Médias por Município",
-       x = "Pontuação Média Municipal (0-100)",
-       y = "Número de Municípios") +
-  theme_minimal()
-
-# 2. Correlação: Pontuação Média vs. Número de Respondentes
-cor_media_n <- cor.test(~ media + n, data = resumo_por_municipio)
-cat("\n--- Correlação entre Pontuação Média e Nº de Respondentes por Município ---\n")
-print(cor_media_n)
-
-ggplot(resumo_por_municipio, aes(x = n, y = media)) +
-  geom_point(alpha = 0.7) +
-  geom_smooth(method = "lm", se = FALSE, color = "blue") +
-  labs(title = "Pontuação Média vs. Número de Respondentes por Município",
-       x = "Número de Respondentes (n)",
-       y = "Pontuação Média Municipal") +
-  annotate("text", x = max(resumo_por_municipio$n)*0.9, y = min(resumo_por_municipio$media), 
-           label = sprintf("R = %.2f, p = %.3f", cor_media_n$estimate, cor_media_n$p.value), 
-           hjust = 1, size = 3) +
-  theme_minimal()
-
-# 3. Classificação dos Municípios pela Pontuação Média
-resumo_por_municipio <- resumo_por_municipio %>% 
-  mutate(
-    classificacao_municipal = case_when(
-      media >= 75 ~ "Pred. Positivo",
-      media >= 50 ~ "Pred. Neutro",
-      TRUE ~ "Pred. Negativo"
-    ),
-    classificacao_municipal = factor(classificacao_municipal, 
-                                     levels = c("Pred. Positivo", "Pred. Neutro", "Pred. Negativo"))
-  )
-
-# 4. Distribuição da Classificação Municipal
-resumo_class_municipio <- resumo_por_municipio %>% 
-  count(classificacao_municipal) %>% 
-  mutate(pct = n / sum(n) * 100)
-
-cat("\n--- Classificação dos Municípios pela Pontuação Média ---\n")
-gt::gt(resumo_class_municipio) %>% 
-  gt::cols_label(
-    classificacao_municipal = "Classificação Predominante",
-    n = "Nº Municípios",
-    pct = "% Municípios"
-  ) %>% 
-  gt::fmt_number(columns = pct, decimals = 1) %>% 
-  gt::tab_header(title = "Distribuição da Classificação Predominante por Município")
-
-ggplot(resumo_class_municipio, aes(x = classificacao_municipal, y = n, fill = classificacao_municipal)) +
-  geom_bar(stat = "identity") +
-  geom_text(aes(label = sprintf("%d (%.1f%%)", n, pct)), vjust = -0.5) +
-  labs(title = "Número de Municípios por Classificação Predominante do Clima",
-       x = "Classificação Predominante",
-       y = "Número de Municípios") +
-  theme_minimal() +
-  theme(legend.position = "none")
+  # 4. Criar o mapa com ggplot2
+  p_macro <- ggplot() +
+    # Camada de fundo: limites municipais (opcional)
+    geom_sf(data = mg_mun, fill = NA, color = "grey85", size = 0.1) +
+    # Camada principal: Macrorregiões coloridas pela média
+    geom_sf(data = mg_map_macro_data, aes(fill = media), color = "black", size = 0.5) +
+    # Camada de rótulos: Nomes das macrorregiões nos centroides
+    geom_sf_text(data = mg_macro_centroids, aes(label = MACRORREGIOES), 
+                 size = 2.5, # Ajustar tamanho da fonte
+                 color = "black", 
+                 check_overlap = TRUE) + # Evita sobreposição excessiva
+    # Escala de cores
+    scale_fill_viridis_c(option = "plasma", name = "Pontuação Média\n(0-100)", 
+                         na.value = "grey90") + # Cor para regiões sem dados
+    # Títulos e tema
+    labs(title = "Clima de Segurança Médio por Macrorregião de Saúde",
+         caption = "Fonte: Dados da pesquisa | Cor preenchimento ~ Pontuação Média") +
+    theme_void() +
+    theme(
+      plot.title = element_text(hjust = 0.5, size = 14),
+      plot.caption = element_text(hjust = 0.5, size = 8),
+      legend.position = "right"
+    )
+  
+  # Exibir o mapa
+  print(p_macro)
+  
+} else {
+  cat("\nNão foi possível gerar o mapa por macrorregião. Verifique se os dados geográficos (mg_regions) e o resumo (resumo_por_macro) foram carregados/calculados corretamente.\n")
+}
 
