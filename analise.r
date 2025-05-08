@@ -1,4 +1,22 @@
 # ==============================================================================
+# 0. REDIRECIONAMENTO DE OUTPUT PARA ARQUIVO
+# ==============================================================================
+
+# Criar nome de arquivo de log com timestamp
+timestamp <- format(Sys.time(), "%Y%m%d_%H%M%S")
+log_file <- file.path("output", paste0("log_analise_", timestamp, ".txt"))
+
+# Iniciar redirecionamento de output para o arquivo
+cat("Iniciando redirecionamento de output para:", log_file, "\n")
+sink(log_file, split = TRUE)  # split=TRUE mantém a saída também no console
+
+# Registrar início da execução
+cat("======================================================================\n")
+cat("INÍCIO DA EXECUÇÃO DO SCRIPT analise.r\n")
+cat("Data e hora:", format(Sys.time(), "%d/%m/%Y %H:%M:%S"), "\n")
+cat("======================================================================\n\n")
+
+# ==============================================================================
 # 1. CONFIGURAÇÃO INICIAL
 # ==============================================================================
 
@@ -11,6 +29,12 @@ library(tidyverse)
 library(psych)      # Para análises estatísticas descritivas
 library(gtsummary)  # Para tabelas de resumo
 library(stringr)    # Para manipulação de strings
+
+# Verificar e instalar webshot2 se necessário (para gtsave com PNG)
+if (!require("webshot2")) {
+  install.packages("webshot2")
+  library(webshot2)
+}
 
 # Carregar funções auxiliares
 source("scripts/funcoes_auxiliares.R")
@@ -136,8 +160,8 @@ tabela_nulos <- gt::gt(df_nulos) %>%
 print(tabela_nulos)
 
 # Salvar tabela de valores nulos
-gtsave(tabela_nulos, filename = file.path(tabelas_dir, "tabela_valores_nulos.html"))
-cat("Tabela 'tabela_valores_nulos.html' salva em", tabelas_dir, "\n")
+gtsave(tabela_nulos, filename = file.path(tabelas_dir, "tabela_valores_nulos.png"))
+cat("Tabela 'tabela_valores_nulos.png' salva em", tabelas_dir, "\n")
 
 # Remover colunas com alta porcentagem de valores nulos (acima de 99%)
 colunas_quase_vazias <- c(
@@ -204,8 +228,8 @@ tabela_resumo_gt <- gt::gt(tabela_resumo) %>% # Atribuir a um objeto
 print(tabela_resumo_gt) # Imprimir o objeto
 
 # Salvar tabela de resumo das colunas
-gtsave(tabela_resumo_gt, filename = file.path(tabelas_dir, "tabela_resumo_colunas.html"))
-cat("Tabela 'tabela_resumo_colunas.html' salva em", tabelas_dir, "\n")
+gtsave(tabela_resumo_gt, filename = file.path(tabelas_dir, "tabela_resumo_colunas.png"))
+cat("Tabela 'tabela_resumo_colunas.png' salva em", tabelas_dir, "\n")
 
 # Verificar se todas as questões de 1-36 estão presentes
 colunas_questionario <- grep("^[0-9]+\\.", names(dados_limpos), value = TRUE)
@@ -608,8 +632,8 @@ tabela_classificacao <- dados_mapeados %>%
 print(tabela_classificacao)
 
 # Salvar tabela de classificação do clima
-gtsave(tabela_classificacao, filename = file.path(tabelas_dir, "tabela_classificacao_clima.html"))
-cat("Tabela 'tabela_classificacao_clima.html' salva em", tabelas_dir, "\n")
+gtsave(tabela_classificacao, filename = file.path(tabelas_dir, "tabela_classificacao_clima.png"))
+cat("Tabela 'tabela_classificacao_clima.png' salva em", tabelas_dir, "\n")
 
 # Tabela 2: Estatísticas Descritivas das Pontuações Finais (Manual com gt)
 stats <- dados_mapeados %>% summarise(
@@ -660,8 +684,8 @@ resumo_pontuacoes <- df_summary %>%
 print(resumo_pontuacoes)
 
 # Salvar tabela de estatísticas descritivas das pontuações finais
-gtsave(resumo_pontuacoes, filename = file.path(tabelas_dir, "tabela_estatisticas_pontuacoes.html"))
-cat("Tabela 'tabela_estatisticas_pontuacoes.html' salva em", tabelas_dir, "\n")
+gtsave(resumo_pontuacoes, filename = file.path(tabelas_dir, "tabela_estatisticas_pontuacoes.png"))
+cat("Tabela 'tabela_estatisticas_pontuacoes.png' salva em", tabelas_dir, "\n")
 
 # ==============================================================================
 # 6. EXPORTAÇÃO DOS RESULTADOS PRELIMINARES (DADOS COM ESCORES)
@@ -958,8 +982,8 @@ tabela_resumo_cargo <- gt::gt(resumo_por_cargo) %>%
   gt::tab_header(title = "Análise do Clima de Segurança por Cargo")
 
 print(tabela_resumo_cargo)
-gtsave(tabela_resumo_cargo, filename = file.path(tabelas_dir, "tabela_resumo_cargo.html"))
-cat("Tabela 'tabela_resumo_cargo.html' salva em", tabelas_dir, "\n")
+gtsave(tabela_resumo_cargo, filename = file.path(tabelas_dir, "tabela_resumo_cargo.png"))
+cat("Tabela 'tabela_resumo_cargo.png' salva em", tabelas_dir, "\n")
 
 # 2. Análise por formação/escolaridade
 resumo_por_formacao <- dados_mapeados %>%
@@ -989,8 +1013,8 @@ tabela_resumo_formacao <- gt::gt(resumo_por_formacao) %>%
   gt::tab_header(title = "Clima de Segurança por Formação")
 
 print(tabela_resumo_formacao)
-gtsave(tabela_resumo_formacao, filename = file.path(tabelas_dir, "tabela_resumo_formacao.html"))
-cat("Tabela 'tabela_resumo_formacao.html' salva em", tabelas_dir, "\n")
+gtsave(tabela_resumo_formacao, filename = file.path(tabelas_dir, "tabela_resumo_formacao.png"))
+cat("Tabela 'tabela_resumo_formacao.png' salva em", tabelas_dir, "\n")
 
 # 3. Análise por faixa etária
 dados_mapeados <- dados_mapeados %>%
@@ -1037,8 +1061,8 @@ tabela_resumo_idade <- gt::gt(resumo_por_idade) %>%
   gt::tab_header(title = "Clima de Segurança por Faixa Etária")
 
 print(tabela_resumo_idade)
-gtsave(tabela_resumo_idade, filename = file.path(tabelas_dir, "tabela_resumo_idade.html"))
-cat("Tabela 'tabela_resumo_idade.html' salva em", tabelas_dir, "\n")
+gtsave(tabela_resumo_idade, filename = file.path(tabelas_dir, "tabela_resumo_idade.png"))
+cat("Tabela 'tabela_resumo_idade.png' salva em", tabelas_dir, "\n")
 
 # 4. Análise por sexo (corrigido)
 resumo_por_sexo <- dados_mapeados %>%
@@ -1067,8 +1091,8 @@ tabela_resumo_sexo <- gt::gt(resumo_por_sexo) %>%
   gt::tab_header(title = "Clima de Segurança por Sexo")
 
 print(tabela_resumo_sexo)
-gtsave(tabela_resumo_sexo, filename = file.path(tabelas_dir, "tabela_resumo_sexo.html"))
-cat("Tabela 'tabela_resumo_sexo.html' salva em", tabelas_dir, "\n")
+gtsave(tabela_resumo_sexo, filename = file.path(tabelas_dir, "tabela_resumo_sexo.png"))
+cat("Tabela 'tabela_resumo_sexo.png' salva em", tabelas_dir, "\n")
 
 # 5. Análise por Município
 resumo_por_municipio <- dados_mapeados %>%
@@ -1098,8 +1122,8 @@ tabela_resumo_municipio <- gt::gt(resumo_por_municipio) %>%
   gt::tab_header(title = "Clima de Segurança por Município")
 
 print(tabela_resumo_municipio)
-gtsave(tabela_resumo_municipio, filename = file.path(tabelas_dir, "tabela_resumo_municipio.html"))
-cat("Tabela 'tabela_resumo_municipio.html' salva em", tabelas_dir, "\n")
+gtsave(tabela_resumo_municipio, filename = file.path(tabelas_dir, "tabela_resumo_municipio.png"))
+cat("Tabela 'tabela_resumo_municipio.png' salva em", tabelas_dir, "\n")
 
 # 6. Análise por Porte do Município (NOVO)
 if ("PORTE_IBGE" %in% names(dados_mapeados)) {
@@ -1130,8 +1154,8 @@ if ("PORTE_IBGE" %in% names(dados_mapeados)) {
     gt::tab_header(title = "Clima de Segurança por Porte do Município (IBGE)")
   
   print(tabela_resumo_porte)
-  gtsave(tabela_resumo_porte, filename = file.path(tabelas_dir, "tabela_resumo_porte.html"))
-  cat("Tabela 'tabela_resumo_porte.html' salva em", tabelas_dir, "\n")
+  gtsave(tabela_resumo_porte, filename = file.path(tabelas_dir, "tabela_resumo_porte.png"))
+  cat("Tabela 'tabela_resumo_porte.png' salva em", tabelas_dir, "\n")
 } else {
   cat("\nColuna 'PORTE_IBGE' não encontrada para análise por porte.\n")
 }
@@ -1165,8 +1189,8 @@ if ("MACRORREGIOES" %in% names(dados_mapeados)) {
     gt::tab_header(title = "Clima de Segurança por Macrorregião")
   
   print(tabela_resumo_macro)
-  gtsave(tabela_resumo_macro, filename = file.path(tabelas_dir, "tabela_resumo_macro.html"))
-  cat("Tabela 'tabela_resumo_macro.html' salva em", tabelas_dir, "\n")
+  gtsave(tabela_resumo_macro, filename = file.path(tabelas_dir, "tabela_resumo_macro.png"))
+  cat("Tabela 'tabela_resumo_macro.png' salva em", tabelas_dir, "\n")
 } else {
   cat("\nColuna 'MACRORREGIOES' não encontrada para análise por macrorregião.\n")
 }
@@ -1203,8 +1227,8 @@ if ("URS" %in% names(dados_mapeados)) {
     gt::tab_options(table.font.size = "small") 
   
   print(tabela_resumo_urs)
-  gtsave(tabela_resumo_urs, filename = file.path(tabelas_dir, "tabela_resumo_urs.html"))
-  cat("Tabela 'tabela_resumo_urs.html' salva em", tabelas_dir, "\n")
+  gtsave(tabela_resumo_urs, filename = file.path(tabelas_dir, "tabela_resumo_urs.png"))
+  cat("Tabela 'tabela_resumo_urs.png' salva em", tabelas_dir, "\n")
   
 } else {
   cat("\nColuna 'URS' não encontrada para análise por URS/Microrregião.\n")
@@ -1250,8 +1274,8 @@ if ("PORTE_IBGE" %in% names(dados_mapeados) && col_cargo_analise %in% names(dado
     gt::tab_options(table.font.size = "small")
   
   print(tabela_resumo_porte_cargo)
-  gtsave(tabela_resumo_porte_cargo, filename = file.path(tabelas_dir, "tabela_resumo_porte_cargo.html"))
-  cat("Tabela 'tabela_resumo_porte_cargo.html' salva em", tabelas_dir, "\n")
+  gtsave(tabela_resumo_porte_cargo, filename = file.path(tabelas_dir, "tabela_resumo_porte_cargo.png"))
+  cat("Tabela 'tabela_resumo_porte_cargo.png' salva em", tabelas_dir, "\n")
   
   # <<< Adicionar Gráfico Boxplot Cruzado: Porte vs Cargo >>>
   p_boxplot_porte_cargo <- ggplot(dados_mapeados %>% 
@@ -1680,3 +1704,17 @@ cat("\nMapa coroplético por macrorregião (baseado em municípios dissolvidos) 
 
 # Limpeza opcional de variáveis intermediárias grandes
 # rm(mg_mun_com_macro_da_pesquisa, sf_macrorregioes_dissolvidas, map_data_macro_final, map_data_para_plotar)
+
+# ==============================================================================
+# FINALIZAÇÃO
+# ==============================================================================
+
+# Registrar fim da execução
+cat("\n======================================================================\n")
+cat("FIM DA EXECUÇÃO DO SCRIPT analise.r\n")
+cat("Data e hora:", format(Sys.time(), "%d/%m/%Y %H:%M:%S"), "\n")
+cat("======================================================================\n")
+
+# Encerrar redirecionamento de output
+sink()
+cat("Redirecionamento de output finalizado. Log salvo em:", log_file, "\n")
