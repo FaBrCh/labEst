@@ -19,21 +19,31 @@ source("scripts/funcoes_auxiliares.R")
 caminho_respostas <- "data/respostas2.xlsx"
 caminho_municipios <- "data/MUNICÍPIOS E SALAS DE VACINAÇÃO SELECIONADOS.xlsx"
 
-# Criar subdiretórios para imagens e tabelas
-imagens_dir <- file.path(output_dir, "imagens")
-if (!dir.exists(imagens_dir)) {
-  dir.create(imagens_dir)
-  cat("Diretório 'output/imagens' criado.\n")
+# Criar o diretório de saída se ele não existir
+output_dir <- "output"
+if (!dir.exists(output_dir)) {
+  dir.create(output_dir)
+  cat("Diretório 'output' criado.\n")
 } else {
-  cat("Diretório 'output/imagens' já existe.\n")
+  cat("Diretório 'output' já existe.\n")
 }
 
+# Criar subdiretórios para imagens e tabelas
+imagens_dir <- file.path(output_dir, "imagens")
 tabelas_dir <- file.path(output_dir, "tabelas")
+
+if (!dir.exists(imagens_dir)) {
+  dir.create(imagens_dir)
+  cat("Diretório 'imagens' criado em", output_dir, "\n")
+} else {
+  cat("Diretório 'imagens' já existe em", output_dir, "\n")
+}
+
 if (!dir.exists(tabelas_dir)) {
   dir.create(tabelas_dir)
-  cat("Diretório 'output/tabelas' criado.\n")
+  cat("Diretório 'tabelas' criado em", output_dir, "\n")
 } else {
-  cat("Diretório 'output/tabelas' já existe.\n")
+  cat("Diretório 'tabelas' já existe em", output_dir, "\n")
 }
 
 # ==============================================================================
@@ -662,33 +672,6 @@ if (!require("writexl")) {
   install.packages("writexl")
 }
 library(writexl)
-
-# Criar o diretório de saída se ele não existir
-output_dir <- "output"
-if (!dir.exists(output_dir)) {
-  dir.create(output_dir)
-  cat("Diretório 'output' criado.\n")
-} else {
-  cat("Diretório 'output' já existe.\n")
-}
-
-# Criar subdiretórios para imagens e tabelas
-imagens_dir <- file.path(output_dir, "imagens")
-tabelas_dir <- file.path(output_dir, "tabelas")
-
-if (!dir.exists(imagens_dir)) {
-  dir.create(imagens_dir)
-  cat("Diretório 'imagens' criado em", output_dir, "\n")
-} else {
-  cat("Diretório 'imagens' já existe em", output_dir, "\n")
-}
-
-if (!dir.exists(tabelas_dir)) {
-  dir.create(tabelas_dir)
-  cat("Diretório 'tabelas' criado em", output_dir, "\n")
-} else {
-  cat("Diretório 'tabelas' já existe em", output_dir, "\n")
-}
 
 # Definir o caminho do arquivo de saída
 caminho_saida_xlsx <- file.path(output_dir, "dados_mapeados_com_pontuacoes.xlsx")
