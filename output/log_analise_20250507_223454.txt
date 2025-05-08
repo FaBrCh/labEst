@@ -1,0 +1,1102 @@
+======================================================================
+INÍCIO DA EXECUÇÃO DO SCRIPT analise.r
+Data e hora: 07/05/2025 22:34:55 
+======================================================================
+
+Diretório 'output' já existe.
+Diretório 'imagens' já existe em output 
+Diretório 'tabelas' já existe em output 
+Informações de municípios carregadas e limpas com sucesso.
+Tabela 'tabela_valores_nulos.png' salva em output/tabelas 
+Colunas originais: 92 
+Colunas após remoção de vazias e quase vazias: 50 
+Colunas adicionais removidas: Unidade de Atenção Primária, Unidade de Atenção Primária à Saúde...19, Unidade de Atenção Primária à Saúde...13 
+Número total de linhas antes da remoção: 728 
+Número de linhas após remoção de NAs: 680 
+Número de linhas removidas: 48 
+Porcentagem de linhas removidas: 6.6 %
+Rows: 680
+Columns: 50
+$ `Carimbo de data/hora`                                                                                                                        [3m[38;5;246m<dttm>[39m[23m …
+$ `\nDeclaro que concordo em participar da pesquisa.`                                                                                           [3m[38;5;246m<chr>[39m[23m …
+$ Município                                                                                                                                     [3m[38;5;246m<chr>[39m[23m …
+$ `Unidade de Atenção Primária à Saúde...4`                                                                                                     [3m[38;5;246m<chr>[39m[23m …
+$ `Localidade da Unidade de Saúde`                                                                                                              [3m[38;5;246m<chr>[39m[23m …
+$ `A Unidade Básica de Saúde (UBS/PSF/ESF) que você trabalha possui acesso a internet?`                                                         [3m[38;5;246m<chr>[39m[23m …
+$ `Idade do Profissonal (em anos) SOMENTE NÚMEROS`                                                                                              [3m[38;5;246m<chr>[39m[23m …
+$ Sexo                                                                                                                                          [3m[38;5;246m<chr>[39m[23m …
+$ `Cargo na Atenção Primária à Saúde (APS) / Unidade Básica de Saúde (UBS)`                                                                     [3m[38;5;246m<chr>[39m[23m …
+$ Formação                                                                                                                                      [3m[38;5;246m<chr>[39m[23m …
+$ `Tipo de Vínculo no Serviço Público`                                                                                                          [3m[38;5;246m<chr>[39m[23m …
+$ `Tempo de Experiência Total como Profissional da Enfermagem...41`                                                                             [3m[38;5;246m<chr>[39m[23m …
+$ `Tempo de Experiência na Atenção Primária à Saúde`                                                                                            [3m[38;5;246m<chr>[39m[23m …
+$ `Tempo de Experiência em Salas de Vacinação`                                                                                                  [3m[38;5;246m<chr>[39m[23m …
+$ `1. As sugestões do (a) enfermeiro (a) são bem recebidas na sala de vacinação`                                                                [3m[38;5;246m<dbl>[39m[23m …
+$ `2. É difícil falar abertamente se eu percebo um problema com o cuidado ao paciente relacionado a vacinação`                                  [3m[38;5;246m<dbl>[39m[23m …
+$ `3. Em relação à vacinação, as discordâncias são resolvidas de modo apropriado (ex: não quem está certo, mas o que é melhor para o paciente)` [3m[38;5;246m<dbl>[39m[23m …
+$ `4. Eu tenho o apoio que necessito de outros membros da equipe para assistência aos pacientes na sala e vacinação`                            [3m[38;5;246m<dbl>[39m[23m …
+$ `5. É fácil para mim, que atuo na vacinação, fazer perguntas quando existe algo que eu não entendo`                                           [3m[38;5;246m<dbl>[39m[23m …
+$ `6. A equipe de enfermagem daqui trabalha junto como uma equipe bem coordenada`                                                               [3m[38;5;246m<dbl>[39m[23m …
+$ `7. Eu me sentiria seguro (a) se fosse vacinado (a) aqui como paciente`                                                                       [3m[38;5;246m<dbl>[39m[23m …
+$ `8. Erros são tratados de maneira apropriada pela equipe`                                                                                     [3m[38;5;246m<dbl>[39m[23m …
+$ `9. Eu conheço os meios adequados para encaminhar as questões relacionadas à segurança do paciente nesta unidade`                             [3m[38;5;246m<dbl>[39m[23m …
+$ `10. Eu recebo retorno apropriado sobre meu desempenho`                                                                                       [3m[38;5;246m<dbl>[39m[23m …
+$ `11. Nesta unidade, é difícil discutir sobre erros`                                                                                           [3m[38;5;246m<dbl>[39m[23m …
+$ `12. Sou encorajado (a) por meus colegas a informar qualquer preocupação que eu possa ter quanto à segurança em sala de vacinação`            [3m[38;5;246m<dbl>[39m[23m …
+$ `13. A cultura de segurança em vacinação torna fácil aprender com os erros dos outros`                                                        [3m[38;5;246m<dbl>[39m[23m …
+$ `14. Minhas sugestões sobre segurança em sala de vacinação seriam postas em ação se eu as expressasse à coordenação`                          [3m[38;5;246m<dbl>[39m[23m …
+$ `15. Eu gosto de trabalhar com vacinação`                                                                                                     [3m[38;5;246m<dbl>[39m[23m …
+$ `16. Trabalhar aqui é como fazer parte de uma grande família`                                                                                 [3m[38;5;246m<dbl>[39m[23m …
+$ `17. A sala de vacinação é um bom lugar para trabalhar`                                                                                       [3m[38;5;246m<dbl>[39m[23m …
+$ `18. Eu me orgulho de trabalhar na vacinação`                                                                                                 [3m[38;5;246m<dbl>[39m[23m …
+$ `19. O prestígio em trabalhar com vacinação é alto`                                                                                           [3m[38;5;246m<dbl>[39m[23m …
+$ `20. Quando minha carga de trabalho é excessiva, meu desempenho é prejudicado`                                                                [3m[38;5;246m<dbl>[39m[23m …
+$ `21. Eu sou menos eficiente no trabalho quando estou cansado (a)`                                                                             [3m[38;5;246m<dbl>[39m[23m …
+$ `22. Eu tenho maior probabilidade de cometer erros em situações tensas ou hostis`                                                             [3m[38;5;246m<dbl>[39m[23m …
+$ `23. O cansaço prejudica meu desempenho durante situações de stress (ex: interrupções, inquietude do vacinado, choro)`                        [3m[38;5;246m<dbl>[39m[23m …
+$ `24. A coordenação apoia meus esforços diários`                                                                                               [3m[38;5;246m<dbl>[39m[23m …
+$ `25. A coordenação não compromete conscientemente a segurança do paciente`                                                                    [3m[38;5;246m<dbl>[39m[23m …
+$ `26. A coordenação está fazendo um bom trabalho`                                                                                              [3m[38;5;246m<dbl>[39m[23m …
+$ `27. Profissionais problemáticos da equipe são tratados de maneira construtiva por nossa coordenação da unidade`                              [3m[38;5;246m<dbl>[39m[23m …
+$ `28. Recebo informações adequadas e oportunas sobre eventos que podem afetar o meu trabalho em sala de vacinação`                             [3m[38;5;246m<dbl>[39m[23m …
+$ `29. Na sala de vacinação, o número e a qualificação dos profissionais são suficientes para lidar com o número de pacientes`                  [3m[38;5;246m<dbl>[39m[23m …
+$ `30. Esta unidade faz um bom trabalho no treinamento de novos membros da equipe de vacinação`                                                 [3m[38;5;246m<dbl>[39m[23m …
+$ `31. Toda informação necessária para a vacinação está disponível rotineiramente para mim`                                                     [3m[38;5;246m<dbl>[39m[23m …
+$ `32. Estagiários da minha profissão são adequadamente supervisionados`                                                                        [3m[38;5;246m<dbl>[39m[23m …
+$ `33. Eu vivencio boa colaboração entre os coordenadores do município`                                                                         [3m[38;5;246m<dbl>[39m[23m …
+$ `34. Eu vivencio boa colaboração com a equipe da unidade`                                                                                     [3m[38;5;246m<dbl>[39m[23m …
+$ `35. Eu vivencio boa colaboração com os técnicos em enfermagem da unidade`                                                                    [3m[38;5;246m<dbl>[39m[23m …
+$ `36. Falhas na comunicação que levam a atrasos no atendimento são comuns`                                                                     [3m[38;5;246m<dbl>[39m[23m …
+Tabela 'tabela_resumo_colunas.png' salva em output/tabelas 
+Número de questões encontradas: 36 
+ [1] "1. As sugestões do (a) enfermeiro (a) são bem recebidas na sala de vacinação"                                                               
+ [2] "2. É difícil falar abertamente se eu percebo um problema com o cuidado ao paciente relacionado a vacinação"                                 
+ [3] "3. Em relação à vacinação, as discordâncias são resolvidas de modo apropriado (ex: não quem está certo, mas o que é melhor para o paciente)"
+ [4] "4. Eu tenho o apoio que necessito de outros membros da equipe para assistência aos pacientes na sala e vacinação"                           
+ [5] "5. É fácil para mim, que atuo na vacinação, fazer perguntas quando existe algo que eu não entendo"                                          
+ [6] "6. A equipe de enfermagem daqui trabalha junto como uma equipe bem coordenada"                                                              
+ [7] "7. Eu me sentiria seguro (a) se fosse vacinado (a) aqui como paciente"                                                                      
+ [8] "8. Erros são tratados de maneira apropriada pela equipe"                                                                                    
+ [9] "9. Eu conheço os meios adequados para encaminhar as questões relacionadas à segurança do paciente nesta unidade"                            
+[10] "10. Eu recebo retorno apropriado sobre meu desempenho"                                                                                      
+[11] "11. Nesta unidade, é difícil discutir sobre erros"                                                                                          
+[12] "12. Sou encorajado (a) por meus colegas a informar qualquer preocupação que eu possa ter quanto à segurança em sala de vacinação"           
+[13] "13. A cultura de segurança em vacinação torna fácil aprender com os erros dos outros"                                                       
+[14] "14. Minhas sugestões sobre segurança em sala de vacinação seriam postas em ação se eu as expressasse à coordenação"                         
+[15] "15. Eu gosto de trabalhar com vacinação"                                                                                                    
+[16] "16. Trabalhar aqui é como fazer parte de uma grande família"                                                                                
+[17] "17. A sala de vacinação é um bom lugar para trabalhar"                                                                                      
+[18] "18. Eu me orgulho de trabalhar na vacinação"                                                                                                
+[19] "19. O prestígio em trabalhar com vacinação é alto"                                                                                          
+[20] "20. Quando minha carga de trabalho é excessiva, meu desempenho é prejudicado"                                                               
+[21] "21. Eu sou menos eficiente no trabalho quando estou cansado (a)"                                                                            
+[22] "22. Eu tenho maior probabilidade de cometer erros em situações tensas ou hostis"                                                            
+[23] "23. O cansaço prejudica meu desempenho durante situações de stress (ex: interrupções, inquietude do vacinado, choro)"                       
+[24] "24. A coordenação apoia meus esforços diários"                                                                                              
+[25] "25. A coordenação não compromete conscientemente a segurança do paciente"                                                                   
+[26] "26. A coordenação está fazendo um bom trabalho"                                                                                             
+[27] "27. Profissionais problemáticos da equipe são tratados de maneira construtiva por nossa coordenação da unidade"                             
+[28] "28. Recebo informações adequadas e oportunas sobre eventos que podem afetar o meu trabalho em sala de vacinação"                            
+[29] "29. Na sala de vacinação, o número e a qualificação dos profissionais são suficientes para lidar com o número de pacientes"                 
+[30] "30. Esta unidade faz um bom trabalho no treinamento de novos membros da equipe de vacinação"                                                
+[31] "31. Toda informação necessária para a vacinação está disponível rotineiramente para mim"                                                    
+[32] "32. Estagiários da minha profissão são adequadamente supervisionados"                                                                       
+[33] "33. Eu vivencio boa colaboração entre os coordenadores do município"                                                                        
+[34] "34. Eu vivencio boa colaboração com a equipe da unidade"                                                                                    
+[35] "35. Eu vivencio boa colaboração com os técnicos em enfermagem da unidade"                                                                   
+[36] "36. Falhas na comunicação que levam a atrasos no atendimento são comuns"                                                                    
+tipos_antes
+numeric 
+     36 
+Valores problemáticos encontrados: 3 
+Linhas com valores problemáticos: 476 538 552 
+Valores: Bom 66 49anos 57 anos 
+Verificando casos específicos:
+Linha 332 - Valor original: 13.0 Valor corrigido: 13 
+Linha 494 - Valor original: 46.0 Valor corrigido: 46 
+Linha 529 - Valor original: 1975.0 Valor corrigido: 48 
+
+Idades potencialmente incorretas após correção: 13 12 11 15 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  19.00   33.00   39.00   39.71   46.00   66.00 
+null device 
+          1 
+
+--- Iniciando tratamento por Cargo e Formação ---
+Linhas antes: 676 
+Número de linhas com cargo 'AUX ADM' a serem removidas: 1 
+Linhas após remover AUX ADM: 675 
+Número de linhas onde Formação será mudada para 'Ensino Técnico': 57 
+Número de linhas onde Cargo será mudado para 'Auxiliar de Enfermagem' (Formação = Ensino Médio Completo restante): 15 
+Linhas finais após tratamento Cargo/Formação: 675 
+Total de linhas removidas nesta etapa (apenas AUX ADM): 1 
+--- Fim tratamento por Cargo e Formação ---
+[1] "Valores distintos nas colunas CATEGORIZADAS após limpeza:"
+$total
+[1] "de 15 a 20 anos"    "de 10 a 15 anos"    "de 5 a 10 anos"    
+[4] "Menos de 6 meses"   "de 3 a 5 anos"      "de 1 a 3 anos"     
+[7] "Mais de 20 anos"    NA                   "de 6 meses a 1 ano"
+
+$aps
+[1] "de 15 a 20 anos"    "de 3 a 5 anos"      "de 5 a 10 anos"    
+[4] "de 1 a 3 anos"      "Menos de 6 meses"   "de 10 a 15 anos"   
+[7] "Mais de 20 anos"    "de 6 meses a 1 ano" NA                  
+
+$vac
+ [1] "de 5 a 10 anos"     "de 1 a 3 anos"      "de 3 a 5 anos"     
+ [4] "de 15 a 20 anos"    NA                   "de 10 a 15 anos"   
+ [7] "Mais de 20 anos"    "Menos de 6 meses"   "Não aplicável"     
+[10] "de 6 meses a 1 ano"
+
+[1] "Exemplos de dados limpos (original vs categorizado):"
+# A tibble: 6 × 6
+  Tempo de Experiência Tota…¹ Tempo de Experiência…² Tempo de Experiência…³
+  <chr>                       <chr>                  <chr>                 
+1 17A                         de 15 a 20 anos        17A                   
+2 17A                         de 15 a 20 anos        3A                    
+3 10A                         de 10 a 15 anos        3A                    
+4 18A                         de 15 a 20 anos        18A                   
+5 14A                         de 10 a 15 anos        8A                    
+6 9A                          de 5 a 10 anos         1A                    
+# ℹ abbreviated names:
+#   ¹​`Tempo de Experiência Total como Profissional da Enfermagem...41`,
+#   ²​`Tempo de Experiência Total como Profissional da Enfermagem...41_cat`,
+#   ³​`Tempo de Experiência na Atenção Primária à Saúde`
+# ℹ 3 more variables:
+#   `Tempo de Experiência na Atenção Primária à Saúde_cat` <chr>,
+#   `Tempo de Experiência em Salas de Vacinação` <chr>, …
+[1] "Contagem de NAs nas colunas CATEGORIZADAS após limpeza:"
+Tempo de Experiência Total como Profissional da Enfermagem...41_cat 
+                                                                  2 
+               Tempo de Experiência na Atenção Primária à Saúde_cat 
+                                                                  1 
+                     Tempo de Experiência em Salas de Vacinação_cat 
+                                                                 12 
+\nFiltragem adicional: Removidas 28 linhas onde Tempo de Experiência em Salas de Vacinação_cat era 'Menos de 6 meses', 'Não aplicável' ou NA.\nLinhas restantes: 647\n clima_trabalho_equipe clima_seguranca  satisfacao_trabalho
+ Min.   : 25.00        Min.   : 17.86   Min.   : 10.00     
+ 1st Qu.: 75.00        1st Qu.: 71.43   1st Qu.: 80.00     
+ Median : 83.33        Median : 82.14   Median : 90.00     
+ Mean   : 83.47        Mean   : 80.74   Mean   : 86.91     
+ 3rd Qu.: 95.83        3rd Qu.: 89.29   3rd Qu.:100.00     
+ Max.   :100.00        Max.   :100.00   Max.   :100.00     
+ percepcao_estresse percepcao_gestao  condicoes_trabalho
+ Min.   :  0.00     Min.   :  8.333   Min.   :  0.00    
+ 1st Qu.: 12.50     1st Qu.: 58.333   1st Qu.: 66.67    
+ Median : 31.25     Median : 75.000   Median : 83.33    
+ Mean   : 35.65     Mean   : 70.788   Mean   : 79.46    
+ 3rd Qu.: 56.25     3rd Qu.: 83.333   3rd Qu.:100.00    
+ Max.   :100.00     Max.   :100.000   Max.   :100.00    
+IDHM_2010 encontrado em df_municipios_amostra, preparando para junção...
+Amostra de municípios processados (primeiros 5):
+# A tibble: 5 × 3
+  Municipio_join             MACRORREGIOES      IDHM_2010
+  <chr>                      <chr>                  <dbl>
+1 ABADIA DOS DOURADOS        TRIÂNGULO DO NORTE        NA
+2 CEDRO DO ABAETE            CENTRO                    NA
+3 ABRE CAMPO                 LESTE DO SUL              NA
+4 SENADOR JOSE BENTO         SUL                       NA
+5 SAO SEBASTIAO DO RIO PRETO CENTRO                    NA
+
+Total de municípios únicos em df_municipios_info: 854
+Total de municípios únicos em dados_mapeados: 96
+Municípios em comum (interseção): 96 
+
+Após junção com dados municipais: 0 registros sem MACRORREGIOES, 0 registros sem PORTE_IBGE.
+Registros com IDHM disponível: 0 de 647 
+# A tibble: 854 × 6
+   MUNICIPIO                  MACRORREGIOES      URS         PORTE_IBGE Municipio_join IDHM_2010
+   <chr>                      <chr>              <chr>       <chr>      <chr>              <dbl>
+ 1 ABADIA DOS DOURADOS        TRIÂNGULO DO NORTE Uberlândia  Pequeno P… ABADIA DOS DO…        NA
+ 2 CEDRO DO ABAETE            CENTRO             Sete Lagoas Pequeno P… CEDRO DO ABAE…        NA
+ 3 ABRE CAMPO                 LESTE DO SUL       Manhuaçu    Pequeno P… ABRE CAMPO            NA
+ 4 SENADOR JOSE BENTO         SUL                Pouso Aleg… Pequeno P… SENADOR JOSE …        NA
+ 5 SAO SEBASTIAO DO RIO PRETO CENTRO             Itabira     Pequeno P… SAO SEBASTIAO…        NA
+ 6 PAIVA                      CENTRO SUL         Barbacena   Pequeno P… PAIVA                 NA
+ 7 DORESOPOLIS                SUL                Passos      Pequeno P… DORESOPOLIS           NA
+ 8 ANTONIO PRADO DE MINAS     SUDESTE            Ubá         Pequeno P… ANTONIO PRADO…        NA
+ 9 PASSABEM                   CENTRO             Itabira     Pequeno P… PASSABEM              NA
+10 OLARIA                     SUDESTE            Juiz de Fo… Pequeno P… OLARIA                NA
+# ℹ 844 more rows
+# ℹ Use `print(n = ...)` to see more rows
+Informações de municípios carregadas e limpas com sucesso.
+# A tibble: 854 × 15
+   NUMERO PARTICIPANTE COLETA_FINALIZADA MACRORREGIOES URS   MUNICIPIO PORTE_IBGE POPULACAO_2021
+    <dbl> <chr>        <chr>             <chr>         <chr> <chr>     <chr>               <dbl>
+ 1      1 EXCLUIDO     Excluido e subst… TRIÂNGULO DO… Uber… 310010-A… Pequeno P…           7022
+ 2    172 NÃO          <NA>              CENTRO        Sete… 311560-C… Pequeno P…           1150
+ 3      3 EXCLUIDO     Excluido e subst… LESTE DO SUL  Manh… 310030-A… Pequeno P…          13434
+ 4    775 NÃO          <NA>              SUL           Pous… 316580-S… Pequeno P…           1422
+ 5    761 NÃO          <NA>              CENTRO        Itab… 316480-S… Pequeno P…           1478
+ 6    546 NÃO          <NA>              CENTRO SUL    Barb… 314660-P… Pequeno P…           1517
+ 7    261 NÃO          <NA>              SUL           Pass… 312340-D… Pequeno P…           1539
+ 8     34 NÃO          <NA>              SUDESTE       Ubá   310310-A… Pequeno P…           1577
+ 9    555 NÃO          <NA>              CENTRO        Itab… 314750-P… Pequeno P…           1619
+10    529 NÃO          <NA>              SUDESTE       Juiz… 314540-O… Pequeno P…           1694
+# ℹ 844 more rows
+# ℹ 7 more variables: N_SALAS_VACINA <dbl>, AREA_KM2_2021 <dbl>, DENSIDADE_2010 <dbl>,
+#   ESCOLARIZACAO_6A14_2010 <dbl>, IDHM_2010 <dbl>, MORTALIDADE_INF_2020 <chr>,
+#   PIB_PER_CAPITA_2020 <dbl>
+# ℹ Use `print(n = ...)` to see more rows
+Iniciando redirecionamento de output para: output/log_analise_20250507_223954.txt 
+======================================================================
+INÍCIO DA EXECUÇÃO DO SCRIPT analise.r
+Data e hora: 07/05/2025 22:39:55 
+======================================================================
+
+# A tibble: 854 × 15
+   NÚMERO PARTICIPANTE `COLETA FINALIZADA?`   MACRORREGIÕES  URS   MUNICIPIO Classificação por po…¹
+    <dbl> <chr>        <chr>                  <chr>          <chr> <chr>     <chr>                 
+ 1      1 EXCLUIDO     Excluido e substituido TRIÂNGULO DO … Uber… 310010-A… Pequeno Porte         
+ 2    172 NÃO          <NA>                   CENTRO         Sete… 311560-C… Pequeno Porte         
+ 3      3 EXCLUIDO     Excluido e substituido LESTE DO SUL   Manh… 310030-A… Pequeno Porte         
+ 4    775 NÃO          <NA>                   SUL            Pous… 316580-S… Pequeno Porte         
+ 5    761 NÃO          <NA>                   CENTRO         Itab… 316480-S… Pequeno Porte         
+ 6    546 NÃO          <NA>                   CENTRO SUL     Barb… 314660-P… Pequeno Porte         
+ 7    261 NÃO          <NA>                   SUL            Pass… 312340-D… Pequeno Porte         
+ 8     34 NÃO          <NA>                   SUDESTE        Ubá   310310-A… Pequeno Porte         
+ 9    555 NÃO          <NA>                   CENTRO         Itab… 314750-P… Pequeno Porte         
+10    529 NÃO          <NA>                   SUDESTE        Juiz… 314540-O… Pequeno Porte         
+# ℹ 844 more rows
+# ℹ abbreviated name: ¹​`Classificação por porte\r\npopulacional conforme\r\nIBGE`
+# ℹ 8 more variables: `População estimada \r\npessoas [2021]` <dbl>,
+#   `Nº SALAS \r\nDE VACINA` <dbl>, `Área Territorial \r\nkm² [2021]` <dbl>,
+#   `Densidade demográfica \r\n- hab/km² [2010]` <dbl>,
+#   `Escolarização <span>6 \r\na 14 anos</span> - % [2010]` <dbl>,
+#   `IDHM <span>Índice de \r\ndesenvolvimento humano \r\nmunicipal</span> [2010]` <dbl>, …
+# ℹ Use `print(n = ...)` to see more rows
+ [1] "NÚMERO"                                                                     
+ [2] "PARTICIPANTE"                                                               
+ [3] "COLETA FINALIZADA?"                                                         
+ [4] "MACRORREGIÕES"                                                              
+ [5] "URS"                                                                        
+ [6] "MUNICIPIO"                                                                  
+ [7] "Classificação por porte\r\npopulacional conforme\r\nIBGE"                   
+ [8] "População estimada \r\npessoas [2021]"                                      
+ [9] "Nº SALAS \r\nDE VACINA"                                                     
+[10] "Área Territorial \r\nkm² [2021]"                                            
+[11] "Densidade demográfica \r\n- hab/km² [2010]"                                 
+[12] "Escolarização <span>6 \r\na 14 anos</span> - % [2010]"                      
+[13] "IDHM <span>Índice de \r\ndesenvolvimento humano \r\nmunicipal</span> [2010]"
+[14] "Mortalidade infantil - óbitos \r\npor mil nascidos vivos [2020]"            
+[15] "PIB per capita - R$ [2020]"                                                 
+Iniciando redirecionamento de output para: output/log_analise_20250507_224525.txt 
+======================================================================
+INÍCIO DA EXECUÇÃO DO SCRIPT analise.r
+Data e hora: 07/05/2025 22:45:26 
+======================================================================
+
+Diretório 'output' já existe.
+Diretório 'imagens' já existe em output 
+Diretório 'tabelas' já existe em output 
+Informações de municípios carregadas e limpas com sucesso.
+Verificando se IDHM_2010 está presente: TRUE 
+# A tibble: 854 × 6
+   MUNICIPIO                  MACRORREGIOES      URS          PORTE_IBGE   IDHM_2010 Municipio_join
+   <chr>                      <chr>              <chr>        <chr>            <dbl> <chr>         
+ 1 ABADIA DOS DOURADOS        TRIÂNGULO DO NORTE Uberlândia   Pequeno Por…     0.689 ABADIA DOS DO…
+ 2 CEDRO DO ABAETE            CENTRO             Sete Lagoas  Pequeno Por…     0.678 CEDRO DO ABAE…
+ 3 ABRE CAMPO                 LESTE DO SUL       Manhuaçu     Pequeno Por…     0.654 ABRE CAMPO    
+ 4 SENADOR JOSE BENTO         SUL                Pouso Alegre Pequeno Por…     0.684 SENADOR JOSE …
+ 5 SAO SEBASTIAO DO RIO PRETO CENTRO             Itabira      Pequeno Por…     0.632 SAO SEBASTIAO…
+ 6 PAIVA                      CENTRO SUL         Barbacena    Pequeno Por…     0.72  PAIVA         
+ 7 DORESOPOLIS                SUL                Passos       Pequeno Por…     0.692 DORESOPOLIS   
+ 8 ANTONIO PRADO DE MINAS     SUDESTE            Ubá          Pequeno Por…     0.684 ANTONIO PRADO…
+ 9 PASSABEM                   CENTRO             Itabira      Pequeno Por…     0.642 PASSABEM      
+10 OLARIA                     SUDESTE            Juiz de Fora Pequeno Por…     0.636 OLARIA        
+# ℹ 844 more rows
+# ℹ Use `print(n = ...)` to see more rows
+Tabela 'tabela_valores_nulos.png' salva em output/tabelas 
+Colunas originais: 92 
+Colunas após remoção de vazias e quase vazias: 50 
+Colunas adicionais removidas: Unidade de Atenção Primária, Unidade de Atenção Primária à Saúde...19, Unidade de Atenção Primária à Saúde...13 
+Número total de linhas antes da remoção: 728 
+Número de linhas após remoção de NAs: 680 
+Número de linhas removidas: 48 
+Porcentagem de linhas removidas: 6.6 %
+Rows: 680
+Columns: 50
+$ `Carimbo de data/hora`                                                                                                                        <dttm> …
+$ `\nDeclaro que concordo em participar da pesquisa.`                                                                                           <chr> …
+$ Município                                                                                                                                     <chr> …
+$ `Unidade de Atenção Primária à Saúde...4`                                                                                                     <chr> …
+$ `Localidade da Unidade de Saúde`                                                                                                              <chr> …
+$ `A Unidade Básica de Saúde (UBS/PSF/ESF) que você trabalha possui acesso a internet?`                                                         <chr> …
+$ `Idade do Profissonal (em anos) SOMENTE NÚMEROS`                                                                                              <chr> …
+$ Sexo                                                                                                                                          <chr> …
+$ `Cargo na Atenção Primária à Saúde (APS) / Unidade Básica de Saúde (UBS)`                                                                     <chr> …
+$ Formação                                                                                                                                      <chr> …
+$ `Tipo de Vínculo no Serviço Público`                                                                                                          <chr> …
+$ `Tempo de Experiência Total como Profissional da Enfermagem...41`                                                                             <chr> …
+$ `Tempo de Experiência na Atenção Primária à Saúde`                                                                                            <chr> …
+$ `Tempo de Experiência em Salas de Vacinação`                                                                                                  <chr> …
+$ `1. As sugestões do (a) enfermeiro (a) são bem recebidas na sala de vacinação`                                                                <dbl> …
+$ `2. É difícil falar abertamente se eu percebo um problema com o cuidado ao paciente relacionado a vacinação`                                  <dbl> …
+$ `3. Em relação à vacinação, as discordâncias são resolvidas de modo apropriado (ex: não quem está certo, mas o que é melhor para o paciente)` <dbl> …
+$ `4. Eu tenho o apoio que necessito de outros membros da equipe para assistência aos pacientes na sala e vacinação`                            <dbl> …
+$ `5. É fácil para mim, que atuo na vacinação, fazer perguntas quando existe algo que eu não entendo`                                           <dbl> …
+$ `6. A equipe de enfermagem daqui trabalha junto como uma equipe bem coordenada`                                                               <dbl> …
+$ `7. Eu me sentiria seguro (a) se fosse vacinado (a) aqui como paciente`                                                                       <dbl> …
+$ `8. Erros são tratados de maneira apropriada pela equipe`                                                                                     <dbl> …
+$ `9. Eu conheço os meios adequados para encaminhar as questões relacionadas à segurança do paciente nesta unidade`                             <dbl> …
+$ `10. Eu recebo retorno apropriado sobre meu desempenho`                                                                                       <dbl> …
+$ `11. Nesta unidade, é difícil discutir sobre erros`                                                                                           <dbl> …
+$ `12. Sou encorajado (a) por meus colegas a informar qualquer preocupação que eu possa ter quanto à segurança em sala de vacinação`            <dbl> …
+$ `13. A cultura de segurança em vacinação torna fácil aprender com os erros dos outros`                                                        <dbl> …
+$ `14. Minhas sugestões sobre segurança em sala de vacinação seriam postas em ação se eu as expressasse à coordenação`                          <dbl> …
+$ `15. Eu gosto de trabalhar com vacinação`                                                                                                     <dbl> …
+$ `16. Trabalhar aqui é como fazer parte de uma grande família`                                                                                 <dbl> …
+$ `17. A sala de vacinação é um bom lugar para trabalhar`                                                                                       <dbl> …
+$ `18. Eu me orgulho de trabalhar na vacinação`                                                                                                 <dbl> …
+$ `19. O prestígio em trabalhar com vacinação é alto`                                                                                           <dbl> …
+$ `20. Quando minha carga de trabalho é excessiva, meu desempenho é prejudicado`                                                                <dbl> …
+$ `21. Eu sou menos eficiente no trabalho quando estou cansado (a)`                                                                             <dbl> …
+$ `22. Eu tenho maior probabilidade de cometer erros em situações tensas ou hostis`                                                             <dbl> …
+$ `23. O cansaço prejudica meu desempenho durante situações de stress (ex: interrupções, inquietude do vacinado, choro)`                        <dbl> …
+$ `24. A coordenação apoia meus esforços diários`                                                                                               <dbl> …
+$ `25. A coordenação não compromete conscientemente a segurança do paciente`                                                                    <dbl> …
+$ `26. A coordenação está fazendo um bom trabalho`                                                                                              <dbl> …
+$ `27. Profissionais problemáticos da equipe são tratados de maneira construtiva por nossa coordenação da unidade`                              <dbl> …
+$ `28. Recebo informações adequadas e oportunas sobre eventos que podem afetar o meu trabalho em sala de vacinação`                             <dbl> …
+$ `29. Na sala de vacinação, o número e a qualificação dos profissionais são suficientes para lidar com o número de pacientes`                  <dbl> …
+$ `30. Esta unidade faz um bom trabalho no treinamento de novos membros da equipe de vacinação`                                                 <dbl> …
+$ `31. Toda informação necessária para a vacinação está disponível rotineiramente para mim`                                                     <dbl> …
+$ `32. Estagiários da minha profissão são adequadamente supervisionados`                                                                        <dbl> …
+$ `33. Eu vivencio boa colaboração entre os coordenadores do município`                                                                         <dbl> …
+$ `34. Eu vivencio boa colaboração com a equipe da unidade`                                                                                     <dbl> …
+$ `35. Eu vivencio boa colaboração com os técnicos em enfermagem da unidade`                                                                    <dbl> …
+$ `36. Falhas na comunicação que levam a atrasos no atendimento são comuns`                                                                     <dbl> …
+Tabela 'tabela_resumo_colunas.png' salva em output/tabelas 
+Número de questões encontradas: 36 
+ [1] "1. As sugestões do (a) enfermeiro (a) são bem recebidas na sala de vacinação"                                                               
+ [2] "2. É difícil falar abertamente se eu percebo um problema com o cuidado ao paciente relacionado a vacinação"                                 
+ [3] "3. Em relação à vacinação, as discordâncias são resolvidas de modo apropriado (ex: não quem está certo, mas o que é melhor para o paciente)"
+ [4] "4. Eu tenho o apoio que necessito de outros membros da equipe para assistência aos pacientes na sala e vacinação"                           
+ [5] "5. É fácil para mim, que atuo na vacinação, fazer perguntas quando existe algo que eu não entendo"                                          
+ [6] "6. A equipe de enfermagem daqui trabalha junto como uma equipe bem coordenada"                                                              
+ [7] "7. Eu me sentiria seguro (a) se fosse vacinado (a) aqui como paciente"                                                                      
+ [8] "8. Erros são tratados de maneira apropriada pela equipe"                                                                                    
+ [9] "9. Eu conheço os meios adequados para encaminhar as questões relacionadas à segurança do paciente nesta unidade"                            
+[10] "10. Eu recebo retorno apropriado sobre meu desempenho"                                                                                      
+[11] "11. Nesta unidade, é difícil discutir sobre erros"                                                                                          
+[12] "12. Sou encorajado (a) por meus colegas a informar qualquer preocupação que eu possa ter quanto à segurança em sala de vacinação"           
+[13] "13. A cultura de segurança em vacinação torna fácil aprender com os erros dos outros"                                                       
+[14] "14. Minhas sugestões sobre segurança em sala de vacinação seriam postas em ação se eu as expressasse à coordenação"                         
+[15] "15. Eu gosto de trabalhar com vacinação"                                                                                                    
+[16] "16. Trabalhar aqui é como fazer parte de uma grande família"                                                                                
+[17] "17. A sala de vacinação é um bom lugar para trabalhar"                                                                                      
+[18] "18. Eu me orgulho de trabalhar na vacinação"                                                                                                
+[19] "19. O prestígio em trabalhar com vacinação é alto"                                                                                          
+[20] "20. Quando minha carga de trabalho é excessiva, meu desempenho é prejudicado"                                                               
+[21] "21. Eu sou menos eficiente no trabalho quando estou cansado (a)"                                                                            
+[22] "22. Eu tenho maior probabilidade de cometer erros em situações tensas ou hostis"                                                            
+[23] "23. O cansaço prejudica meu desempenho durante situações de stress (ex: interrupções, inquietude do vacinado, choro)"                       
+[24] "24. A coordenação apoia meus esforços diários"                                                                                              
+[25] "25. A coordenação não compromete conscientemente a segurança do paciente"                                                                   
+[26] "26. A coordenação está fazendo um bom trabalho"                                                                                             
+[27] "27. Profissionais problemáticos da equipe são tratados de maneira construtiva por nossa coordenação da unidade"                             
+[28] "28. Recebo informações adequadas e oportunas sobre eventos que podem afetar o meu trabalho em sala de vacinação"                            
+[29] "29. Na sala de vacinação, o número e a qualificação dos profissionais são suficientes para lidar com o número de pacientes"                 
+[30] "30. Esta unidade faz um bom trabalho no treinamento de novos membros da equipe de vacinação"                                                
+[31] "31. Toda informação necessária para a vacinação está disponível rotineiramente para mim"                                                    
+[32] "32. Estagiários da minha profissão são adequadamente supervisionados"                                                                       
+[33] "33. Eu vivencio boa colaboração entre os coordenadores do município"                                                                        
+[34] "34. Eu vivencio boa colaboração com a equipe da unidade"                                                                                    
+[35] "35. Eu vivencio boa colaboração com os técnicos em enfermagem da unidade"                                                                   
+[36] "36. Falhas na comunicação que levam a atrasos no atendimento são comuns"                                                                    
+tipos_antes
+numeric 
+     36 
+Valores problemáticos encontrados: 3 
+Linhas com valores problemáticos: 476 538 552 
+Valores: Bom 66 49anos 57 anos 
+Verificando casos específicos:
+Linha 332 - Valor original: 13.0 Valor corrigido: 13 
+Linha 494 - Valor original: 46.0 Valor corrigido: 46 
+Linha 529 - Valor original: 1975.0 Valor corrigido: 48 
+
+Idades potencialmente incorretas após correção: 13 12 11 15 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  19.00   33.00   39.00   39.71   46.00   66.00 
+null device 
+          1 
+
+--- Iniciando tratamento por Cargo e Formação ---
+Linhas antes: 676 
+Número de linhas com cargo 'AUX ADM' a serem removidas: 1 
+Linhas após remover AUX ADM: 675 
+Número de linhas onde Formação será mudada para 'Ensino Técnico': 57 
+Número de linhas onde Cargo será mudado para 'Auxiliar de Enfermagem' (Formação = Ensino Médio Completo restante): 15 
+Linhas finais após tratamento Cargo/Formação: 675 
+Total de linhas removidas nesta etapa (apenas AUX ADM): 1 
+--- Fim tratamento por Cargo e Formação ---
+[1] "Valores distintos nas colunas CATEGORIZADAS após limpeza:"
+$total
+[1] "de 15 a 20 anos"    "de 10 a 15 anos"    "de 5 a 10 anos"     "Menos de 6 meses"  
+[5] "de 3 a 5 anos"      "de 1 a 3 anos"      "Mais de 20 anos"    NA                  
+[9] "de 6 meses a 1 ano"
+
+$aps
+[1] "de 15 a 20 anos"    "de 3 a 5 anos"      "de 5 a 10 anos"     "de 1 a 3 anos"     
+[5] "Menos de 6 meses"   "de 10 a 15 anos"    "Mais de 20 anos"    "de 6 meses a 1 ano"
+[9] NA                  
+
+$vac
+ [1] "de 5 a 10 anos"     "de 1 a 3 anos"      "de 3 a 5 anos"      "de 15 a 20 anos"   
+ [5] NA                   "de 10 a 15 anos"    "Mais de 20 anos"    "Menos de 6 meses"  
+ [9] "Não aplicável"      "de 6 meses a 1 ano"
+
+[1] "Exemplos de dados limpos (original vs categorizado):"
+# A tibble: 6 × 6
+  Tempo de Experiência Total…¹ Tempo de Experiência…² Tempo de Experiência…³ Tempo de Experiência…⁴
+  <chr>                        <chr>                  <chr>                  <chr>                 
+1 17A                          de 15 a 20 anos        17A                    de 15 a 20 anos       
+2 17A                          de 15 a 20 anos        3A                     de 3 a 5 anos         
+3 10A                          de 10 a 15 anos        3A                     de 3 a 5 anos         
+4 18A                          de 15 a 20 anos        18A                    de 15 a 20 anos       
+5 14A                          de 10 a 15 anos        8A                     de 5 a 10 anos        
+6 9A                           de 5 a 10 anos         1A                     de 1 a 3 anos         
+# ℹ abbreviated names: ¹​`Tempo de Experiência Total como Profissional da Enfermagem...41`,
+#   ²​`Tempo de Experiência Total como Profissional da Enfermagem...41_cat`,
+#   ³​`Tempo de Experiência na Atenção Primária à Saúde`,
+#   ⁴​`Tempo de Experiência na Atenção Primária à Saúde_cat`
+# ℹ 2 more variables: `Tempo de Experiência em Salas de Vacinação` <chr>,
+#   `Tempo de Experiência em Salas de Vacinação_cat` <chr>
+[1] "Contagem de NAs nas colunas CATEGORIZADAS após limpeza:"
+Tempo de Experiência Total como Profissional da Enfermagem...41_cat 
+                                                                  2 
+               Tempo de Experiência na Atenção Primária à Saúde_cat 
+                                                                  1 
+                     Tempo de Experiência em Salas de Vacinação_cat 
+                                                                 12 
+\nFiltragem adicional: Removidas 28 linhas onde Tempo de Experiência em Salas de Vacinação_cat era 'Menos de 6 meses', 'Não aplicável' ou NA.\nLinhas restantes: 647\n clima_trabalho_equipe clima_seguranca  satisfacao_trabalho percepcao_estresse percepcao_gestao 
+ Min.   : 25.00        Min.   : 17.86   Min.   : 10.00      Min.   :  0.00     Min.   :  8.333  
+ 1st Qu.: 75.00        1st Qu.: 71.43   1st Qu.: 80.00      1st Qu.: 12.50     1st Qu.: 58.333  
+ Median : 83.33        Median : 82.14   Median : 90.00      Median : 31.25     Median : 75.000  
+ Mean   : 83.47        Mean   : 80.74   Mean   : 86.91      Mean   : 35.65     Mean   : 70.788  
+ 3rd Qu.: 95.83        3rd Qu.: 89.29   3rd Qu.:100.00      3rd Qu.: 56.25     3rd Qu.: 83.333  
+ Max.   :100.00        Max.   :100.00   Max.   :100.00      Max.   :100.00     Max.   :100.000  
+ condicoes_trabalho
+ Min.   :  0.00    
+ 1st Qu.: 66.67    
+ Median : 83.33    
+ Mean   : 79.46    
+ 3rd Qu.:100.00    
+ Max.   :100.00    
+
+Após junção com dados municipais: 0 registros sem MACRORREGIOES, 0 registros sem PORTE_IBGE, 0 registros sem IDHM_2010.
+Tabela 'tabela_classificacao_clima.png' salva em output/tabelas 
+Tabela 'tabela_estatisticas_pontuacoes.png' salva em output/tabelas 
+DataFrame 'dados_mapeados' exportado com sucesso para: output/dados_mapeados_com_pontuacoes.xlsx 
+
+--- Verificando disponibilidade das variáveis para análise ---
+idade_num - Disponível
+Sexo - Disponível
+Cargo na Atenção Primária à Saúde (APS) / Unidade Básica de Saúde (UBS) - Disponível
+Formação - Disponível
+Tempo de Experiência na Atenção Primária à Saúde_cat - Disponível
+Tempo de Experiência em Salas de Vacinação_cat - Disponível
+Tempo de Experiência Total como Profissional da Enfermagem...41_cat - Disponível
+Tipo de Vínculo no Serviço Público - Disponível
+Localidade da Unidade de Saúde - Disponível
+Possíveis variáveis de localidade: Localidade da Unidade de Saúde 
+IDHM_2010 - Disponível
+pacote ‘repr’ desempacotado com sucesso e somas MD5 verificadas
+pacote ‘skimr’ desempacotado com sucesso e somas MD5 verificadas
+
+Os pacotes binários baixados estão em
+	C:\Users\Fabricio\AppData\Local\Temp\RtmpAjIM2V\downloaded_packages
+pacote ‘Deriv’ desempacotado com sucesso e somas MD5 verificadas
+pacote ‘microbenchmark’ desempacotado com sucesso e somas MD5 verificadas
+pacote ‘doBy’ desempacotado com sucesso e somas MD5 verificadas
+pacote ‘SparseM’ desempacotado com sucesso e somas MD5 verificadas
+pacote ‘MatrixModels’ desempacotado com sucesso e somas MD5 verificadas
+pacote ‘carData’ desempacotado com sucesso e somas MD5 verificadas
+pacote ‘Formula’ desempacotado com sucesso e somas MD5 verificadas
+pacote ‘pbkrtest’ desempacotado com sucesso e somas MD5 verificadas
+pacote ‘quantreg’ desempacotado com sucesso e somas MD5 verificadas
+pacote ‘corrplot’ desempacotado com sucesso e somas MD5 verificadas
+pacote ‘car’ desempacotado com sucesso e somas MD5 verificadas
+pacote ‘ggrepel’ desempacotado com sucesso e somas MD5 verificadas
+pacote ‘ggsci’ desempacotado com sucesso e somas MD5 verificadas
+pacote ‘cowplot’ desempacotado com sucesso e somas MD5 verificadas
+pacote ‘ggsignif’ desempacotado com sucesso e somas MD5 verificadas
+pacote ‘polynom’ desempacotado com sucesso e somas MD5 verificadas
+pacote ‘rstatix’ desempacotado com sucesso e somas MD5 verificadas
+pacote ‘ggpubr’ desempacotado com sucesso e somas MD5 verificadas
+
+Os pacotes binários baixados estão em
+	C:\Users\Fabricio\AppData\Local\Temp\RtmpAjIM2V\downloaded_packages
+pacote ‘lmtest’ desempacotado com sucesso e somas MD5 verificadas
+
+Os pacotes binários baixados estão em
+	C:\Users\Fabricio\AppData\Local\Temp\RtmpAjIM2V\downloaded_packages
+Dados carregados. Número de observações: 647 
+Número de colunas: 75 
+Error in install.packages : Updating loaded packages
+pacote ‘brio’ desempacotado com sucesso e somas MD5 verificadas
+pacote ‘desc’ desempacotado com sucesso e somas MD5 verificadas
+pacote ‘downlit’ desempacotado com sucesso e somas MD5 verificadas
+pacote ‘xml2’ desempacotado com sucesso e somas MD5 verificadas
+Warning in install.packages :
+  não foi possível remover a instalação prévia do pacote ‘xml2’
+Warning in install.packages :
+  problem copying C:\Users\Fabricio\AppData\Local\R\win-library\4.4\00LOCK\xml2\libs\x64\xml2.dll to C:\Users\Fabricio\AppData\Local\R\win-library\4.4\xml2\libs\x64\xml2.dll: Permission denied
+Warning in install.packages :
+  ‘xml2’ restaurado
+
+Os pacotes binários baixados estão em
+	C:\Users\Fabricio\AppData\Local\Temp\RtmpAjIM2V\downloaded_packages
+[1] "output/dados_mapeados_com_pontuacoes.xlsx"
+# A tibble: 647 × 75
+   `Carimbo de data/hora` \nDeclaro que concordo e…¹ Município
+   <dttm>                 <chr>                      <chr>    
+ 1 2023-11-17 14:37:57    Sim                        Jequitaí 
+ 2 2023-11-24 15:11:28    Sim                        Bom Desp…
+ 3 2023-11-29 06:41:27    Sim                        Varzelân…
+ 4 2023-11-29 15:18:49    Sim                        Varzelân…
+ 5 2023-12-13 14:19:13    Sim                        Jequitin…
+ 6 2024-02-19 09:52:30    Sim                        Almenara 
+ 7 2023-12-11 11:38:44    Sim                        Jampruca 
+ 8 2024-04-12 16:11:22    Sim                        Água Boa 
+ 9 2024-04-15 14:02:14    Sim                        Almenara 
+10 2024-04-16 14:51:36    Sim                        Almenara 
+# ℹ 637 more rows
+# ℹ abbreviated name:
+#   ¹​`\nDeclaro que concordo em participar da pesquisa.`
+# ℹ 72 more variables:
+#   `Unidade de Atenção Primária à Saúde` <chr>,
+#   `Localidade da Unidade de Saúde` <chr>,
+#   `A Unidade Básica de Saúde (UBS/PSF/ESF) que você trabalha possui acesso a internet?` <chr>, …
+# ℹ Use `print(n = ...)` to see more rows
+Rows: 647
+Columns: 75
+$ `Carimbo de data/hora`                                                                                                                        <dttm> …
+$ `\nDeclaro que concordo em participar da pesquisa.`                                                                                           <chr> …
+$ Município                                                                                                                                     <chr> …
+$ `Unidade de Atenção Primária à Saúde`                                                                                                         <chr> …
+$ `Localidade da Unidade de Saúde`                                                                                                              <chr> …
+$ `A Unidade Básica de Saúde (UBS/PSF/ESF) que você trabalha possui acesso a internet?`                                                         <chr> …
+$ `Idade do Profissonal (em anos) SOMENTE NÚMEROS`                                                                                              <chr> …
+$ Sexo                                                                                                                                          <chr> …
+$ `Cargo na Atenção Primária à Saúde (APS) / Unidade Básica de Saúde (UBS)`                                                                     <chr> …
+$ Formação                                                                                                                                      <chr> …
+$ `Tipo de Vínculo no Serviço Público`                                                                                                          <chr> …
+$ `Tempo de Experiência Total como Profissional da Enfermagem`                                                                                  <chr> …
+$ `Tempo de Experiência Total como Profissional da Enfermagem...41_cat`                                                                         <chr> …
+$ `Tempo de Experiência na Atenção Primária à Saúde`                                                                                            <chr> …
+$ `Tempo de Experiência na Atenção Primária à Saúde_cat`                                                                                        <chr> …
+$ `Tempo de Experiência em Salas de Vacinação`                                                                                                  <chr> …
+$ `Tempo de Experiência em Salas de Vacinação_cat`                                                                                              <chr> …
+$ `1. As sugestões do (a) enfermeiro (a) são bem recebidas na sala de vacinação`                                                                <dbl> …
+$ `2. É difícil falar abertamente se eu percebo um problema com o cuidado ao paciente relacionado a vacinação`                                  <dbl> …
+$ `3. Em relação à vacinação, as discordâncias são resolvidas de modo apropriado (ex: não quem está certo, mas o que é melhor para o paciente)` <dbl> …
+$ `4. Eu tenho o apoio que necessito de outros membros da equipe para assistência aos pacientes na sala e vacinação`                            <dbl> …
+$ `5. É fácil para mim, que atuo na vacinação, fazer perguntas quando existe algo que eu não entendo`                                           <dbl> …
+$ `6. A equipe de enfermagem daqui trabalha junto como uma equipe bem coordenada`                                                               <dbl> …
+$ `7. Eu me sentiria seguro (a) se fosse vacinado (a) aqui como paciente`                                                                       <dbl> …
+$ `8. Erros são tratados de maneira apropriada pela equipe`                                                                                     <dbl> …
+$ `9. Eu conheço os meios adequados para encaminhar as questões relacionadas à segurança do paciente nesta unidade`                             <dbl> …
+$ `10. Eu recebo retorno apropriado sobre meu desempenho`                                                                                       <dbl> …
+$ `11. Nesta unidade, é difícil discutir sobre erros`                                                                                           <dbl> …
+$ `12. Sou encorajado (a) por meus colegas a informar qualquer preocupação que eu possa ter quanto à segurança em sala de vacinação`            <dbl> …
+$ `13. A cultura de segurança em vacinação torna fácil aprender com os erros dos outros`                                                        <dbl> …
+$ `14. Minhas sugestões sobre segurança em sala de vacinação seriam postas em ação se eu as expressasse à coordenação`                          <dbl> …
+$ `15. Eu gosto de trabalhar com vacinação`                                                                                                     <dbl> …
+$ `16. Trabalhar aqui é como fazer parte de uma grande família`                                                                                 <dbl> …
+$ `17. A sala de vacinação é um bom lugar para trabalhar`                                                                                       <dbl> …
+$ `18. Eu me orgulho de trabalhar na vacinação`                                                                                                 <dbl> …
+$ `19. O prestígio em trabalhar com vacinação é alto`                                                                                           <dbl> …
+$ `20. Quando minha carga de trabalho é excessiva, meu desempenho é prejudicado`                                                                <dbl> …
+$ `21. Eu sou menos eficiente no trabalho quando estou cansado (a)`                                                                             <dbl> …
+$ `22. Eu tenho maior probabilidade de cometer erros em situações tensas ou hostis`                                                             <dbl> …
+$ `23. O cansaço prejudica meu desempenho durante situações de stress (ex: interrupções, inquietude do vacinado, choro)`                        <dbl> …
+$ `24. A coordenação apoia meus esforços diários`                                                                                               <dbl> …
+$ `25. A coordenação não compromete conscientemente a segurança do paciente`                                                                    <dbl> …
+$ `26. A coordenação está fazendo um bom trabalho`                                                                                              <dbl> …
+$ `27. Profissionais problemáticos da equipe são tratados de maneira construtiva por nossa coordenação da unidade`                              <dbl> …
+$ `28. Recebo informações adequadas e oportunas sobre eventos que podem afetar o meu trabalho em sala de vacinação`                             <dbl> …
+$ `29. Na sala de vacinação, o número e a qualificação dos profissionais são suficientes para lidar com o número de pacientes`                  <dbl> …
+$ `30. Esta unidade faz um bom trabalho no treinamento de novos membros da equipe de vacinação`                                                 <dbl> …
+$ `31. Toda informação necessária para a vacinação está disponível rotineiramente para mim`                                                     <dbl> …
+$ `32. Estagiários da minha profissão são adequadamente supervisionados`                                                                        <dbl> …
+$ `33. Eu vivencio boa colaboração entre os coordenadores do município`                                                                         <dbl> …
+$ `34. Eu vivencio boa colaboração com a equipe da unidade`                                                                                     <dbl> …
+$ `35. Eu vivencio boa colaboração com os técnicos em enfermagem da unidade`                                                                    <dbl> …
+$ `36. Falhas na comunicação que levam a atrasos no atendimento são comuns`                                                                     <dbl> …
+$ idade_num                                                                                                                                     <dbl> …
+$ q2_inv                                                                                                                                        <dbl> …
+$ q11_inv                                                                                                                                       <dbl> …
+$ q20_inv                                                                                                                                       <dbl> …
+$ q21_inv                                                                                                                                       <dbl> …
+$ q22_inv                                                                                                                                       <dbl> …
+$ q23_inv                                                                                                                                       <dbl> …
+$ q36_inv                                                                                                                                       <dbl> …
+$ clima_trabalho_equipe                                                                                                                         <dbl> …
+$ clima_seguranca                                                                                                                               <dbl> …
+$ satisfacao_trabalho                                                                                                                           <dbl> …
+$ percepcao_estresse                                                                                                                            <dbl> …
+$ percepcao_gestao                                                                                                                              <dbl> …
+$ condicoes_trabalho                                                                                                                            <dbl> …
+$ clima_seguranca_total                                                                                                                         <dbl> …
+$ clima_dominio_medio                                                                                                                           <dbl> …
+$ classificacao_clima                                                                                                                           <fct> …
+$ Municipio_join                                                                                                                                <chr> …
+$ MACRORREGIOES                                                                                                                                 <chr> …
+$ URS                                                                                                                                           <chr> …
+$ PORTE_IBGE                                                                                                                                    <fct> …
+$ IDHM_2010                                                                                                                                     <dbl> …
+Dados carregados. Número de observações: 647 
+INFO: Coluna 'faixa_etaria' foi criada dinamicamente.
+# A tibble: 647 × 76
+   `Carimbo de data/hora` \nDeclaro que concordo e…¹ Município
+   <dttm>                 <chr>                      <chr>    
+ 1 2023-11-17 14:37:57    Sim                        Jequitaí 
+ 2 2023-11-24 15:11:28    Sim                        Bom Desp…
+ 3 2023-11-29 06:41:27    Sim                        Varzelân…
+ 4 2023-11-29 15:18:49    Sim                        Varzelân…
+ 5 2023-12-13 14:19:13    Sim                        Jequitin…
+ 6 2024-02-19 09:52:30    Sim                        Almenara 
+ 7 2023-12-11 11:38:44    Sim                        Jampruca 
+ 8 2024-04-12 16:11:22    Sim                        Água Boa 
+ 9 2024-04-15 14:02:14    Sim                        Almenara 
+10 2024-04-16 14:51:36    Sim                        Almenara 
+# ℹ 637 more rows
+# ℹ abbreviated name:
+#   ¹​`\nDeclaro que concordo em participar da pesquisa.`
+# ℹ 73 more variables:
+#   `Unidade de Atenção Primária à Saúde` <chr>,
+#   `Localidade da Unidade de Saúde` <chr>,
+#   `A Unidade Básica de Saúde (UBS/PSF/ESF) que você trabalha possui acesso a internet?` <chr>, …
+# ℹ Use `print(n = ...)` to see more rows
+Iniciando redirecionamento de output para: output/log_analise_20250507_235123.txt 
+======================================================================
+INÍCIO DA EXECUÇÃO DO SCRIPT analise.r
+Data e hora: 07/05/2025 23:51:23 
+======================================================================
+
+Diretório 'output' já existe.
+Diretório 'imagens' já existe em output 
+Diretório 'tabelas' já existe em output 
+Informações de municípios carregadas e limpas com sucesso.
+Verificando se IDHM_2010 está presente: TRUE 
+Tabela 'tabela_valores_nulos.png' salva em output/tabelas 
+Colunas originais: 92 
+Colunas após remoção de vazias e quase vazias: 50 
+Colunas adicionais removidas: Unidade de Atenção Primária, Unidade de Atenção Primária à Saúde...19, Unidade de Atenção Primária à Saúde...13 
+Número total de linhas antes da remoção: 728 
+Número de linhas após remoção de NAs: 680 
+Número de linhas removidas: 48 
+Porcentagem de linhas removidas: 6.6 %
+Rows: 680
+Columns: 50
+$ `Carimbo de data/hora`                                                                                                                        <dttm> …
+$ `\nDeclaro que concordo em participar da pesquisa.`                                                                                           <chr> …
+$ Município                                                                                                                                     <chr> …
+$ `Unidade de Atenção Primária à Saúde...4`                                                                                                     <chr> …
+$ `Localidade da Unidade de Saúde`                                                                                                              <chr> …
+$ `A Unidade Básica de Saúde (UBS/PSF/ESF) que você trabalha possui acesso a internet?`                                                         <chr> …
+$ `Idade do Profissonal (em anos) SOMENTE NÚMEROS`                                                                                              <chr> …
+$ Sexo                                                                                                                                          <chr> …
+$ `Cargo na Atenção Primária à Saúde (APS) / Unidade Básica de Saúde (UBS)`                                                                     <chr> …
+$ Formação                                                                                                                                      <chr> …
+$ `Tipo de Vínculo no Serviço Público`                                                                                                          <chr> …
+$ `Tempo de Experiência Total como Profissional da Enfermagem...41`                                                                             <chr> …
+$ `Tempo de Experiência na Atenção Primária à Saúde`                                                                                            <chr> …
+$ `Tempo de Experiência em Salas de Vacinação`                                                                                                  <chr> …
+$ `1. As sugestões do (a) enfermeiro (a) são bem recebidas na sala de vacinação`                                                                <dbl> …
+$ `2. É difícil falar abertamente se eu percebo um problema com o cuidado ao paciente relacionado a vacinação`                                  <dbl> …
+$ `3. Em relação à vacinação, as discordâncias são resolvidas de modo apropriado (ex: não quem está certo, mas o que é melhor para o paciente)` <dbl> …
+$ `4. Eu tenho o apoio que necessito de outros membros da equipe para assistência aos pacientes na sala e vacinação`                            <dbl> …
+$ `5. É fácil para mim, que atuo na vacinação, fazer perguntas quando existe algo que eu não entendo`                                           <dbl> …
+$ `6. A equipe de enfermagem daqui trabalha junto como uma equipe bem coordenada`                                                               <dbl> …
+$ `7. Eu me sentiria seguro (a) se fosse vacinado (a) aqui como paciente`                                                                       <dbl> …
+$ `8. Erros são tratados de maneira apropriada pela equipe`                                                                                     <dbl> …
+$ `9. Eu conheço os meios adequados para encaminhar as questões relacionadas à segurança do paciente nesta unidade`                             <dbl> …
+$ `10. Eu recebo retorno apropriado sobre meu desempenho`                                                                                       <dbl> …
+$ `11. Nesta unidade, é difícil discutir sobre erros`                                                                                           <dbl> …
+$ `12. Sou encorajado (a) por meus colegas a informar qualquer preocupação que eu possa ter quanto à segurança em sala de vacinação`            <dbl> …
+$ `13. A cultura de segurança em vacinação torna fácil aprender com os erros dos outros`                                                        <dbl> …
+$ `14. Minhas sugestões sobre segurança em sala de vacinação seriam postas em ação se eu as expressasse à coordenação`                          <dbl> …
+$ `15. Eu gosto de trabalhar com vacinação`                                                                                                     <dbl> …
+$ `16. Trabalhar aqui é como fazer parte de uma grande família`                                                                                 <dbl> …
+$ `17. A sala de vacinação é um bom lugar para trabalhar`                                                                                       <dbl> …
+$ `18. Eu me orgulho de trabalhar na vacinação`                                                                                                 <dbl> …
+$ `19. O prestígio em trabalhar com vacinação é alto`                                                                                           <dbl> …
+$ `20. Quando minha carga de trabalho é excessiva, meu desempenho é prejudicado`                                                                <dbl> …
+$ `21. Eu sou menos eficiente no trabalho quando estou cansado (a)`                                                                             <dbl> …
+$ `22. Eu tenho maior probabilidade de cometer erros em situações tensas ou hostis`                                                             <dbl> …
+$ `23. O cansaço prejudica meu desempenho durante situações de stress (ex: interrupções, inquietude do vacinado, choro)`                        <dbl> …
+$ `24. A coordenação apoia meus esforços diários`                                                                                               <dbl> …
+$ `25. A coordenação não compromete conscientemente a segurança do paciente`                                                                    <dbl> …
+$ `26. A coordenação está fazendo um bom trabalho`                                                                                              <dbl> …
+$ `27. Profissionais problemáticos da equipe são tratados de maneira construtiva por nossa coordenação da unidade`                              <dbl> …
+$ `28. Recebo informações adequadas e oportunas sobre eventos que podem afetar o meu trabalho em sala de vacinação`                             <dbl> …
+$ `29. Na sala de vacinação, o número e a qualificação dos profissionais são suficientes para lidar com o número de pacientes`                  <dbl> …
+$ `30. Esta unidade faz um bom trabalho no treinamento de novos membros da equipe de vacinação`                                                 <dbl> …
+$ `31. Toda informação necessária para a vacinação está disponível rotineiramente para mim`                                                     <dbl> …
+$ `32. Estagiários da minha profissão são adequadamente supervisionados`                                                                        <dbl> …
+$ `33. Eu vivencio boa colaboração entre os coordenadores do município`                                                                         <dbl> …
+$ `34. Eu vivencio boa colaboração com a equipe da unidade`                                                                                     <dbl> …
+$ `35. Eu vivencio boa colaboração com os técnicos em enfermagem da unidade`                                                                    <dbl> …
+$ `36. Falhas na comunicação que levam a atrasos no atendimento são comuns`                                                                     <dbl> …
+Tabela 'tabela_resumo_colunas.png' salva em output/tabelas 
+Número de questões encontradas: 36 
+ [1] "1. As sugestões do (a) enfermeiro (a) são bem recebidas na sala de vacinação"                                                               
+ [2] "2. É difícil falar abertamente se eu percebo um problema com o cuidado ao paciente relacionado a vacinação"                                 
+ [3] "3. Em relação à vacinação, as discordâncias são resolvidas de modo apropriado (ex: não quem está certo, mas o que é melhor para o paciente)"
+ [4] "4. Eu tenho o apoio que necessito de outros membros da equipe para assistência aos pacientes na sala e vacinação"                           
+ [5] "5. É fácil para mim, que atuo na vacinação, fazer perguntas quando existe algo que eu não entendo"                                          
+ [6] "6. A equipe de enfermagem daqui trabalha junto como uma equipe bem coordenada"                                                              
+ [7] "7. Eu me sentiria seguro (a) se fosse vacinado (a) aqui como paciente"                                                                      
+ [8] "8. Erros são tratados de maneira apropriada pela equipe"                                                                                    
+ [9] "9. Eu conheço os meios adequados para encaminhar as questões relacionadas à segurança do paciente nesta unidade"                            
+[10] "10. Eu recebo retorno apropriado sobre meu desempenho"                                                                                      
+[11] "11. Nesta unidade, é difícil discutir sobre erros"                                                                                          
+[12] "12. Sou encorajado (a) por meus colegas a informar qualquer preocupação que eu possa ter quanto à segurança em sala de vacinação"           
+[13] "13. A cultura de segurança em vacinação torna fácil aprender com os erros dos outros"                                                       
+[14] "14. Minhas sugestões sobre segurança em sala de vacinação seriam postas em ação se eu as expressasse à coordenação"                         
+[15] "15. Eu gosto de trabalhar com vacinação"                                                                                                    
+[16] "16. Trabalhar aqui é como fazer parte de uma grande família"                                                                                
+[17] "17. A sala de vacinação é um bom lugar para trabalhar"                                                                                      
+[18] "18. Eu me orgulho de trabalhar na vacinação"                                                                                                
+[19] "19. O prestígio em trabalhar com vacinação é alto"                                                                                          
+[20] "20. Quando minha carga de trabalho é excessiva, meu desempenho é prejudicado"                                                               
+[21] "21. Eu sou menos eficiente no trabalho quando estou cansado (a)"                                                                            
+[22] "22. Eu tenho maior probabilidade de cometer erros em situações tensas ou hostis"                                                            
+[23] "23. O cansaço prejudica meu desempenho durante situações de stress (ex: interrupções, inquietude do vacinado, choro)"                       
+[24] "24. A coordenação apoia meus esforços diários"                                                                                              
+[25] "25. A coordenação não compromete conscientemente a segurança do paciente"                                                                   
+[26] "26. A coordenação está fazendo um bom trabalho"                                                                                             
+[27] "27. Profissionais problemáticos da equipe são tratados de maneira construtiva por nossa coordenação da unidade"                             
+[28] "28. Recebo informações adequadas e oportunas sobre eventos que podem afetar o meu trabalho em sala de vacinação"                            
+[29] "29. Na sala de vacinação, o número e a qualificação dos profissionais são suficientes para lidar com o número de pacientes"                 
+[30] "30. Esta unidade faz um bom trabalho no treinamento de novos membros da equipe de vacinação"                                                
+[31] "31. Toda informação necessária para a vacinação está disponível rotineiramente para mim"                                                    
+[32] "32. Estagiários da minha profissão são adequadamente supervisionados"                                                                       
+[33] "33. Eu vivencio boa colaboração entre os coordenadores do município"                                                                        
+[34] "34. Eu vivencio boa colaboração com a equipe da unidade"                                                                                    
+[35] "35. Eu vivencio boa colaboração com os técnicos em enfermagem da unidade"                                                                   
+[36] "36. Falhas na comunicação que levam a atrasos no atendimento são comuns"                                                                    
+tipos_antes
+numeric 
+     36 
+Valores problemáticos encontrados: 3 
+Linhas com valores problemáticos: 476 538 552 
+Valores: Bom 66 49anos 57 anos 
+Verificando casos específicos:
+Linha 332 - Valor original: 13.0 Valor corrigido: 13 
+Linha 494 - Valor original: 46.0 Valor corrigido: 46 
+Linha 529 - Valor original: 1975.0 Valor corrigido: 48 
+
+Idades potencialmente incorretas após correção: 13 12 11 15 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  19.00   33.00   39.00   39.71   46.00   66.00 
+null device 
+          1 
+
+--- Iniciando tratamento por Cargo e Formação ---
+Linhas antes: 676 
+Número de linhas com cargo 'AUX ADM' a serem removidas: 1 
+Linhas após remover AUX ADM: 675 
+Número de linhas onde Formação será mudada para 'Ensino Técnico': 57 
+Número de linhas onde Cargo será mudado para 'Auxiliar de Enfermagem' (Formação = Ensino Médio Completo restante): 15 
+Linhas finais após tratamento Cargo/Formação: 675 
+Total de linhas removidas nesta etapa (apenas AUX ADM): 1 
+--- Fim tratamento por Cargo e Formação ---
+[1] "Valores distintos nas colunas CATEGORIZADAS após limpeza:"
+$total
+[1] "de 15 a 20 anos"    "de 10 a 15 anos"    "de 5 a 10 anos"     "Menos de 6 meses"  
+[5] "de 3 a 5 anos"      "de 1 a 3 anos"      "Mais de 20 anos"    NA                  
+[9] "de 6 meses a 1 ano"
+
+$aps
+[1] "de 15 a 20 anos"    "de 3 a 5 anos"      "de 5 a 10 anos"     "de 1 a 3 anos"     
+[5] "Menos de 6 meses"   "de 10 a 15 anos"    "Mais de 20 anos"    "de 6 meses a 1 ano"
+[9] NA                  
+
+$vac
+ [1] "de 5 a 10 anos"     "de 1 a 3 anos"      "de 3 a 5 anos"      "de 15 a 20 anos"   
+ [5] NA                   "de 10 a 15 anos"    "Mais de 20 anos"    "Menos de 6 meses"  
+ [9] "Não aplicável"      "de 6 meses a 1 ano"
+
+[1] "Exemplos de dados limpos (original vs categorizado):"
+# A tibble: 6 × 6
+  Tempo de Experiência Total como Profissio…¹ Tempo de Experiência…² Tempo de Experiência…³
+  <chr>                                       <chr>                  <chr>                 
+1 17A                                         de 15 a 20 anos        17A                   
+2 17A                                         de 15 a 20 anos        3A                    
+3 10A                                         de 10 a 15 anos        3A                    
+4 18A                                         de 15 a 20 anos        18A                   
+5 14A                                         de 10 a 15 anos        8A                    
+6 9A                                          de 5 a 10 anos         1A                    
+# ℹ abbreviated names: ¹​`Tempo de Experiência Total como Profissional da Enfermagem...41`,
+#   ²​`Tempo de Experiência Total como Profissional da Enfermagem...41_cat`,
+#   ³​`Tempo de Experiência na Atenção Primária à Saúde`
+# ℹ 3 more variables: `Tempo de Experiência na Atenção Primária à Saúde_cat` <chr>,
+#   `Tempo de Experiência em Salas de Vacinação` <chr>,
+#   `Tempo de Experiência em Salas de Vacinação_cat` <chr>
+[1] "Contagem de NAs nas colunas CATEGORIZADAS após limpeza:"
+Tempo de Experiência Total como Profissional da Enfermagem...41_cat 
+                                                                  2 
+               Tempo de Experiência na Atenção Primária à Saúde_cat 
+                                                                  1 
+                     Tempo de Experiência em Salas de Vacinação_cat 
+                                                                 12 
+\nFiltragem adicional: Removidas 28 linhas onde Tempo de Experiência em Salas de Vacinação_cat era 'Menos de 6 meses', 'Não aplicável' ou NA.\nLinhas restantes: 647\n clima_trabalho_equipe clima_seguranca  satisfacao_trabalho percepcao_estresse
+ Min.   : 25.00        Min.   : 17.86   Min.   : 10.00      Min.   :  0.00    
+ 1st Qu.: 75.00        1st Qu.: 71.43   1st Qu.: 80.00      1st Qu.: 12.50    
+ Median : 83.33        Median : 82.14   Median : 90.00      Median : 31.25    
+ Mean   : 83.47        Mean   : 80.74   Mean   : 86.91      Mean   : 35.65    
+ 3rd Qu.: 95.83        3rd Qu.: 89.29   3rd Qu.:100.00      3rd Qu.: 56.25    
+ Max.   :100.00        Max.   :100.00   Max.   :100.00      Max.   :100.00    
+ percepcao_gestao  condicoes_trabalho
+ Min.   :  8.333   Min.   :  0.00    
+ 1st Qu.: 58.333   1st Qu.: 66.67    
+ Median : 75.000   Median : 83.33    
+ Mean   : 70.788   Mean   : 79.46    
+ 3rd Qu.: 83.333   3rd Qu.:100.00    
+ Max.   :100.000   Max.   :100.00    
+
+Após junção com dados municipais: 0 registros sem MACRORREGIOES, 0 registros sem PORTE_IBGE, 0 registros sem IDHM_2010.
+Tabela 'tabela_classificacao_clima.png' salva em output/tabelas 
+Tabela 'tabela_estatisticas_pontuacoes.png' salva em output/tabelas 
+DataFrame 'dados_mapeados' exportado com sucesso para: output/dados_mapeados_com_pontuacoes.xlsx 
+INFO: Coluna 'faixa_etaria' já existe em dados_analise ou não precisou ser criada.
+[1] "idade_num"     "faixa_etaria"  "Sexo"          "Formação"      "PORTE_IBGE"   
+[6] "MACRORREGIOES" "URS"           "IDHM_2010"    
+Rows: 647
+Columns: 76
+$ `Carimbo de data/hora`                                                                                                                        <dttm> …
+$ `\nDeclaro que concordo em participar da pesquisa.`                                                                                           <chr> …
+$ Município                                                                                                                                     <chr> …
+$ `Unidade de Atenção Primária à Saúde`                                                                                                         <chr> …
+$ `Localidade da Unidade de Saúde`                                                                                                              <chr> …
+$ `A Unidade Básica de Saúde (UBS/PSF/ESF) que você trabalha possui acesso a internet?`                                                         <chr> …
+$ `Idade do Profissonal (em anos) SOMENTE NÚMEROS`                                                                                              <chr> …
+$ Sexo                                                                                                                                          <chr> …
+$ `Cargo na Atenção Primária à Saúde (APS) / Unidade Básica de Saúde (UBS)`                                                                     <chr> …
+$ Formação                                                                                                                                      <chr> …
+$ `Tipo de Vínculo no Serviço Público`                                                                                                          <chr> …
+$ `Tempo de Experiência Total como Profissional da Enfermagem`                                                                                  <chr> …
+$ `Tempo de Experiência Total como Profissional da Enfermagem...41_cat`                                                                         <chr> …
+$ `Tempo de Experiência na Atenção Primária à Saúde`                                                                                            <chr> …
+$ `Tempo de Experiência na Atenção Primária à Saúde_cat`                                                                                        <chr> …
+$ `Tempo de Experiência em Salas de Vacinação`                                                                                                  <chr> …
+$ `Tempo de Experiência em Salas de Vacinação_cat`                                                                                              <chr> …
+$ `1. As sugestões do (a) enfermeiro (a) são bem recebidas na sala de vacinação`                                                                <dbl> …
+$ `2. É difícil falar abertamente se eu percebo um problema com o cuidado ao paciente relacionado a vacinação`                                  <dbl> …
+$ `3. Em relação à vacinação, as discordâncias são resolvidas de modo apropriado (ex: não quem está certo, mas o que é melhor para o paciente)` <dbl> …
+$ `4. Eu tenho o apoio que necessito de outros membros da equipe para assistência aos pacientes na sala e vacinação`                            <dbl> …
+$ `5. É fácil para mim, que atuo na vacinação, fazer perguntas quando existe algo que eu não entendo`                                           <dbl> …
+$ `6. A equipe de enfermagem daqui trabalha junto como uma equipe bem coordenada`                                                               <dbl> …
+$ `7. Eu me sentiria seguro (a) se fosse vacinado (a) aqui como paciente`                                                                       <dbl> …
+$ `8. Erros são tratados de maneira apropriada pela equipe`                                                                                     <dbl> …
+$ `9. Eu conheço os meios adequados para encaminhar as questões relacionadas à segurança do paciente nesta unidade`                             <dbl> …
+$ `10. Eu recebo retorno apropriado sobre meu desempenho`                                                                                       <dbl> …
+$ `11. Nesta unidade, é difícil discutir sobre erros`                                                                                           <dbl> …
+$ `12. Sou encorajado (a) por meus colegas a informar qualquer preocupação que eu possa ter quanto à segurança em sala de vacinação`            <dbl> …
+$ `13. A cultura de segurança em vacinação torna fácil aprender com os erros dos outros`                                                        <dbl> …
+$ `14. Minhas sugestões sobre segurança em sala de vacinação seriam postas em ação se eu as expressasse à coordenação`                          <dbl> …
+$ `15. Eu gosto de trabalhar com vacinação`                                                                                                     <dbl> …
+$ `16. Trabalhar aqui é como fazer parte de uma grande família`                                                                                 <dbl> …
+$ `17. A sala de vacinação é um bom lugar para trabalhar`                                                                                       <dbl> …
+$ `18. Eu me orgulho de trabalhar na vacinação`                                                                                                 <dbl> …
+$ `19. O prestígio em trabalhar com vacinação é alto`                                                                                           <dbl> …
+$ `20. Quando minha carga de trabalho é excessiva, meu desempenho é prejudicado`                                                                <dbl> …
+$ `21. Eu sou menos eficiente no trabalho quando estou cansado (a)`                                                                             <dbl> …
+$ `22. Eu tenho maior probabilidade de cometer erros em situações tensas ou hostis`                                                             <dbl> …
+$ `23. O cansaço prejudica meu desempenho durante situações de stress (ex: interrupções, inquietude do vacinado, choro)`                        <dbl> …
+$ `24. A coordenação apoia meus esforços diários`                                                                                               <dbl> …
+$ `25. A coordenação não compromete conscientemente a segurança do paciente`                                                                    <dbl> …
+$ `26. A coordenação está fazendo um bom trabalho`                                                                                              <dbl> …
+$ `27. Profissionais problemáticos da equipe são tratados de maneira construtiva por nossa coordenação da unidade`                              <dbl> …
+$ `28. Recebo informações adequadas e oportunas sobre eventos que podem afetar o meu trabalho em sala de vacinação`                             <dbl> …
+$ `29. Na sala de vacinação, o número e a qualificação dos profissionais são suficientes para lidar com o número de pacientes`                  <dbl> …
+$ `30. Esta unidade faz um bom trabalho no treinamento de novos membros da equipe de vacinação`                                                 <dbl> …
+$ `31. Toda informação necessária para a vacinação está disponível rotineiramente para mim`                                                     <dbl> …
+$ `32. Estagiários da minha profissão são adequadamente supervisionados`                                                                        <dbl> …
+$ `33. Eu vivencio boa colaboração entre os coordenadores do município`                                                                         <dbl> …
+$ `34. Eu vivencio boa colaboração com a equipe da unidade`                                                                                     <dbl> …
+$ `35. Eu vivencio boa colaboração com os técnicos em enfermagem da unidade`                                                                    <dbl> …
+$ `36. Falhas na comunicação que levam a atrasos no atendimento são comuns`                                                                     <dbl> …
+$ idade_num                                                                                                                                     <dbl> …
+$ q2_inv                                                                                                                                        <dbl> …
+$ q11_inv                                                                                                                                       <dbl> …
+$ q20_inv                                                                                                                                       <dbl> …
+$ q21_inv                                                                                                                                       <dbl> …
+$ q22_inv                                                                                                                                       <dbl> …
+$ q23_inv                                                                                                                                       <dbl> …
+$ q36_inv                                                                                                                                       <dbl> …
+$ clima_trabalho_equipe                                                                                                                         <dbl> …
+$ clima_seguranca                                                                                                                               <dbl> …
+$ satisfacao_trabalho                                                                                                                           <dbl> …
+$ percepcao_estresse                                                                                                                            <dbl> …
+$ percepcao_gestao                                                                                                                              <dbl> …
+$ condicoes_trabalho                                                                                                                            <dbl> …
+$ clima_seguranca_total                                                                                                                         <dbl> …
+$ clima_dominio_medio                                                                                                                           <dbl> …
+$ classificacao_clima                                                                                                                           <fct> …
+$ Municipio_join                                                                                                                                <chr> …
+$ MACRORREGIOES                                                                                                                                 <chr> …
+$ URS                                                                                                                                           <chr> …
+$ PORTE_IBGE                                                                                                                                    <fct> …
+$ IDHM_2010                                                                                                                                     <dbl> …
+$ faixa_etaria                                                                                                                                  <fct> …
+Rows: 647
+Columns: 76
+$ `Carimbo de data/hora`                                                                                                                        <dttm> …
+$ `\nDeclaro que concordo em participar da pesquisa.`                                                                                           <chr> …
+$ Município                                                                                                                                     <chr> …
+$ `Unidade de Atenção Primária à Saúde`                                                                                                         <chr> …
+$ `Localidade da Unidade de Saúde`                                                                                                              <chr> …
+$ `A Unidade Básica de Saúde (UBS/PSF/ESF) que você trabalha possui acesso a internet?`                                                         <chr> …
+$ `Idade do Profissonal (em anos) SOMENTE NÚMEROS`                                                                                              <chr> …
+$ Sexo                                                                                                                                          <chr> …
+$ `Cargo na Atenção Primária à Saúde (APS) / Unidade Básica de Saúde (UBS)`                                                                     <chr> …
+$ Formação                                                                                                                                      <chr> …
+$ `Tipo de Vínculo no Serviço Público`                                                                                                          <chr> …
+$ `Tempo de Experiência Total como Profissional da Enfermagem`                                                                                  <chr> …
+$ `Tempo de Experiência Total como Profissional da Enfermagem...41_cat`                                                                         <chr> …
+$ `Tempo de Experiência na Atenção Primária à Saúde`                                                                                            <chr> …
+$ `Tempo de Experiência na Atenção Primária à Saúde_cat`                                                                                        <chr> …
+$ `Tempo de Experiência em Salas de Vacinação`                                                                                                  <chr> …
+$ `Tempo de Experiência em Salas de Vacinação_cat`                                                                                              <chr> …
+$ `1. As sugestões do (a) enfermeiro (a) são bem recebidas na sala de vacinação`                                                                <dbl> …
+$ `2. É difícil falar abertamente se eu percebo um problema com o cuidado ao paciente relacionado a vacinação`                                  <dbl> …
+$ `3. Em relação à vacinação, as discordâncias são resolvidas de modo apropriado (ex: não quem está certo, mas o que é melhor para o paciente)` <dbl> …
+$ `4. Eu tenho o apoio que necessito de outros membros da equipe para assistência aos pacientes na sala e vacinação`                            <dbl> …
+$ `5. É fácil para mim, que atuo na vacinação, fazer perguntas quando existe algo que eu não entendo`                                           <dbl> …
+$ `6. A equipe de enfermagem daqui trabalha junto como uma equipe bem coordenada`                                                               <dbl> …
+$ `7. Eu me sentiria seguro (a) se fosse vacinado (a) aqui como paciente`                                                                       <dbl> …
+$ `8. Erros são tratados de maneira apropriada pela equipe`                                                                                     <dbl> …
+$ `9. Eu conheço os meios adequados para encaminhar as questões relacionadas à segurança do paciente nesta unidade`                             <dbl> …
+$ `10. Eu recebo retorno apropriado sobre meu desempenho`                                                                                       <dbl> …
+$ `11. Nesta unidade, é difícil discutir sobre erros`                                                                                           <dbl> …
+$ `12. Sou encorajado (a) por meus colegas a informar qualquer preocupação que eu possa ter quanto à segurança em sala de vacinação`            <dbl> …
+$ `13. A cultura de segurança em vacinação torna fácil aprender com os erros dos outros`                                                        <dbl> …
+$ `14. Minhas sugestões sobre segurança em sala de vacinação seriam postas em ação se eu as expressasse à coordenação`                          <dbl> …
+$ `15. Eu gosto de trabalhar com vacinação`                                                                                                     <dbl> …
+$ `16. Trabalhar aqui é como fazer parte de uma grande família`                                                                                 <dbl> …
+$ `17. A sala de vacinação é um bom lugar para trabalhar`                                                                                       <dbl> …
+$ `18. Eu me orgulho de trabalhar na vacinação`                                                                                                 <dbl> …
+$ `19. O prestígio em trabalhar com vacinação é alto`                                                                                           <dbl> …
+$ `20. Quando minha carga de trabalho é excessiva, meu desempenho é prejudicado`                                                                <dbl> …
+$ `21. Eu sou menos eficiente no trabalho quando estou cansado (a)`                                                                             <dbl> …
+$ `22. Eu tenho maior probabilidade de cometer erros em situações tensas ou hostis`                                                             <dbl> …
+$ `23. O cansaço prejudica meu desempenho durante situações de stress (ex: interrupções, inquietude do vacinado, choro)`                        <dbl> …
+$ `24. A coordenação apoia meus esforços diários`                                                                                               <dbl> …
+$ `25. A coordenação não compromete conscientemente a segurança do paciente`                                                                    <dbl> …
+$ `26. A coordenação está fazendo um bom trabalho`                                                                                              <dbl> …
+$ `27. Profissionais problemáticos da equipe são tratados de maneira construtiva por nossa coordenação da unidade`                              <dbl> …
+$ `28. Recebo informações adequadas e oportunas sobre eventos que podem afetar o meu trabalho em sala de vacinação`                             <dbl> …
+$ `29. Na sala de vacinação, o número e a qualificação dos profissionais são suficientes para lidar com o número de pacientes`                  <dbl> …
+$ `30. Esta unidade faz um bom trabalho no treinamento de novos membros da equipe de vacinação`                                                 <dbl> …
+$ `31. Toda informação necessária para a vacinação está disponível rotineiramente para mim`                                                     <dbl> …
+$ `32. Estagiários da minha profissão são adequadamente supervisionados`                                                                        <dbl> …
+$ `33. Eu vivencio boa colaboração entre os coordenadores do município`                                                                         <dbl> …
+$ `34. Eu vivencio boa colaboração com a equipe da unidade`                                                                                     <dbl> …
+$ `35. Eu vivencio boa colaboração com os técnicos em enfermagem da unidade`                                                                    <dbl> …
+$ `36. Falhas na comunicação que levam a atrasos no atendimento são comuns`                                                                     <dbl> …
+$ idade_num                                                                                                                                     <dbl> …
+$ q2_inv                                                                                                                                        <dbl> …
+$ q11_inv                                                                                                                                       <dbl> …
+$ q20_inv                                                                                                                                       <dbl> …
+$ q21_inv                                                                                                                                       <dbl> …
+$ q22_inv                                                                                                                                       <dbl> …
+$ q23_inv                                                                                                                                       <dbl> …
+$ q36_inv                                                                                                                                       <dbl> …
+$ clima_trabalho_equipe                                                                                                                         <dbl> …
+$ clima_seguranca                                                                                                                               <dbl> …
+$ satisfacao_trabalho                                                                                                                           <dbl> …
+$ percepcao_estresse                                                                                                                            <dbl> …
+$ percepcao_gestao                                                                                                                              <dbl> …
+$ condicoes_trabalho                                                                                                                            <dbl> …
+$ clima_seguranca_total                                                                                                                         <dbl> …
+$ clima_dominio_medio                                                                                                                           <dbl> …
+$ classificacao_clima                                                                                                                           <fct> …
+$ Municipio_join                                                                                                                                <chr> …
+$ MACRORREGIOES                                                                                                                                 <chr> …
+$ URS                                                                                                                                           <chr> …
+$ PORTE_IBGE                                                                                                                                    <fct> …
+$ IDHM_2010                                                                                                                                     <dbl> …
+$ faixa_etaria                                                                                                                                  <fct> …
+INFO: Coluna 'faixa_etaria' já existe em dados_analise ou não precisou ser criada.
+ [1] "Carimbo de data/hora"                                                                                                                       
+ [2] "\nDeclaro que concordo em participar da pesquisa."                                                                                          
+ [3] "Município"                                                                                                                                  
+ [4] "Unidade de Atenção Primária à Saúde"                                                                                                        
+ [5] "Localidade da Unidade de Saúde"                                                                                                             
+ [6] "A Unidade Básica de Saúde (UBS/PSF/ESF) que você trabalha possui acesso a internet?"                                                        
+ [7] "Idade do Profissonal (em anos) SOMENTE NÚMEROS"                                                                                             
+ [8] "Sexo"                                                                                                                                       
+ [9] "Cargo na Atenção Primária à Saúde (APS) / Unidade Básica de Saúde (UBS)"                                                                    
+[10] "Formação"                                                                                                                                   
+[11] "Tipo de Vínculo no Serviço Público"                                                                                                         
+[12] "Tempo de Experiência Total como Profissional da Enfermagem"                                                                                 
+[13] "Tempo de Experiência Total como Profissional da Enfermagem...41_cat"                                                                        
+[14] "Tempo de Experiência na Atenção Primária à Saúde"                                                                                           
+[15] "Tempo de Experiência na Atenção Primária à Saúde_cat"                                                                                       
+[16] "Tempo de Experiência em Salas de Vacinação"                                                                                                 
+[17] "Tempo de Experiência em Salas de Vacinação_cat"                                                                                             
+[18] "1. As sugestões do (a) enfermeiro (a) são bem recebidas na sala de vacinação"                                                               
+[19] "2. É difícil falar abertamente se eu percebo um problema com o cuidado ao paciente relacionado a vacinação"                                 
+[20] "3. Em relação à vacinação, as discordâncias são resolvidas de modo apropriado (ex: não quem está certo, mas o que é melhor para o paciente)"
+[21] "4. Eu tenho o apoio que necessito de outros membros da equipe para assistência aos pacientes na sala e vacinação"                           
+[22] "5. É fácil para mim, que atuo na vacinação, fazer perguntas quando existe algo que eu não entendo"                                          
+[23] "6. A equipe de enfermagem daqui trabalha junto como uma equipe bem coordenada"                                                              
+[24] "7. Eu me sentiria seguro (a) se fosse vacinado (a) aqui como paciente"                                                                      
+[25] "8. Erros são tratados de maneira apropriada pela equipe"                                                                                    
+[26] "9. Eu conheço os meios adequados para encaminhar as questões relacionadas à segurança do paciente nesta unidade"                            
+[27] "10. Eu recebo retorno apropriado sobre meu desempenho"                                                                                      
+[28] "11. Nesta unidade, é difícil discutir sobre erros"                                                                                          
+[29] "12. Sou encorajado (a) por meus colegas a informar qualquer preocupação que eu possa ter quanto à segurança em sala de vacinação"           
+[30] "13. A cultura de segurança em vacinação torna fácil aprender com os erros dos outros"                                                       
+[31] "14. Minhas sugestões sobre segurança em sala de vacinação seriam postas em ação se eu as expressasse à coordenação"                         
+[32] "15. Eu gosto de trabalhar com vacinação"                                                                                                    
+[33] "16. Trabalhar aqui é como fazer parte de uma grande família"                                                                                
+[34] "17. A sala de vacinação é um bom lugar para trabalhar"                                                                                      
+[35] "18. Eu me orgulho de trabalhar na vacinação"                                                                                                
+[36] "19. O prestígio em trabalhar com vacinação é alto"                                                                                          
+[37] "20. Quando minha carga de trabalho é excessiva, meu desempenho é prejudicado"                                                               
+[38] "21. Eu sou menos eficiente no trabalho quando estou cansado (a)"                                                                            
+[39] "22. Eu tenho maior probabilidade de cometer erros em situações tensas ou hostis"                                                            
+[40] "23. O cansaço prejudica meu desempenho durante situações de stress (ex: interrupções, inquietude do vacinado, choro)"                       
+[41] "24. A coordenação apoia meus esforços diários"                                                                                              
+[42] "25. A coordenação não compromete conscientemente a segurança do paciente"                                                                   
+[43] "26. A coordenação está fazendo um bom trabalho"                                                                                             
+[44] "27. Profissionais problemáticos da equipe são tratados de maneira construtiva por nossa coordenação da unidade"                             
+[45] "28. Recebo informações adequadas e oportunas sobre eventos que podem afetar o meu trabalho em sala de vacinação"                            
+[46] "29. Na sala de vacinação, o número e a qualificação dos profissionais são suficientes para lidar com o número de pacientes"                 
+[47] "30. Esta unidade faz um bom trabalho no treinamento de novos membros da equipe de vacinação"                                                
+[48] "31. Toda informação necessária para a vacinação está disponível rotineiramente para mim"                                                    
+[49] "32. Estagiários da minha profissão são adequadamente supervisionados"                                                                       
+[50] "33. Eu vivencio boa colaboração entre os coordenadores do município"                                                                        
+[51] "34. Eu vivencio boa colaboração com a equipe da unidade"                                                                                    
+[52] "35. Eu vivencio boa colaboração com os técnicos em enfermagem da unidade"                                                                   
+[53] "36. Falhas na comunicação que levam a atrasos no atendimento são comuns"                                                                    
+[54] "idade_num"                                                                                                                                  
+[55] "q2_inv"                                                                                                                                     
+[56] "q11_inv"                                                                                                                                    
+[57] "q20_inv"                                                                                                                                    
+[58] "q21_inv"                                                                                                                                    
+[59] "q22_inv"                                                                                                                                    
+[60] "q23_inv"                                                                                                                                    
+[61] "q36_inv"                                                                                                                                    
+[62] "clima_trabalho_equipe"                                                                                                                      
+[63] "clima_seguranca"                                                                                                                            
+[64] "satisfacao_trabalho"                                                                                                                        
+[65] "percepcao_estresse"                                                                                                                         
+[66] "percepcao_gestao"                                                                                                                           
+[67] "condicoes_trabalho"                                                                                                                         
+[68] "clima_seguranca_total"                                                                                                                      
+[69] "clima_dominio_medio"                                                                                                                        
+[70] "classificacao_clima"                                                                                                                        
+[71] "Municipio_join"                                                                                                                             
+[72] "MACRORREGIOES"                                                                                                                              
+[73] "URS"                                                                                                                                        
+[74] "PORTE_IBGE"                                                                                                                                 
+[75] "IDHM_2010"                                                                                                                                  
+[76] "faixa_etaria"                                                                                                                               
+Dados carregados. Número de observações: 647 
+Número de colunas: 76 
+INFO: Coluna 'faixa_etaria' já existe em dados_analise ou não precisou ser criada.

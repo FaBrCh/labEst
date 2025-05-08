@@ -1,0 +1,1771 @@
+---
+title: "Análise dos Fatores Influenciadores no Clima de Segurança do Paciente em Salas de Vacinação de Minas Gerais"
+author: "Fabrício Chaves da Costa e Gabriela Oliveira"
+format: pdf
+editor: visual
+execute:
+  echo: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE, # Garante que chunks individuais também não mostrem código por padrão
+  warning = FALSE,
+  message = FALSE,
+  fig.align = "center",
+  out.width = "80%" 
+)
+```
+
+# 1. Introdução e Objetivo(s)
+
+A segurança do paciente constitui um pilar essencial para a qualidade da assistência à saúde, sendo sua promoção em ambientes de imunização, como as salas de vacinação, de suma importância para o sucesso dos programas de vacinação e para a manutenção da confiança da população nos serviços de saúde. A ocorrência de erros de imunização, embora frequentemente passíveis de prevenção, pode resultar em eventos adversos, necessidade de revacinação, custos adicionais ao sistema e, crucialmente, impactar negativamente a adesão às campanhas vacinais. Nesse contexto, o clima de segurança percebido pelos profissionais de saúde que atuam diretamente nesses serviços emerge como um indicador valioso das práticas, atitudes e da cultura organizacional que podem influenciar tanto a ocorrência quanto a notificação desses eventos.
+
+O presente estudo tem como **objetivo geral** avaliar os fatores sociodemográficos, profissionais e contextuais que influenciam o clima de segurança do paciente em salas de vacinação no estado de Minas Gerais, Brasil.
+
+Para alcançar este objetivo geral, foram definidos os seguintes **objetivos específicos**:
+
+1.  Descrever o perfil sociodemográfico (idade, sexo) e profissional (cargo, formação, tempo de experiência, tipo de vínculo) dos participantes do estudo.
+2.  Caracterizar o contexto das unidades de saúde e dos municípios de atuação dos profissionais (localidade da unidade, porte do município, macrorregião de saúde, Unidade Regional de Saúde - URS, e Índice de Desenvolvimento Humano Municipal - IDHM).
+3.  Mensurar a percepção do clima de segurança do paciente entre os profissionais de enfermagem, tanto de forma global quanto por meio dos seus seis domínios específicos (Clima de Trabalho em Equipe, Clima de Segurança, Satisfação no Trabalho, Percepção do Estresse, Percepção da Gestão e Condições de Trabalho).
+4.  Analisar a associação entre as variáveis sociodemográficas, profissionais e contextuais (incluindo o IDHM) e o escore geral do clima de segurança do paciente, bem como sua classificação (Positivo, Neutro, Negativo).
+5.  Identificar, por meio de modelagem multivariada, os preditores independentes que exercem maior influência sobre a percepção do clima de segurança do paciente nas salas de vacinação.
+
+Este relatório detalha a metodologia estatística empregada para a análise dos dados quantitativos coletados, apresenta os resultados descritivos e inferenciais obtidos e discute as implicações desses achados para a melhoria da segurança do paciente no contexto da imunização.
+
+# 2. Metodologia
+
+## Variáveis do Estudo e Manipulações do Banco de Dados
+
+Os dados para esta análise foram obtidos a partir de um questionário aplicado a profissionais de enfermagem atuantes em salas de vacinação no estado de Minas Gerais. O instrumento principal utilizado foi o *Safety Attitudes Questionnaire – Short Form 2006 (SAQ-SF)*, composto por 36 itens que avaliam a percepção dos profissionais sobre o clima de segurança, distribuídos em seis domínios (detalhados na Tabela @tbl-dominios-metodologia). Adicionalmente, foram coletadas informações sociodemográficas, profissionais e contextuais.
+
+O banco de dados original passou por um processo de limpeza e preparação antes da análise estatística. As principais manipulações realizadas no banco de dados incluíram:
+
+-   **Tratamento de Dados Ausentes e Inconsistentes:** Remoção de colunas inteiramente vazias ou com percentual de dados faltantes superior a 99%. Linhas (participantes) com qualquer valor nulo (`NA`) foram excluídas para garantir a completude dos dados. Idades calculadas como menores de 18 ou maiores de 90 anos foram removidas. Participantes com "Menos de 6 meses" de experiência em salas de vacinação, ou cuja experiência era "Não aplicável" ou ausente, também foram excluídos.
+
+-   **Padronização e Recategorização de Variáveis:**
+
+    -   A variável `idade` foi limpa e convertida para formato numérico (`idade_num`), tratando entradas textuais e calculando a idade a partir do ano de nascimento quando necessário.
+    -   As variáveis de `tempo de experiência` (total, na APS e em salas de vacinação) foram padronizadas, e novas colunas categóricas foram criadas (e.g., "Menos de 6 meses", "de 1 a 3 anos", "Mais de 20 anos") baseadas no tempo convertido para anos.
+    -   A variável `Cargo` foi ajustada: "Diretora" foi alterado para "Técnico em Enfermagem"; participantes com cargo "AUX ADM" foram removidos.
+    -   A variável `Formação` foi ajustada em conjunto com `Cargo`: se cargo era "Técnico em Enfermagem" e formação "Ensino Médio Completo", a formação foi alterada para "Ensino Técnico"; subsequentemente, para os demais com formação "Ensino Médio Completo", o cargo foi alterado para "Auxiliar de Enfermagem".
+
+-   **Tratamento das Questões do SAQ-SF:** As 36 questões do questionário foram convertidas para formato numérico. As respostas originais em escala Likert de 5 pontos foram mapeadas para uma escala de 0 a 100 (onde 1="Discordo Totalmente" -\> 0 pontos, ..., 5="Concordo Totalmente" -\> 100 pontos). As questões com conotação negativa (itens 2, 11, 20, 21, 22, 23, 36) tiveram suas pontuações invertidas (100 - pontuação mapeada).
+
+-   **Criação de Escores:**
+
+    -   Escores para cada um dos seis domínios do SAQ-SF foram calculados como a média das pontuações (0-100) das suas respectivas questões.
+    -   Um escore geral do clima de segurança (`clima_seguranca_total`) foi calculado como a média das pontuações (0-100) de todas as 36 questões do SAQ-SF.
+    -   O escore `clima_seguranca_total` foi categorizado em "Negativo" (pontuação \< 50), "Neutro" (pontuação ≥ 50 e \< 75) e "Positivo" (pontuação ≥ 75).
+
+Após este processo de tratamento, o banco de dados utilizado para as análises neste relatório contém 647 observações.
+
+As principais variáveis analisadas neste estudo são:
+
+-   **Variável Desfecho Principal:**
+    -   `clima_seguranca_total`: Escore geral do clima de segurança (contínuo, 0-100).
+    -   `classificacao_clima`: Classificação do clima de segurança (Negativo, Neutro, Positivo).
+-   **Variáveis Desfecho Secundárias (Domínios do Clima - contínuos, 0-100):**
+    -   `clima_trabalho_equipe`
+    -   `clima_seguranca`
+    -   `satisfacao_trabalho`
+    -   `percepcao_estresse`
+    -   `percepcao_gestao`
+    -   `condicoes_trabalho`
+-   **Variáveis Independentes (Explanatórias):**
+    -   `idade_num`: Idade do profissional em anos.
+    -   `faixa_etaria`: Faixa etária do profissional.
+    -   `Sexo`: Sexo do profissional.
+    -   `Cargo na Atenção Primária à Saúde (APS) / Unidade Básica de Saúde (UBS)`: Cargo do profissional.
+    -   `Formação`: Nível de formação do profissional.
+    -   `Tempo de Experiência Total como Profissional da Enfermagem...41_cat`: Tempo total de experiência na enfermagem (categorizado).
+    -   `Tempo de Experiência na Atenção Primária à Saúde_cat`: Tempo de experiência na APS (categorizado).
+    -   `Tempo de Experiência em Salas de Vacinação_cat`: Tempo de experiência em salas de vacinação (categorizado).
+    -   `Tipo de Vínculo no Serviço Público`: Tipo de vínculo empregatício.
+    -   `Localidade da Unidade de Saúde`: Localização da unidade (Urbana, Rural).
+    -   `PORTE_IBGE`: Porte do município de atuação (Pequeno, Médio, Grande).
+    -   `MACRORREGIOES`: Macrorregião de saúde da pesquisa.
+    -   `URS`: Unidade Regional de Saúde (Microrregião).
+    -   `IDHM_2010`: Índice de Desenvolvimento Humano Municipal (2010).
+
+```{r}
+#| cap: "Estrutura dos Domínios do Questionário SAQ-SF Utilizado"
+#| label: tbl-dominios-metodologia
+#| echo: false 
+
+resumo_dominios_met <- data.frame(
+  Dominio = c("Clima de trabalho em equipe", "Clima de Segurança", 
+              "Satisfação no trabalho", "Percepção do estresse",
+              "Percepção da gestão", "Condições de trabalho",
+              "Itens não correlacionados (não compõem escore de domínio específico)"),
+  Itens = c("1-6", "7-13", "15-19", "20-23", "24-29", "30-32", "14, 33-36"),
+  `Nº de Itens` = c(6, 7, 5, 4, 6, 3, 5)
+)
+
+gt::gt(resumo_dominios_met) |>
+  gt::tab_header(title = "Domínios do Clima de Segurança Avaliados pelo SAQ-SF")
+```
+
+## Métodos Estatísticos e Software
+
+As análises estatísticas foram realizadas utilizando o software R (versão 4.3.2 ou superior) integrado ao ambiente RStudio. Os principais pacotes utilizados incluem tidyverse para manipulação de dados e criação de gráficos, readxl para importação de dados, gt e gtsummary para a elaboração de tabelas descritivas e de resultados de modelos estatísticos, skimr para estatísticas descritivas sumárias, e pacotes específicos para modelagem estatística como nnet (para regressão logística multinomial) ou MASS (para regressão logística ordinal), e lmtest e car para diagnósticos de modelos lineares.
+
+## Carregamento de Pacotes e Dados
+
+```{r setup-libraries-and-data, collapse=TRUE}
+# 1. Carregar Pacotes Essenciais
+library(plyr) 
+library(tidyverse)    # Para manipulação de dados e gráficos (ggplot2, dplyr, etc.)
+library(readxl)       # Para ler arquivos Excel
+library(gt)           # Para tabelas formatadas de alta qualidade
+library(gtsummary)    # Para tabelas de resumo e de modelos estatísticos
+library(skimr)        # Para estatísticas descritivas rápidas
+library(kableExtra)   # Para formatação adicional de tabelas kable
+library(ggpubr)       # Para adicionar p-valores e outros elementos a gráficos ggplot2
+library(rstatix)      # Para testes estatísticos e manipulação de resultados
+library(car)          # Para diagnósticos de regressão (e.g., VIF, teste de Levene)
+library(lmtest)       # Para testes em modelos lineares (e.g., Breusch-Pagan)
+# Adicionar outros pacotes conforme necessário para análises específicas (e.g., nnet, MASS, sf, geobr)
+library(sf)           # Para mapas
+library(geobr)        # Para dados geográficos do Brasil
+
+# Carregar funções auxiliares (se o arquivo existir e a função for necessária)
+if (file.exists("scripts/funcoes_auxiliares.R")) {
+  source("scripts/funcoes_auxiliares.R")
+} else {
+  # Definir a função limpar_nomes aqui se o arquivo não for encontrado, para evitar erro
+  limpar_nomes <- function(nomes) {
+    nomes_limpos <- stringr::str_to_lower(nomes)
+    nomes_limpos <- iconv(nomes_limpos, from = "UTF-8", to = "ASCII//TRANSLIT")
+    nomes_limpos <- stringr::str_replace_all(nomes_limpos, "[^a-z0-9 ]", "")
+    nomes_limpos <- stringr::str_replace_all(nomes_limpos, "\\s+", " ")
+    nomes_limpos <- stringr::str_trim(nomes_limpos)
+    return(nomes_limpos)
+  }
+  warning("Arquivo 'scripts/funcoes_auxiliares.R' não encontrado. Usando definição interna de limpar_nomes().")
+}
+
+# 2. Definir Caminhos e Variáveis (ajuste conforme sua estrutura de projeto)
+caminho_dados_processados <- "output/dados_mapeados_com_pontuacoes.xlsx" # Confirme este caminho
+caminho_dados_limpos <- "output/dados_limpos_para_likert.xlsx"        # Caminho para os dados limpos (escala 1-5)
+caminho_municipios_info <- "data/MUNICÍPIOS E SALAS DE VACINAÇÃO SELECIONADOS.xlsx" # Caminho para info completa dos municípios
+
+# Nomes das variáveis chave (conforme fornecido anteriormente)
+var_idade <- "idade_num"
+var_sexo <- "Sexo" 
+var_cargo <- "Cargo na Atenção Primária à Saúde (APS) / Unidade Básica de Saúde (UBS)" # Removido crases externas
+var_formacao <- "Formação" # Já corrigido
+var_exp_aps_cat <- "Tempo de Experiência na Atenção Primária à Saúde_cat" # Removido crases externas
+var_exp_vac_cat <- "Tempo de Experiência em Salas de Vacinação_cat" # Removido crases externas
+var_exp_total_cat <- "Tempo de Experiência Total como Profissional da Enfermagem...41_cat" # Removido crases externas
+var_porte_ibge <- "PORTE_IBGE"
+var_macrorregiao <- "MACRORREGIOES"
+var_urs <- "URS"
+
+var_clima_total <- "clima_seguranca_total"
+var_class_clima <- "classificacao_clima"
+
+vars_dominios <- c(
+  "clima_trabalho_equipe", "clima_seguranca", "satisfacao_trabalho", 
+  "percepcao_estresse", "percepcao_gestao", "condicoes_trabalho"
+)
+
+# 3. Carregar Dados Processados
+dados_analise <- read_excel(caminho_dados_processados)
+dados_likert_input <- read_excel(caminho_dados_limpos) # Carregar dados limpos para Likert
+
+# 3.5 Carregar Informações Completas dos Municípios (para mapas)
+tryCatch({
+  df_municipios_amostra_qmd <- read_excel(caminho_municipios_info, sheet = "AMOSTRA", skip = 4) 
+  df_municipios_info_qmd <- df_municipios_amostra_qmd %>% 
+    rename(
+      MUNICIPIO_RAW = 6, # Nome original com código
+      MACRORREGIOES = 4,
+      # Adicionar outros se precisar (URS, PORTE_IBGE...)
+    ) %>% 
+    select(MUNICIPIO_RAW, MACRORREGIOES) %>% 
+    mutate(
+      MUNICIPIO = str_replace(MUNICIPIO_RAW, "^[0-9]+-", ""), # Remover código
+      Municipio_join = limpar_nomes(MUNICIPIO), # Limpar para junção
+      MACRORREGIOES = str_trim(MACRORREGIOES)
+    ) %>% 
+    distinct(Municipio_join, .keep_all = TRUE) # Manter apenas um por município limpo
+  cat("Informações completas de municípios/macrorregiões carregadas para mapas.\n")
+}, error = function(e) {
+  warning(paste("Erro ao carregar informações completas de municípios:", e$message, ". Mapas podem não ser gerados corretamente."))
+  df_municipios_info_qmd <- NULL # Define como NULL se houver erro
+})
+
+
+# Converter colunas categóricas relevantes para fator, se necessário, para garantir a ordem correta em tabelas e gráficos
+# Exemplo: Ordenar 'classificacao_clima'
+if (var_class_clima %in% names(dados_analise)) {
+  dados_analise[[var_class_clima]] <- factor(dados_analise[[var_class_clima]], 
+                                             levels = c("Negativo", "Neutro", "Positivo"))
+}
+
+# Exemplo: Ordenar 'PORTE_IBGE'
+if (var_porte_ibge %in% names(dados_analise)) {
+  dados_analise[[var_porte_ibge]] <- factor(dados_analise[[var_porte_ibge]], 
+                                             levels = c("Pequeno Porte", "Médio Porte", "Grande Porte")) # Ajustado para "Pequeno Porte", "Médio Porte", "Grande Porte"
+}
+
+
+# Visualizar as primeiras linhas e a estrutura dos dados carregados
+# glimpse(dados_analise) # Descomente para verificar no console ao renderizar
+# head(dados_analise)    # Descomente para verificar no console ao renderizar
+
+cat("Dados carregados. Número de observações:", nrow(dados_analise), "\n")
+cat("Número de colunas:", ncol(dados_analise), "\n")
+```
+
+# 3. Resultados
+
+Nesta seção, são apresentados os resultados da análise estatística, iniciando pela caracterização da amostra de profissionais e do contexto das unidades de saúde. Em seguida, detalha-se a avaliação do clima de segurança do paciente, incluindo a distribuição das respostas aos itens do questionário, os escores globais e por domínio, e as análises univariada e multivariada dos fatores associados.
+
+## 3.1. Caracterização da Amostra e do Contexto
+
+A amostra final do estudo foi composta por 647 profissionais de enfermagem atuantes em salas de vacinação de Minas Gerais. A análise descritiva a seguir foca nas principais variáveis sociodemográficas, profissionais e contextuais.
+
+### 3.1.1. Idade dos Profissionais
+
+As estatísticas descritivas para a idade dos profissionais são apresentadas abaixo:
+
+```{r}
+#| code-summary: "Estatísticas Descritivas - Idade"
+#| label: tbl-desc-idade
+#| tbl-cap: "Estatísticas descritivas da Idade dos profissionais (anos)."
+
+if (var_idade %in% names(dados_analise)) {
+  summary_idade <- dados_analise %>% 
+    summarise(
+      N = sum(!is.na(.data[[var_idade]])),
+      Média = mean(.data[[var_idade]], na.rm = TRUE),
+      `Desvio Padrão` = sd(.data[[var_idade]], na.rm = TRUE),
+      Mínimo = min(.data[[var_idade]], na.rm = TRUE),
+      P25 = quantile(.data[[var_idade]], 0.25, na.rm = TRUE),
+      Mediana = median(.data[[var_idade]], na.rm = TRUE),
+      P75 = quantile(.data[[var_idade]], 0.75, na.rm = TRUE),
+      Máximo = max(.data[[var_idade]], na.rm = TRUE)
+    )
+  
+  # Usar kable para uma tabela simples
+  knitr::kable(summary_idade, digits = 1, caption = "Estatísticas descritivas da Idade (anos)")
+} else {
+  cat("Variável de idade (", var_idade, ") não encontrada.")
+}
+```
+
+A distribuição das idades pode ser visualizada no histograma abaixo (Figura @fig-hist-idade).
+
+```{r}
+#| code-summary: "Histograma - Idade"
+#| label: fig-hist-idade
+#| fig-cap: "Histograma da distribuição da Idade dos profissionais."
+#| fig-width: 7
+#| fig-height: 5
+
+if (var_idade %in% names(dados_analise)) {
+  ggplot(dados_analise, aes(x = .data[[var_idade]])) +
+    geom_histogram(binwidth = 5, fill = "skyblue", color = "black") +
+    labs(title = "Distribuição da Idade dos Profissionais",
+         x = "Idade (anos)",
+         y = "Frequência") +
+    theme_minimal()
+} else {
+  cat("Variável de idade (", var_idade, ") não encontrada para gerar histograma.")
+}
+```
+
+A idade média dos 647 profissionais da amostra é de aproximadamente 39,9 anos, com um desvio padrão de 9,4 anos. A mediana da idade é de 40 anos, indicando que metade dos profissionais tem até 40 anos. As idades variam de 19 a 66 anos, com 50% dos profissionais concentrando-se entre 33 e 46 anos (intervalo interquartil). O histograma (@fig-hist-idade) sugere uma distribuição unimodal, com a maior concentração de profissionais na faixa etária entre 35 e 45 anos. Há uma leve assimetria, com uma cauda um pouco mais longa para idades mais elevadas.
+
+### 3.1.2. Características Categóricas
+
+A Tabela @tbl-carac-categoricas resume as características categóricas selecionadas dos profissionais e do contexto de trabalho.
+
+```{r carac-categoricas-setup, collapse=TRUE}
+#| code-summary: "Configuração - Variáveis Categóricas"
+
+# Variáveis categóricas selecionadas
+vars_categoricas_selecionadas <- c(
+  var_sexo, 
+  var_cargo, 
+  var_formacao,
+  var_exp_total_cat, 
+  var_exp_aps_cat, 
+  var_exp_vac_cat
+)
+
+# Filtrar para variáveis que existem em dados_analise
+vars_categoricas_existentes <- intersect(vars_categoricas_selecionadas, names(dados_analise))
+
+# Definir rótulos APENAS para as variáveis existentes
+rotulos_categoricos <- list(
+  Sexo ~ "Sexo",
+  `Cargo na Atenção Primária à Saúde (APS) / Unidade Básica de Saúde (UBS)` ~ "Cargo na APS/UBS",
+  Formação ~ "Formação",
+  `Tempo de Experiência Total como Profissional da Enfermagem...41_cat` ~ "Tempo de Exp. Total Enfermagem",
+  `Tempo de Experiência na Atenção Primária à Saúde_cat` ~ "Tempo de Exp. na APS",
+  `Tempo de Experiência em Salas de Vacinação_cat` ~ "Tempo de Exp. em Sala de Vacinação"
+)
+
+# Manter apenas rótulos para variáveis existentes
+rotulos_categoricos_final <- rotulos_categoricos[names(rotulos_categoricos) %in% vars_categoricas_existentes]
+
+# Ordenar níveis de fatores para tempo de experiência (se existirem)
+levels_experiencia <- c("Menos de 6 meses", "de 6 meses a 1 ano", "de 1 a 3 anos", 
+                        "de 3 a 5 anos", "de 5 a 10 anos", "de 10 a 15 anos", 
+                        "de 15 a 20 anos", "Mais de 20 anos", "Não aplicável")
+
+if (var_exp_total_cat %in% vars_categoricas_existentes) {
+  dados_analise[[var_exp_total_cat]] <- factor(dados_analise[[var_exp_total_cat]], levels = intersect(levels_experiencia, unique(dados_analise[[var_exp_total_cat]])))
+}
+if (var_exp_aps_cat %in% vars_categoricas_existentes) {
+  dados_analise[[var_exp_aps_cat]] <- factor(dados_analise[[var_exp_aps_cat]], levels = intersect(levels_experiencia, unique(dados_analise[[var_exp_aps_cat]])))
+}
+if (var_exp_vac_cat %in% vars_categoricas_existentes) {
+  dados_analise[[var_exp_vac_cat]] <- factor(dados_analise[[var_exp_vac_cat]], levels = intersect(levels_experiencia, unique(dados_analise[[var_exp_vac_cat]])))
+}
+# Adicione outras ordenações se necessário (Formação, Cargo etc.)
+
+```
+
+```{r}
+#| label: tbl-carac-categoricas
+#| tbl-cap: "Distribuição das características categóricas selecionadas (N=647)."
+#| code-summary: "Gerar tabela - Variáveis Categóricas"
+
+if (length(vars_categoricas_existentes) > 0) {
+  tbl_categoricas_base <- dados_analise %>% 
+    select(all_of(vars_categoricas_existentes)) %>% 
+    tbl_summary(
+      label = rotulos_categoricos_final,
+      statistic = all_categorical() ~ "{n} ({p}%)",
+      digits = all_categorical() ~ c(0, 1),
+      missing_text = "Não informado/Ausente"
+    ) 
+
+  # Modificar rótulo de cargo se ele existe
+  if(var_cargo %in% vars_categoricas_existentes){
+     # Criar lista nomeada corretamente para update
+     update_list <- list()
+     update_list[[var_cargo]] <- "**Cargo na APS/UBS**"
+     tbl_categoricas <- tbl_categoricas_base %>% 
+       modify_header(update = update_list)
+  } else {
+    tbl_categoricas <- tbl_categoricas_base # Usar tabela base se cargo não estiver presente
+  }
+  
+  # Aplicar outras modificações gerais à tabela (agora chamada tbl_categoricas)
+  tbl_categoricas <- tbl_categoricas %>% 
+    modify_header(label ~ "**Característica**") %>% # Modifica o título da coluna 'label' (antes chamada 'variable')
+    modify_caption("**Tabela 3.1: Distribuição das Características Categóricas Selecionadas**") %>% 
+    bold_labels()
+  
+  tbl_categoricas
+} else {
+  cat("Nenhuma variável categórica selecionada encontrada.")
+}
+```
+
+A Tabela @tbl-carac-categoricas detalha o perfil dos participantes. Observa-se uma predominância do sexo feminino (91,8%). Quanto ao cargo, a maioria dos profissionais atua como Técnico em Enfermagem (53,8%) ou Enfermeiro(a) (41,1%), com uma pequena parcela de Auxiliares de Enfermagem (5,1%). A formação mais comum é o Ensino Técnico (49,8%), seguida pela Graduação (23,5%) e Especialização Lato Sensu (22,7%). Em relação ao tempo de experiência total na enfermagem, a distribuição é relativamente equilibrada entre as faixas, com destaque para o intervalo de 5 a 10 anos (21,4%). Padrão semelhante ocorre para o tempo de experiência na APS. Já o tempo de experiência específico em salas de vacinação concentra-se mais nas faixas iniciais, especialmente de 5 a 10 anos (24,6%) e de 1 a 3 anos (22,3%).
+
+## 3.2. Análise do Clima de Segurança do Paciente
+
+### 3.2.1. Distribuição das Respostas aos Itens do Questionário (Escala Likert)
+
+A percepção dos profissionais sobre os diferentes aspectos do clima de segurança foi inicialmente avaliada por meio da distribuição das respostas aos 36 itens do questionário SAQ-SF. Os itens são agrupados em seis domínios principais. É importante notar que algumas questões são formuladas de maneira negativa (e.g., "É difícil falar abertamente..."). Para estas, uma maior concordância indica uma percepção mais negativa do clima. Nos gráficos a seguir, essas questões são identificadas com o prefixo "NEG:" e suas respostas devem ser interpretadas considerando essa inversão de sentido.
+
+As questões com formulação negativa, cujas respostas foram invertidas para o cálculo dos escores (onde maior pontuação significa melhor percepção), mas que nos gráficos de Likert são apresentadas com sua concordância original, são: **Q2, Q11, Q20, Q21, Q22, Q23 e Q36**.
+
+```{r preparar-dados-likert-qmd, collapse=TRUE, eval=TRUE}
+#| code-summary: "Preparar dados e função para gráficos Likert"
+# Este chunk é o mesmo da resposta anterior, garantindo que os dados Likert sejam preparados.
+# Vou assumir que ele foi executado corretamente e os objetos likert_*-qmd e data_likert_*-qmd existem.
+# Se houve erro aqui, os plots abaixo não funcionarão.
+
+# Carregar pacotes adicionais se ainda não carregados na sessão
+library(likert)
+library(RColorBrewer)
+library(patchwork) 
+library(stringr)   
+
+# Definir os níveis da escala Likert em português
+likert_levels <- c("Discordo Totalmente", "Discordo Pouco", "Neutro", "Concordo Pouco", "Concordo Totalmente")
+
+# Nomes das colunas das questões originais no dataframe 'dados_analise'
+perguntas_invertidas_base_nomes_originais <- c(
+  "2. É difícil falar abertamente se eu percebo um problema com o cuidado ao paciente relacionado a vacinação",
+  "11. Nesta unidade, é difícil discutir sobre erros",
+  "20. Quando minha carga de trabalho é excessiva, meu desempenho é prejudicado",
+  "21. Eu sou menos eficiente no trabalho quando estou cansado (a)",
+  "22. Eu tenho maior probabilidade de cometer erros em situações tensas ou hostis",
+  "23. O cansaço prejudica meu desempenho durante situações de stress (ex: interrupções, inquietude do vacinado, choro)",
+  "36. Falhas na comunicação que levam a atrasos no atendimento são comuns" 
+)
+
+# Função para preparar os dados para o pacote likert
+prepare_likert_data_qmd <- function(df, columns_list, inverted_list_original_names) {
+  missing_cols <- setdiff(columns_list, names(df))
+  if (length(missing_cols) > 0) {
+    stop(paste("As seguintes colunas não foram encontradas no dataframe:", paste(missing_cols, collapse=", ")))
+  }
+  df_subset <- df %>% select(all_of(columns_list))
+  
+  new_colnames <- sapply(columns_list, function(col_name) {
+    if (col_name %in% inverted_list_original_names) {
+      num_pergunta <- stringr::str_extract(col_name, "^[0-9]+\\.")
+      texto_pergunta <- stringr::str_replace(col_name, "^[0-9]+\\.\\s*", "")
+      return(paste0(num_pergunta, " NEG: ", texto_pergunta))
+    } else {
+      return(col_name)
+    }
+  })
+  colnames(df_subset) <- new_colnames
+  
+  df_likert <- df_subset %>%
+    mutate(across(everything(), ~factor(as.integer(.x), levels = 1:5, labels = likert_levels, ordered = TRUE)))
+  return(as.data.frame(df_likert))
+}
+
+# Definir colunas por domínio
+cols_clima_equipe_orig <- c("1. As sugestões do (a) enfermeiro (a) são bem recebidas na sala de vacinação", "2. É difícil falar abertamente se eu percebo um problema com o cuidado ao paciente relacionado a vacinação", "3. Em relação à vacinação, as discordâncias são resolvidas de modo apropriado (ex: não quem está certo, mas o que é melhor para o paciente)","4. Eu tenho o apoio que necessito de outros membros da equipe para assistência aos pacientes na sala e vacinação", "5. É fácil para mim, que atuo na vacinação, fazer perguntas quando existe algo que eu não entendo", "6. A equipe de enfermagem daqui trabalha junto como uma equipe bem coordenada")
+cols_clima_seguranca_orig <- c("7. Eu me sentiria seguro (a) se fosse vacinado (a) aqui como paciente", "8. Erros são tratados de maneira apropriada pela equipe", "9. Eu conheço os meios adequados para encaminhar as questões relacionadas à segurança do paciente nesta unidade", "10. Eu recebo retorno apropriado sobre meu desempenho", "11. Nesta unidade, é difícil discutir sobre erros", "12. Sou encorajado (a) por meus colegas a informar qualquer preocupação que eu possa ter quanto à segurança em sala de vacinação", "13. A cultura de segurança em vacinação torna fácil aprender com os erros dos outros")
+cols_satisfacao_orig <- c("15. Eu gosto de trabalhar com vacinação", "16. Trabalhar aqui é como fazer parte de uma grande família", "17. A sala de vacinação é um bom lugar para trabalhar", "18. Eu me orgulho de trabalhar na vacinação", "19. O prestígio em trabalhar com vacinação é alto")
+cols_estresse_orig <- c("20. Quando minha carga de trabalho é excessiva, meu desempenho é prejudicado", "21. Eu sou menos eficiente no trabalho quando estou cansado (a)", "22. Eu tenho maior probabilidade de cometer erros em situações tensas ou hostis", "23. O cansaço prejudica meu desempenho durante situações de stress (ex: interrupções, inquietude do vacinado, choro)")
+cols_gestao_orig <- c("24. A coordenação apoia meus esforços diários", "25. A coordenação não compromete conscientemente a segurança do paciente", "26. A coordenação está fazendo um bom trabalho", "27. Profissionais problemáticos da equipe são tratados de maneira construtiva por nossa coordenação da unidade", "28. Recebo informações adequadas e oportunas sobre eventos que podem afetar o meu trabalho em sala de vacinação", "29. Na sala de vacinação, o número e a qualificação dos profissionais são suficientes para lidar com o número de pacientes")
+cols_condicoes_orig <- c("30. Esta unidade faz um bom trabalho no treinamento de novos membros da equipe de vacinação", "31. Toda informação necessária para a vacinação está disponível rotineiramente para mim", "32. Estagiários da minha profissão são adequadamente supervisionados")
+
+# Preparar os dados para cada domínio
+data_likert_equipe_qmd <- prepare_likert_data_qmd(dados_likert_input, cols_clima_equipe_orig, perguntas_invertidas_base_nomes_originais)
+data_likert_seguranca_qmd <- prepare_likert_data_qmd(dados_likert_input, cols_clima_seguranca_orig, perguntas_invertidas_base_nomes_originais)
+data_likert_satisfacao_qmd <- prepare_likert_data_qmd(dados_likert_input, cols_satisfacao_orig, perguntas_invertidas_base_nomes_originais)
+data_likert_estresse_qmd <- prepare_likert_data_qmd(dados_likert_input, cols_estresse_orig, perguntas_invertidas_base_nomes_originais)
+data_likert_gestao_qmd <- prepare_likert_data_qmd(dados_likert_input, cols_gestao_orig, perguntas_invertidas_base_nomes_originais)
+data_likert_condicoes_qmd <- prepare_likert_data_qmd(dados_likert_input, cols_condicoes_orig, perguntas_invertidas_base_nomes_originais)
+
+# Criar objetos likert
+likert_eq_qmd <- likert(data_likert_equipe_qmd)
+likert_seg_qmd <- likert(data_likert_seguranca_qmd)
+likert_sat_qmd <- likert(data_likert_satisfacao_qmd)
+likert_est_qmd <- likert(data_likert_estresse_qmd)
+likert_ges_qmd <- likert(data_likert_gestao_qmd)
+likert_con_qmd <- likert(data_likert_condicoes_qmd)
+
+# Definir uma paleta de cores divergente personalizada
+cores_base_rdbu_qmd <- RColorBrewer::brewer.pal(5, "RdBu")
+# Ajuste para ter 5 cores, não 9. Se o anterior era `cores_base_rdbu_qmd[c(1,2,5,4,3)]` ou algo assim, precisa reavaliar.
+# Se a intenção é pegar as extremas e a do meio:
+# cores_personalizadas_qmd <- c(cores_base_rdbu_qmd[1], cores_base_rdbu_qmd[2], "grey80", cores_base_rdbu_qmd[4], cores_base_rdbu_qmd[5])
+# Se o erro foi na duplicação: 
+cores_personalizadas_qmd <- c(cores_base_rdbu_qmd[1], cores_base_rdbu_qmd[2], "grey80", cores_base_rdbu_qmd[4], cores_base_rdbu_qmd[5])
+
+
+# Função auxiliar para criar plots Likert
+criar_plot_likert_qmd <- function(likert_obj, data_likert_df, titulo_plot, 
+                                  cores_lik, 
+                                  tamanho_titulo_plot = 14, 
+                                  tamanho_eixo_y = 11,  # Aumentado de 10
+                                  tamanho_leg_texto = 11, # Aumentado de 10
+                                  tamanho_leg_titulo = 13, # Aumentado de 12
+                                  mostrar_legenda = TRUE, 
+                                  largura_wrap_labels = 70, 
+                                  percent_text_size = 4) { # Aumentado de 3.5
+  
+  nomes_colunas_plot <- colnames(data_likert_df)
+  labels_y_wrapped <- stringr::str_wrap(nomes_colunas_plot, width = largura_wrap_labels)
+
+  p_final <- plot(likert_obj, centered = TRUE, center = 3, colors = cores_lik, group.order = nomes_colunas_plot,
+                  plot.percents = TRUE,          # Mostrar porcentagens
+                  plot.percent.low = TRUE,       # Mostrar % Discordo Totalmente
+                  plot.percent.high = TRUE,      # Mostrar % Concordo Totalmente
+                  plot.percent.neutral = FALSE,  # Ocultar % Neutro
+                  percent.text.size = percent_text_size, # Usar argumento
+                  percent.label = FALSE          # Ocultar o símbolo "%" 
+                  ) + 
+    ggtitle(titulo_plot) +
+    scale_y_discrete(labels = labels_y_wrapped) +
+    theme_minimal(base_size = 11) + # Aumentado base_size
+    theme(
+      plot.title = element_text(hjust = 0.5, size = tamanho_titulo_plot, face = "bold"),
+      axis.text.y = element_text(size = tamanho_eixo_y, hjust = 1, margin = margin(t=0, r=5, b=0, l=0)), 
+      axis.title.x = element_blank(),
+      axis.title.y = element_blank(),
+      legend.text = element_text(size = tamanho_leg_texto),
+      legend.title = element_text(size = tamanho_leg_titulo),
+      panel.grid.major.y = element_blank(), 
+      panel.grid.minor.y = element_blank()  
+    )
+  
+  if (mostrar_legenda) {
+    p_final <- p_final + guides(fill = guide_legend(title = "Nível de Concordância"))
+  } else {
+    p_final <- p_final + theme(legend.position = "none")
+  }
+  return(p_final)
+}
+```
+
+```{r}
+#| label: fig-likert-equipe
+#| fig-cap: "Distribuição das respostas: Clima de Trabalho em Equipe."
+#| fig-width: 10
+#| fig-height: 7 
+#| code-summary: "Gerar Gráfico Likert (Equipe)"
+
+p_eq_qmd <- criar_plot_likert_qmd(likert_eq_qmd, data_likert_equipe_qmd, 
+                                  "Clima de Trab. em Equipe", 
+                                  cores_personalizadas_qmd)
+print(p_eq_qmd)
+```
+
+```{r}
+#| label: fig-likert-seguranca
+#| fig-cap: "Distribuição das respostas: Clima de Segurança."
+#| fig-width: 10
+#| fig-height: 7 
+#| code-summary: "Gerar Gráfico Likert (Segurança)"
+
+p_seg_qmd <- criar_plot_likert_qmd(likert_seg_qmd, data_likert_seguranca_qmd, 
+                                   "Clima de Segurança", 
+                                   cores_personalizadas_qmd)
+print(p_seg_qmd)
+```
+
+```{r}
+#| label: fig-likert-satisfacao
+#| fig-cap: "Distribuição das respostas: Satisfação no Trabalho."
+#| fig-width: 10
+#| fig-height: 6 # Menos itens
+#| code-summary: "Gerar Gráfico Likert (Satisfação)"
+
+p_sat_qmd <- criar_plot_likert_qmd(likert_sat_qmd, data_likert_satisfacao_qmd, 
+                                   "Satisfação no Trabalho", 
+                                   cores_personalizadas_qmd)
+print(p_sat_qmd)
+```
+
+```{r}
+#| label: fig-likert-estresse
+#| fig-cap: "Distribuição das respostas: Percepção do Estresse."
+#| fig-width: 10
+#| fig-height: 5 # Menos itens
+#| code-summary: "Gerar Gráfico Likert (Estresse)"
+
+p_est_qmd <- criar_plot_likert_qmd(likert_est_qmd, data_likert_estresse_qmd, 
+                                   "Percepção do Estresse", 
+                                   cores_personalizadas_qmd)
+print(p_est_qmd)
+```
+
+```{r}
+#| label: fig-likert-gestao
+#| fig-cap: "Distribuição das respostas: Percepção da Gestão."
+#| fig-width: 10
+#| fig-height: 7 
+#| code-summary: "Gerar Gráfico Likert (Gestão)"
+
+p_ges_qmd <- criar_plot_likert_qmd(likert_ges_qmd, data_likert_gestao_qmd, 
+                                   "Percepção da Gestão", 
+                                   cores_personalizadas_qmd)
+print(p_ges_qmd)
+```
+
+```{r}
+#| label: fig-likert-condicoes
+#| fig-cap: "Distribuição das respostas: Condições de Trabalho."
+#| fig-width: 10
+#| fig-height: 5 # Menos itens
+#| code-summary: "Gerar Gráfico Likert (Condições)"
+
+p_con_qmd <- criar_plot_likert_qmd(likert_con_qmd, data_likert_condicoes_qmd, 
+                                   "Condições de Trabalho", 
+                                   cores_personalizadas_qmd)
+print(p_con_qmd)
+```
+
+As Figuras @fig-likert-equipe, @fig-likert-seguranca, @fig-likert-satisfacao, @fig-likert-estresse, @fig-likert-gestao e @fig-likert-condicoes ilustram a distribuição das respostas para cada item dos seis domínios do clima de segurança.
+
+A análise detalhada das respostas aos itens do questionário SAQ-SF, agrupadas por domínio (Figuras @fig-likert-equipe, @fig-likert-seguranca, @fig-likert-satisfacao, @fig-likert-estresse, @fig-likert-gestao e @fig-likert-condicoes), revela nuances importantes sobre o clima de segurança:
+
+-   **Clima de Trabalho em Equipe (@fig-likert-equipe):** A percepção neste domínio é **predominantemente positiva**. Há forte concordância sobre o apoio entre colegas (Q4), a facilidade em fazer perguntas (Q5) e a percepção de que a equipe trabalha de forma coordenada (Q6). As sugestões dos enfermeiros são geralmente bem recebidas (Q1) e as discordâncias resolvidas apropriadamente (Q3). Crucialmente, a alta discordância com a questão negativa Q2 (**NEG**: É difícil falar abertamente...) indica que os profissionais, em sua maioria, **sentem-se à vontade para expressar preocupações** sobre o cuidado ao paciente, o que é um ponto muito positivo para a segurança.
+
+-   **Clima de Segurança (@fig-likert-seguranca):** Este domínio apresenta um **quadro misto**. Por um lado, há uma forte sensação de segurança pessoal (Q7: sentir-se-ia seguro como paciente) e os profissionais sentem-se encorajados pelos colegas a reportar preocupações (Q12). Por outro lado, existem **pontos críticos**: há uma concordância significativa com a questão Q11 (**NEG**: Nesta unidade, é difícil discutir sobre erros), indicando uma **barreira na comunicação sobre falhas**. Além disso, a percepção sobre o retorno apropriado sobre desempenho (Q10) e a capacidade de aprender com os erros dos outros (Q13) mostram bastante neutralidade e discordância, sugerindo fragilidades nesses processos.
+
+-   **Satisfação no Trabalho (@fig-likert-satisfacao):** Este é um domínio com **percepção excepcionalmente positiva**. A grande maioria dos profissionais gosta do trabalho (Q15), considera a sala de vacinação um bom lugar para trabalhar (Q17) e sente orgulho de sua atuação (Q18). A percepção de pertencimento (Q16: como uma grande família) e de prestígio (Q19) também são majoritariamente positivas.
+
+-   **Percepção do Estresse (@fig-likert-estresse):** As respostas indicam um **reconhecimento significativo do impacto negativo do estresse**. Há concordância considerável com todas as questões negativas deste domínio (**Q20, Q21, Q22, Q23 NEG**), sugerindo que os profissionais percebem que a carga de trabalho excessiva, o cansaço e situações tensas prejudicam seu desempenho e aumentam a probabilidade de erros. A maior concordância é vista em relação ao cansaço prejudicando o desempenho durante situações de estresse (Q23).
+
+-   **Percepção da Gestão (@fig-likert-gestao):** Este domínio revela **áreas de preocupação significativas**. Embora haja percepções positivas sobre a gestão fazer um bom trabalho (Q26) e fornecer informações (Q28), existem pontos muito negativos. Há forte concordância de que a coordenação **não** compromete conscientemente a segurança (Q25), o que é **altamente problemático**. Também há percepção negativa sobre como profissionais problemáticos são tratados (Q27) e sobre a suficiência de pessoal qualificado (Q29). O apoio da coordenação aos esforços diários (Q24) também gera respostas divididas.
+
+-   **Condições de Trabalho (@fig-likert-condicoes):** A percepção aqui é **mista**. A disponibilidade de informação necessária para a vacinação (Q31) é vista de forma muito positiva. No entanto, a avaliação sobre o treinamento de novos membros (Q30) é menos favorável, com um percentual considerável de neutralidade e discordância. A supervisão adequada de estagiários (Q32) é o **ponto mais crítico**, com alta taxa de discordância e neutralidade, indicando uma falha percebida neste aspecto.
+
+**Resumo da Percepção:** De forma geral, os profissionais demonstram alta satisfação com o trabalho e percebem um bom clima de equipe, sentindo-se seguros e apoiados pelos colegas. Contudo, existem barreiras importantes relacionadas à comunicação sobre erros, feedback, percepção sobre a gestão (especialmente em relação ao comprometimento com a segurança e adequação de pessoal), reconhecimento do impacto do estresse e problemas nas condições de trabalho (treinamento e supervisão de estagiários).
+
+### 3.2.2. Escores dos Domínios do Clima de Segurança
+
+```{r}
+#| label: fig-medias-dominios
+#| fig-cap: "Pontuação Média por Domínio do Clima de Segurança."
+#| code-summary: "Gerar Gráfico de Barras (Médias dos Domínios)"
+
+# Calcular médias (usando nomes de colunas existentes em dados_analise)
+medias_dominios_qmd <- dados_analise %>% 
+  summarise(
+    `Satisfação no Trabalho` = mean(satisfacao_trabalho, na.rm = TRUE),
+    `Clima de Trab. em Equipe` = mean(clima_trabalho_equipe, na.rm = TRUE),
+    `Clima de Segurança` = mean(clima_seguranca, na.rm = TRUE),
+    `Condições de Trabalho` = mean(condicoes_trabalho, na.rm = TRUE),
+    `Percepção da Gestão` = mean(percepcao_gestao, na.rm = TRUE),
+    `Percepção do Estresse` = mean(percepcao_estresse, na.rm = TRUE)
+  ) %>% 
+  pivot_longer(everything(), names_to = "dominio", values_to = "media")
+
+# Gráfico de barras das médias
+p_medias_dominios_qmd <- ggplot(medias_dominios_qmd, 
+                                aes(x = reorder(dominio, -media), y = media, fill = media >= 75)) +
+  geom_bar(stat = "identity") +
+  scale_fill_manual(values = c("lightblue", "lightgreen"), 
+                    labels = c("< 75", "≥ 75"),
+                    name = "Avaliação Média") +
+  theme_minimal(base_size = 11) + 
+  labs(title = NULL, # Remover título principal do gráfico
+       x = "Domínio", 
+       y = "Pontuação Média (0-100)") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10),
+        axis.title = element_text(size = 12),
+        legend.title = element_text(size = 11),
+        legend.text = element_text(size = 10)) +
+  geom_hline(yintercept = 75, linetype = "dashed", color = "green", size = 1) +
+  geom_hline(yintercept = 50, linetype = "dashed", color = "orange", size = 1)
+
+print(p_medias_dominios_qmd)
+```
+
+```{r}
+#| label: fig-boxplot-dominios
+#| fig-cap: "Distribuição dos Escores por Domínio do Clima de Segurança."
+#| code-summary: "Gerar Gráfico Boxplot (Distribuição dos Domínios)"
+
+# Preparar dados longos (usando nomes de colunas existentes em dados_analise)
+dados_dominios_long_qmd <- dados_analise %>% 
+  select(satisfacao_trabalho, clima_trabalho_equipe, clima_seguranca, 
+         condicoes_trabalho, percepcao_gestao, percepcao_estresse) %>% 
+  pivot_longer(cols = everything(), 
+               names_to = "dominio", 
+               values_to = "escore") %>% 
+  # Renomear para melhor visualização no eixo x
+  mutate(dominio_label = case_when(
+    dominio == "satisfacao_trabalho" ~ "Satisfação",
+    dominio == "clima_trabalho_equipe" ~ "Equipe",
+    dominio == "clima_seguranca" ~ "Segurança",
+    dominio == "condicoes_trabalho" ~ "Condições",
+    dominio == "percepcao_gestao" ~ "Gestão",
+    dominio == "percepcao_estresse" ~ "Estresse",
+    TRUE ~ dominio
+  ))
+
+# Ordenar os domínios pela mediana para o boxplot
+dominio_order <- dados_dominios_long_qmd %>%
+  group_by(dominio_label) %>%
+  summarise(mediana = median(escore, na.rm = TRUE)) %>%
+  arrange(desc(mediana)) %>%
+  pull(dominio_label)
+
+dados_dominios_long_qmd$dominio_label <- factor(dados_dominios_long_qmd$dominio_label, levels = dominio_order)
+
+# Gráfico boxplot
+p_boxplot_dominios_qmd <- ggplot(dados_dominios_long_qmd, aes(x = dominio_label, y = escore)) +
+  geom_boxplot(fill = "lightblue") +
+  theme_minimal(base_size = 11) +
+  labs(title = NULL, # Remover título principal
+       x = "Domínio", 
+       y = "Escore (0-100)") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10), 
+        axis.title = element_text(size = 12)) + 
+  geom_hline(yintercept = 75, linetype = "dashed", color = "green", size = 1) +
+  geom_hline(yintercept = 50, linetype = "dashed", color = "orange", size = 1)
+
+print(p_boxplot_dominios_qmd)
+```
+
+A análise consolidada dos escores (escala 0-100) para cada domínio revela o panorama geral da percepção do clima de segurança. O gráfico de barras (@fig-medias-dominios) mostra que, na média, quatro domínios apresentam avaliação positiva (escore ≥ 75): Satisfação no Trabalho (média mais alta), Clima de Trabalho em Equipe, Clima de Segurança e Condições de Trabalho. A Percepção da Gestão apresenta uma média na faixa neutra (entre 50 e 75), enquanto a Percepção do Estresse tem a menor média, indicando uma avaliação média negativa (ressalta-se que, neste domínio, uma pontuação maior significa *menor* percepção de estresse, portanto a baixa média reflete uma *alta* percepção de estresse relatada).
+
+O gráfico de boxplots (@fig-boxplot-dominios) complementa essa visão ao mostrar a distribuição e variabilidade dos escores. Confirma-se a forte positividade para Satisfação no Trabalho e Clima de Trabalho em Equipe, com medianas e a maior parte da distribuição (IQR) bem acima de 75. O Clima de Segurança também mostra mediana acima de 75, mas com maior variabilidade para baixo. Condições de Trabalho apresenta mediana acima de 75, porém o intervalo interquartil já alcança a faixa neutra, indicando opiniões mais divididas. A Percepção da Gestão tem mediana próxima a 75, mas com grande dispersão, especialmente para valores mais baixos, reforçando a percepção mista observada nos itens individuais. A Percepção do Estresse se destaca negativamente, com mediana e toda a caixa (IQR) abaixo de 50, confirmando a alta percepção de estresse como um problema generalizado na amostra.
+
+## 3.3. Análise do Escore Geral do Clima de Segurança
+
+Nesta seção, analisamos o escore geral do clima de segurança (`clima_seguranca_total`), que representa a média das 36 questões do SAQ-SF após o devido tratamento das escalas e inversão de itens negativos. Exploramos sua distribuição e como ele se relaciona com diferentes características sociodemográficas e profissionais.
+
+### 3.3.1. Classificação Geral do Clima
+
+```{r}
+#| label: tbl-classificacao-clima-geral
+#| tbl-cap: "Distribuição da Classificação Geral do Clima de Segurança (N=647)."
+#| code-summary: "Gerar Tabela de Classificação Geral do Clima"
+
+# Código para gerar a tabela 'tabela_classificacao' do script analise.r
+# Exemplo (precisa adaptar com base nos objetos do QMD, se necessário):
+dados_analise %>% 
+  count(classificacao_clima) %>% 
+  mutate(
+    Percentual = n / sum(n) * 100,
+    classificacao_clima = factor(classificacao_clima, levels = c("Positivo", "Neutro", "Negativo"))
+  ) %>% 
+  arrange(classificacao_clima) %>% 
+  gt::gt() %>% 
+  gt::cols_label(
+    classificacao_clima = "Classificação do Clima",
+    n = "N",
+    Percentual = "Percentual (%)"
+  ) %>% 
+  gt::fmt_number(
+    columns = Percentual,
+    decimals = 1
+  ) %>% 
+  gt::tab_header(title = "Distribuição da Classificação Geral do Clima de Segurança")
+```
+
+Dos 647 profissionais, a maioria (57,7%) percebe o clima de segurança como **Positivo**, enquanto 39,7% o classificam como **Neutro**. Uma pequena parcela (2,6%) tem uma percepção **Negativa**.
+
+### 3.3.2. Estatísticas Descritivas do Escore Geral
+
+```{r}
+#| label: tbl-estatisticas-escore-geral
+#| tbl-cap: "Estatísticas Descritivas do Escore Geral do Clima de Segurança (0-100)."
+#| code-summary: "Gerar Tabela de Estatísticas do Escore Geral"
+
+# Código para gerar a tabela 'resumo_pontuacoes' do script analise.r
+# Exemplo (focando apenas no clima_seguranca_total):
+stats_geral <- dados_analise %>% summarise(
+  Média = mean(clima_seguranca_total, na.rm = TRUE),
+  `Desvio Padrão` = sd(clima_seguranca_total, na.rm = TRUE),
+  Mediana = median(clima_seguranca_total, na.rm = TRUE),
+  `P25` = quantile(clima_seguranca_total, .25, na.rm = TRUE),
+  `P75` = quantile(clima_seguranca_total, .75, na.rm = TRUE),
+  Mínimo = min(clima_seguranca_total, na.rm = TRUE),
+  Máximo = max(clima_seguranca_total, na.rm = TRUE)
+)
+
+df_summary_geral <- tibble::rownames_to_column(as.data.frame(t(stats_geral)), "Estatística")
+colnames(df_summary_geral) <- c("Estatística", "Valor")
+
+gt::gt(df_summary_geral) %>% 
+  gt::fmt_number(columns = Valor, decimals = 1) %>% 
+  gt::tab_header(title = "Estatísticas Descritivas do Escore Geral do Clima de Segurança")
+```
+
+O escore geral do clima de segurança, numa escala de 0 a 100, apresentou uma **média de 75,0** e **mediana de 77,1**. Isso indica que, em geral, a percepção do clima de segurança tende a ser positiva. Os escores variaram de um mínimo de 27,1 a um máximo de 99,3, com 50% dos profissionais pontuando entre 68,8 (Percentil 25) e 83,3 (Percentil 75).
+
+### 3.3.3. Escore Geral por Cargo
+
+```{r}
+#| label: tbl-escore-por-cargo
+#| tbl-cap: "Escore Geral do Clima de Segurança por Cargo."
+#| code-summary: "Gerar Tabela - Escore por Cargo"
+
+# Código para 'tabela_resumo_cargo' de analise.r
+dados_analise %>% 
+  group_by(!!sym(var_cargo)) %>% 
+  summarise(
+    N = n(),
+    Média = mean(clima_seguranca_total, na.rm = TRUE),
+    DP = sd(clima_seguranca_total, na.rm = TRUE),
+    Mediana = median(clima_seguranca_total, na.rm = TRUE),
+    Positivo = sum(classificacao_clima == "Positivo", na.rm = TRUE),
+    `% Positivo` = 100 * Positivo / N
+  ) %>% 
+  arrange(desc(Média)) %>% 
+  gt::gt() %>% 
+  gt::fmt_number(columns = where(is.numeric), decimals = 1) %>% 
+  gt::cols_label(!!sym(var_cargo) := "Cargo")
+```
+
+```{r}
+#| label: fig-boxplot-cargo
+#| fig-cap: "Distribuição do Escore Geral do Clima de Segurança por Cargo."
+#| code-summary: "Gerar Boxplot - Escore por Cargo"
+
+# Código para 'p_boxplot_cargo' de analise.r
+ggplot(dados_analise, aes(x = reorder(!!sym(var_cargo), clima_seguranca_total, FUN = median),
+                           y = clima_seguranca_total, fill = !!sym(var_cargo))) +
+  geom_boxplot() +
+  theme_minimal(base_size = 11) +
+  labs(x = "Cargo", y = "Escore Geral (0-100)") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position = "none") +
+  geom_hline(yintercept = 75, linetype = "dashed", color = "green", size = 1) +
+  geom_hline(yintercept = 50, linetype = "dashed", color = "orange", size = 1)
+```
+
+A Tabela @tbl-escore-por-cargo e a Figura @fig-boxplot-cargo mostram que Auxiliares de Enfermagem apresentaram a maior média (77,1) e mediana (79,2) no escore geral, com 63,6% classificando o clima como positivo. Técnicos em Enfermagem tiveram média de 76,0 e mediana de 77,8, com 60,9% de percepção positiva. Enfermeiros(as) apresentaram as menores médias (73,4) e medianas (75,7), com 52,6% de percepção positiva. Apesar das diferenças nas médias, os boxplots indicam uma sobreposição considerável nos intervalos interquartis entre os cargos, sugerindo que as distribuições dos escores são relativamente semelhantes, embora os enfermeiros apresentem uma cauda inferior um pouco mais extensa.
+
+### 3.3.4. Escore Geral por Formação
+
+```{r}
+#| label: tbl-escore-por-formacao
+#| tbl-cap: "Escore Geral do Clima de Segurança por Formação."
+#| code-summary: "Gerar Tabela - Escore por Formação"
+
+# Código para 'tabela_resumo_formacao' de analise.r
+dados_analise %>% 
+  group_by(!!sym(var_formacao)) %>% 
+  summarise(
+    N = n(),
+    Média = mean(clima_seguranca_total, na.rm = TRUE),
+    DP = sd(clima_seguranca_total, na.rm = TRUE),
+    Mediana = median(clima_seguranca_total, na.rm = TRUE),
+    Positivo = sum(classificacao_clima == "Positivo", na.rm = TRUE),
+    `% Positivo` = 100 * Positivo / N
+  ) %>% 
+  arrange(desc(Média)) %>% 
+  gt::gt() %>% 
+  gt::fmt_number(columns = where(is.numeric), decimals = 1) %>% 
+  gt::cols_label(!!sym(var_formacao) := "Formação")
+```
+
+Analisando o escore por nível de formação (Tabela @tbl-escore-por-formacao), profissionais com Ensino Médio Completo (que foram direcionados para Auxiliares de Enfermagem, N=14) e Ensino Técnico (N=322) apresentaram as maiores médias (76,8 e 76,1, respectivamente) e percentuais de clima positivo (64,3% e 61,2%). Profissionais com Graduação (N=152) tiveram média de 74,8. Aqueles com níveis mais altos de formação, como Especialização Lato Sensu (N=147), Mestrado (N=4) e Doutorado (N=1), apresentaram médias ligeiramente inferiores (72,6, 71,7 e 71,5, respectivamente). O único profissional com Doutorado classificou o clima como negativo (0% positivo). É importante notar o baixo número de participantes em algumas categorias de formação (Mestrado, Doutorado, Especialização nível Residência), o que limita generalizações.
+
+### 3.3.5. Escore Geral por Faixa Etária
+
+```{r}
+#| label: tbl-escore-por-faixa-etaria
+#| tbl-cap: "Escore Geral do Clima de Segurança por Faixa Etária."
+#| code-summary: "Gerar Tabela - Escore por Faixa Etária"
+
+# Adicionar criação da faixa_etaria aqui, se não existir em dados_analise do QMD
+dados_analise_faixa <- dados_analise %>%
+  mutate(
+    faixa_etaria_qmd = case_when(
+      idade_num < 20 ~ "< 20 anos",
+      idade_num >= 20 & idade_num <= 30 ~ "20-30 anos",
+      idade_num >= 31 & idade_num <= 40 ~ "31-40 anos",
+      idade_num >= 41 & idade_num <= 50 ~ "41-50 anos",
+      idade_num >= 51 & idade_num <= 60 ~ "51-60 anos",
+      idade_num > 60 ~ "> 60 anos",
+      TRUE ~ "Não informado"
+    ),
+    faixa_etaria_qmd = factor(faixa_etaria_qmd, 
+                          levels = c("< 20 anos", "20-30 anos", "31-40 anos", 
+                                      "41-50 anos", "51-60 anos", "> 60 anos", 
+                                      "Não informado"))
+  )
+
+dados_analise_faixa %>% 
+  group_by(faixa_etaria_qmd) %>% 
+  summarise(
+    N = n(),
+    Média = mean(clima_seguranca_total, na.rm = TRUE),
+    DP = sd(clima_seguranca_total, na.rm = TRUE),
+    Mediana = median(clima_seguranca_total, na.rm = TRUE),
+    Positivo = sum(classificacao_clima == "Positivo", na.rm = TRUE),
+    `% Positivo` = 100 * Positivo / N
+  ) %>% 
+  gt::gt() %>% 
+  gt::fmt_number(columns = where(is.numeric), decimals = 1) %>% 
+  gt::cols_label(faixa_etaria_qmd = "Faixa Etária")
+```
+
+```{r}
+#| label: fig-boxplot-faixa-etaria
+#| fig-cap: "Distribuição do Escore Geral do Clima de Segurança por Faixa Etária."
+#| code-summary: "Gerar Boxplot - Escore por Faixa Etária"
+
+# Usar dados_analise_faixa que já tem a coluna fatorizada
+ggplot(dados_analise_faixa, aes(x = faixa_etaria_qmd, y = clima_seguranca_total, fill = faixa_etaria_qmd)) +
+  geom_boxplot() +
+  theme_minimal(base_size = 11) +
+  labs(x = "Faixa Etária", y = "Escore Geral (0-100)") +
+  theme(legend.position = "none") +
+  geom_hline(yintercept = 75, linetype = "dashed", color = "green", size = 1) +
+  geom_hline(yintercept = 50, linetype = "dashed", color = "orange", size = 1)
+```
+
+A Tabela @tbl-escore-por-faixa-etaria e a Figura @fig-boxplot-faixa-etaria revelam uma tendência interessante, sugerindo uma possível relação em forma de "U" entre idade e percepção do clima de segurança. Profissionais nos extremos de idade – mais jovens (\< 20 anos, N=4, Média=76,2) e mais velhos (\> 60 anos, N=11, Média=84,3) – apresentaram as maiores médias de escore e os maiores percentuais de clima positivo (75% e 100%, respectivamente). As faixas etárias intermediárias (20-30, 31-40, 41-50, 51-60) apresentaram médias relativamente consistentes e ligeiramente inferiores, variando de 73,9 a 76,7. Os boxplots mostram que, embora a mediana para os profissionais \> 60 anos seja notavelmente alta, o número de participantes é pequeno. As demais faixas etárias apresentam distribuições semelhantes, com maior variabilidade e alguns outliers inferiores nas faixas de 20-30, 31-40 e 41-50 anos. O gráfico de médias por faixa etária (@fig-media-escore-por-faixa-etaria) ilustra essa tendência de forma mais clara.
+
+```{r}
+#| label: fig-media-escore-por-faixa-etaria
+#| fig-cap: "Média do Escore Geral do Clima de Segurança por Faixa Etária."
+#| code-summary: "Gerar Gráfico de Linha - Média do Escore por Faixa Etária"
+
+# Calcular médias por faixa etária (usando dados_analise_faixa já criado no chunk tbl-escore-por-faixa-etaria)
+media_por_faixa_etaria <- dados_analise_faixa %>% 
+  group_by(faixa_etaria_qmd) %>% 
+  summarise(
+    media_escore = mean(clima_seguranca_total, na.rm = TRUE),
+    n = n()
+  ) %>% 
+  filter(faixa_etaria_qmd != "Não informado") # Remover se houver "Não informado"
+
+
+ggplot(media_por_faixa_etaria, aes(x = faixa_etaria_qmd, y = media_escore, group = 1)) +
+  geom_line(color = "steelblue", linewidth = 1) + # Usar linewidth em vez de size para geom_line
+  geom_point(color = "steelblue", size = 3) +
+  geom_text(aes(label = paste0("N=", n)), vjust = -0.8, size = 3.5, color = "black") + # Adicionar N
+  theme_minimal(base_size = 11) +
+  labs(x = "Faixa Etária", y = "Média do Escore Geral (0-100)", 
+       title = NULL) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10),
+        axis.title = element_text(size = 12),
+        plot.title = element_text(hjust = 0.5, size = 14))
+```
+
+### 3.3.6. Escore Geral por Sexo
+
+```{r}
+#| label: tbl-escore-por-sexo
+#| tbl-cap: "Escore Geral do Clima de Segurança por Sexo."
+#| code-summary: "Gerar Tabela - Escore por Sexo"
+
+# Código para 'tabela_resumo_sexo' de analise.r
+dados_analise %>% 
+  group_by(!!sym(var_sexo)) %>% 
+  summarise(
+    N = n(),
+    Média = mean(clima_seguranca_total, na.rm = TRUE),
+    DP = sd(clima_seguranca_total, na.rm = TRUE),
+    Mediana = median(clima_seguranca_total, na.rm = TRUE),
+    Positivo = sum(classificacao_clima == "Positivo", na.rm = TRUE),
+    `% Positivo` = 100 * Positivo / N
+  ) %>% 
+  gt::gt() %>% 
+  gt::fmt_number(columns = where(is.numeric), decimals = 1) %>% 
+  gt::cols_label(!!sym(var_sexo) := "Sexo")
+```
+
+Conforme a Tabela @tbl-escore-por-sexo, profissionais do sexo masculino (N=53) apresentaram uma média de escore ligeiramente superior (76,9) em comparação com os do sexo feminino (N=594, média 74,8). O percentual de percepção positiva também foi maior entre os homens (64,2%) do que entre as mulheres (57,1%). Dada a grande disparidade no tamanho das amostras, mais análises seriam necessárias para determinar a significância dessa diferença.
+
+### 3.3.7. Escore Geral por Porte do Município
+
+```{r}
+#| label: tbl-escore-por-porte
+#| tbl-cap: "Escore Geral do Clima de Segurança por Porte do Município."
+#| code-summary: "Gerar Tabela - Escore por Porte"
+
+# Código para 'tabela_resumo_porte' de analise.r
+if (var_porte_ibge %in% names(dados_analise)) {
+  dados_analise %>% 
+    filter(!is.na(!!sym(var_porte_ibge))) %>% 
+    group_by(!!sym(var_porte_ibge)) %>% 
+    summarise(
+      N = n(),
+      Média = mean(clima_seguranca_total, na.rm = TRUE),
+      DP = sd(clima_seguranca_total, na.rm = TRUE),
+      Mediana = median(clima_seguranca_total, na.rm = TRUE),
+      Positivo = sum(classificacao_clima == "Positivo", na.rm = TRUE),
+      `% Positivo` = 100 * Positivo / N
+    ) %>% 
+    arrange(!!sym(var_porte_ibge)) %>% 
+    gt::gt() %>% 
+    gt::fmt_number(columns = where(is.numeric), decimals = 1) %>% 
+    gt::cols_label(!!sym(var_porte_ibge) := "Porte IBGE")
+} else {
+  cat("Variável PORTE_IBGE não encontrada.")
+}
+```
+
+```{r}
+#| label: fig-boxplot-porte
+#| fig-cap: "Distribuição do Escore Geral do Clima de Segurança por Porte do Município."
+#| code-summary: "Gerar Boxplot - Escore por Porte"
+
+# Código para 'p_boxplot_porte' de analise.r
+if (var_porte_ibge %in% names(dados_analise)) {
+  ggplot(dados_analise %>% filter(!is.na(!!sym(var_porte_ibge))), 
+         aes(x = !!sym(var_porte_ibge), y = clima_seguranca_total, fill = !!sym(var_porte_ibge))) +
+    geom_boxplot() +
+    theme_minimal(base_size = 11) +
+    labs(x = "Porte IBGE", y = "Escore Geral (0-100)") +
+    theme(legend.position = "none") +
+    geom_hline(yintercept = 75, linetype = "dashed", color = "green", size = 1) +
+    geom_hline(yintercept = 50, linetype = "dashed", color = "orange", size = 1)
+} else {
+  cat("Variável PORTE_IBGE não encontrada para o gráfico.")
+}
+```
+
+A Tabela @tbl-escore-por-porte e a Figura @fig-boxplot-porte indicam que a percepção do clima de segurança é similar entre os diferentes portes de município. Municípios de Pequeno Porte (N=403) tiveram a maior média (75,2), seguidos por Grande Porte (N=171, média 74,7) e Médio Porte (N=73, média 74,3). Os percentuais de clima positivo foram 59,3% (Pequeno), 50,7% (Médio) e 56,7% (Grande). Os boxplots mostram distribuições bastante sobrepostas, com medianas próximas, sugerindo pouca variação expressiva do escore geral em função do porte municipal.
+
+### 3.3.8. Escore Geral por Macrorregião
+
+```{r}
+#| label: tbl-escore-por-macro
+#| tbl-cap: "Escore Geral do Clima de Segurança por Macrorregião."
+#| code-summary: "Gerar Tabela - Escore por Macrorregião"
+
+# Código para 'tabela_resumo_macro' de analise.r
+if (var_macrorregiao %in% names(dados_analise)) {
+  dados_analise %>% 
+    filter(!is.na(!!sym(var_macrorregiao))) %>% 
+    group_by(!!sym(var_macrorregiao)) %>% 
+    summarise(
+      N = n(),
+      Média = mean(clima_seguranca_total, na.rm = TRUE),
+      DP = sd(clima_seguranca_total, na.rm = TRUE),
+      Mediana = median(clima_seguranca_total, na.rm = TRUE),
+      Positivo = sum(classificacao_clima == "Positivo", na.rm = TRUE),
+      `% Positivo` = 100 * Positivo / N
+    ) %>% 
+    arrange(!!sym(var_macrorregiao)) %>% 
+    gt::gt() %>% 
+    gt::fmt_number(columns = where(is.numeric), decimals = 1) %>% 
+    gt::cols_label(!!sym(var_macrorregiao) := "Macrorregião")
+} else {
+  cat("Variável MACRORREGIOES não encontrada.")
+}
+```
+
+A Tabela @tbl-escore-por-macro mostra a percepção do clima de segurança entre as macrorregiões de saúde. Destacam-se positivamente as macrorregiões TRIÂNGULO DO SUL (N=9, Média=85,1, 100% Positivo), SUL (N=55, Média=79,0, 78,2% Positivo) e VALE DO AÇO (N=19, Média=78,1, 68,4% Positivo). Por outro lado, as macrorregiões CENTRO (N=18, Média=67,2, 38,9% Positivo), NORTE (N=54, Média=70,2, 35,2% Positivo) e LESTE DO SUL (N=17, Média=70,7, 35,3% Positivo) apresentaram as menores médias e percentuais de clima positivo. A macrorregião OESTE, com o maior número de respondentes (N=214), apresentou uma média de 75,5 (58,9% Positivo). É importante notar a variação no número de respondentes por macrorregião, com algumas (ex: NOROESTE, N=2) tendo uma representatividade muito pequena para generalizações.
+
+### 3.3.9. Distribuição Espacial do Clima de Segurança
+
+Para visualizar a distribuição geográfica da percepção do clima de segurança, foram gerados dois mapas: um com pontos nos centroides dos municípios participantes, coloridos pela média do escore e com tamanho proporcional ao número de respondentes, sobreposto a um mapa das macrorregiões da pesquisa; e um mapa coroplético colorindo as macrorregiões da pesquisa pela média do escore de clima de segurança.
+
+```{r}
+#| label: fig-mapa-centroides-macrofundo
+#| fig-cap: "Clima de Segurança Médio e Nº de Respondentes por Município, sobre Fundo das Macrorregiões da Pesquisa."
+#| code-summary: "Gerar Mapa de Centroides Municipais"
+#| fig-width: 10
+#| fig-height: 8
+
+# Dependências: sf, geobr, dplyr, ggplot2, viridisLite (para scale_color_viridis_c)
+# A função limpar_nomes() e o df_municipios_info_qmd devem estar disponíveis (carregados no setup)
+
+if (!exists("mg_mun_qmd")) { 
+  mg_mun_qmd <- read_municipality(code_muni = "MG", year = 2020)
+}
+
+# Preparar dados para geometrias das Macrorregiões da Pesquisa (fundo)
+# USA O DF COMPLETO CARREGADO NO SETUP (df_municipios_info_qmd)
+sf_macrorregioes_dissolvidas_qmd <- NULL # Inicializa
+if(!is.null(df_municipios_info_qmd)){
+  mg_mun_com_macro_qmd <- mg_mun_qmd %>% 
+    mutate(Municipio_join = limpar_nomes(name_muni)) %>% 
+    left_join(df_municipios_info_qmd %>% select(Municipio_join, MACRORREGIOES), by = "Municipio_join")
+  
+  sf_macrorregioes_dissolvidas_qmd <- mg_mun_com_macro_qmd %>% 
+    filter(!is.na(MACRORREGIOES) & MACRORREGIOES != "") %>% # Filtrar NAs e vazios
+    group_by(MACRORREGIOES) %>% 
+    summarize(
+      geometry = st_union(geom),
+      .groups = 'drop'
+    ) %>% 
+    mutate(geometry = st_simplify(geometry, preserveTopology = TRUE, dTolerance = 500))
+} else {
+  cat("WARN: df_municipios_info_qmd não disponível. Fundo de macrorregiões não será gerado.\n")
+  # Cria um objeto vazio para não dar erro no plot
+  sf_macrorregioes_dissolvidas_qmd <- st_sf(MACRORREGIOES = character(), geometry = st_sfc(), crs = st_crs(mg_mun_qmd))
+}
+
+# Preparar dados para os centroides (continua usando dados_analise)
+resumo_por_municipio_qmd <- dados_analise %>% 
+  group_by(!!sym("Município")) %>% 
+  summarise(
+    media = mean(clima_seguranca_total, na.rm = TRUE),
+    n = n(),
+    .groups = 'drop'
+  ) %>% 
+  mutate(Municipio_limpo = limpar_nomes(!!sym("Município")))
+
+mg_mun_mapa_qmd_centroids <- mg_mun_qmd %>% 
+  mutate(Municipio_limpo = limpar_nomes(name_muni))
+
+mg_map_data_qmd_centroids <- left_join(mg_mun_mapa_qmd_centroids, 
+                                       resumo_por_municipio_qmd %>% select(Municipio_limpo, `Município`, media, n),
+                                       by = "Municipio_limpo")
+
+mg_centroids_filtered_qmd <- mg_map_data_qmd_centroids %>% 
+  filter(!is.na(media)) %>% 
+  st_centroid()
+
+# Plotar o mapa
+if(nrow(mg_centroids_filtered_qmd) > 0){
+  p_centroides <- ggplot() 
+  if(!is.null(sf_macrorregioes_dissolvidas_qmd) && nrow(sf_macrorregioes_dissolvidas_qmd) > 0) { 
+    p_centroides <- p_centroides + geom_sf(data = sf_macrorregioes_dissolvidas_qmd, fill = "grey92", color = "black", linewidth = 0.6, alpha = 0.8)
+  }
+  p_centroides <- p_centroides +
+    geom_sf(data = mg_centroids_filtered_qmd, aes(size = n, color = media),
+            shape = 16, alpha = 0.7) +
+    scale_color_viridis_c(option = "plasma", name = "Pontuação Média\n(0-100)") + 
+    scale_size_continuous(name = "Nº Respondentes", range = c(2, 10)) + 
+    labs(caption = "Tamanho do ponto ~ Nº Respondentes | Cor ~ Pontuação Média") +
+    theme_void() +
+    theme(legend.position = "right")
+  print(p_centroides)
+} else {
+  cat("Não há dados de centroides para plotar o mapa.\n")
+}
+```
+
+```{r}
+#| label: fig-mapa-macro-coropleto
+#| fig-cap: "Clima de Segurança Médio por Macrorregião de Planejamento em MG."
+#| code-summary: "Gerar Mapa Coroplético por Macrorregião"
+#| fig-width: 10
+#| fig-height: 8
+
+# Reutilizar sf_macrorregioes_dissolvidas_qmd (geometrias completas calculadas no chunk anterior)
+
+# Calcular resumo por macrorregião a partir de dados_analise (para as cores)
+resumo_por_macro_qmd_map <- dados_analise %>% 
+  filter(!is.na(!!sym(var_macrorregiao)) & !!sym(var_macrorregiao) != "") %>% # Filtrar NAs e vazios
+  group_by(!!sym(var_macrorregiao)) %>% 
+  summarise(
+    media = mean(clima_seguranca_total, na.rm = TRUE),
+    n = n(),
+    .groups = 'drop'
+  ) %>% 
+  rename(MACRORREGIOES = !!sym(var_macrorregiao))
+
+# Juntar geometrias completas com os dados de média da amostra
+if(!is.null(sf_macrorregioes_dissolvidas_qmd) && nrow(sf_macrorregioes_dissolvidas_qmd) > 0) { 
+    map_data_macro_final_qmd <- sf_macrorregioes_dissolvidas_qmd %>% 
+      left_join(resumo_por_macro_qmd_map, by = "MACRORREGIOES")
+    
+    if(nrow(map_data_macro_final_qmd %>% filter(!is.na(media))) > 0) {
+      min_media_map <- min(map_data_macro_final_qmd$media, na.rm = TRUE)
+      max_media_map <- max(map_data_macro_final_qmd$media, na.rm = TRUE)
+    
+      ggplot() +
+        geom_sf(data = map_data_macro_final_qmd, aes(fill = media), color = "black", linewidth = 0.5, alpha = 0.9) + 
+        scale_fill_distiller(
+          palette = "YlGnBu", 
+          direction = 1,
+          name = "Pontuação Média\n(0-100)",
+          limits = c(floor(min_media_map/10)*10, ceiling(max_media_map/10)*10),
+          na.value = "grey80" # Cor para macrorregiões sem respondentes
+        ) +
+        geom_sf_text(
+          data = map_data_macro_final_qmd %>% filter(!is.na(media)), # Rotular apenas as com dados
+          aes(label = str_wrap(MACRORREGIOES, width = 12)), 
+          size = 2.5, 
+          color = "black", 
+          fun.geometry = st_centroid,
+          check_overlap = TRUE 
+        ) +
+        labs(
+          caption = paste0("Fonte: Dados da pesquisa. N respondentes nas macrorregiões com dados: ", 
+                           sum(resumo_por_macro_qmd_map$n[resumo_por_macro_qmd_map$MACRORREGIOES %in% (map_data_macro_final_qmd %>% filter(!is.na(media)) %>% pull(MACRORREGIOES))], na.rm = TRUE))
+        ) +
+        theme_void() +
+        theme(legend.position = "right",
+              panel.background = element_rect(fill = "white", colour = "white"))
+    } else {
+      cat("Não há dados de macrorregiões com média para plotar o mapa coroplético.\n")
+    }
+} else {
+  cat("Geometrias das macrorregiões não disponíveis para o mapa coroplético.\n")
+}
+```
+
+O mapa de centroides (@fig-mapa-centroides-macrofundo) permite visualizar a distribuição dos respondentes e a pontuação média do clima em cada município participante, sobreposto às macrorregiões de planejamento. Observa-se uma concentração de respondentes (pontos maiores) em certas áreas, como a macrorregião OESTE. As cores dos pontos indicam a variabilidade da pontuação média municipal, com tons mais quentes (amarelo/laranja) representando escores mais altos e tons mais frios (roxo) indicando escores mais baixos. Há uma predominância de cores mais quentes, alinhada com a média geral positiva, mas com pontos mais frios dispersos, sugerindo heterogeneidade local.
+
+O mapa coroplético (@fig-mapa-macro-coropleto) agrega a pontuação média por macrorregião. Confirma-se visualmente as maiores médias (tons mais escuros de azul) nas regiões TRIÂNGULO DO SUL, SUL e VALE DO AÇO, e as menores médias (tons mais claros de verde/azul claro) nas regiões CENTRO, NORTE e LESTE DO SUL. A região NOROESTE aparece em cinza, indicando ausência de dados suficientes ou não correspondência na junção para cálculo da média (N=2 na Tabela @tbl-escore-por-macro). Este mapa reforça a existência de variações regionais significativas na percepção do clima de segurança.
+
+### 3.3.10. Escore Geral por Porte do Município e Cargo
+
+```{r}
+#| label: tbl-escore-por-porte-cargo
+#| tbl-cap: "Escore Geral do Clima de Segurança por Porte do Município e Cargo."
+#| code-summary: "Gerar Tabela - Escore por Porte e Cargo"
+
+# Código para 'tabela_resumo_porte_cargo' de analise.r
+if (var_porte_ibge %in% names(dados_analise) && var_cargo %in% names(dados_analise)) {
+  dados_analise %>% 
+    filter(!is.na(!!sym(var_porte_ibge)) & !is.na(!!sym(var_cargo))) %>% 
+    mutate(!!var_porte_ibge := factor(!!sym(var_porte_ibge), levels = c("Pequeno Porte", "Médio Porte", "Grande Porte"))) %>% 
+    group_by(!!sym(var_porte_ibge), !!sym(var_cargo)) %>% 
+    summarise(
+      N = n(),
+      Média = mean(clima_seguranca_total, na.rm = TRUE),
+      DP = sd(clima_seguranca_total, na.rm = TRUE),
+      Mediana = median(clima_seguranca_total, na.rm = TRUE),
+      Positivo = sum(classificacao_clima == "Positivo", na.rm = TRUE),
+      `% Positivo` = 100 * Positivo / N,
+      .groups = 'drop'
+    ) %>% 
+    arrange(!!sym(var_porte_ibge), !!sym(var_cargo)) %>% 
+    gt::gt() %>% 
+    gt::fmt_number(columns = where(is.numeric), decimals = 1) %>% 
+    gt::cols_label(!!sym(var_porte_ibge) := "Porte IBGE", !!sym(var_cargo) := "Cargo")
+} else {
+  cat("Variáveis PORTE_IBGE ou Cargo não encontradas.")
+}
+```
+
+```{r}
+#| label: fig-boxplot-porte-cargo
+#| fig-cap: "Distribuição do Escore Geral por Porte do Município e Cargo."
+#| code-summary: "Gerar Boxplot - Escore por Porte e Cargo"
+#| fig-width: 9
+#| fig-height: 7
+
+# Código para 'p_boxplot_porte_cargo' de analise.r
+if (var_porte_ibge %in% names(dados_analise) && var_cargo %in% names(dados_analise)) {
+  ggplot(dados_analise %>% 
+             filter(!is.na(!!sym(var_porte_ibge)) & !is.na(!!sym(var_cargo))) %>% 
+             mutate(!!var_porte_ibge := factor(!!sym(var_porte_ibge), levels = c("Pequeno Porte", "Médio Porte", "Grande Porte"))), 
+           aes(x = !!sym(var_porte_ibge), y = clima_seguranca_total, fill = !!sym(var_cargo))) +
+    geom_boxplot(position = position_dodge(preserve = 'single')) +
+    theme_minimal(base_size = 11) +
+    labs(x = "Porte IBGE", y = "Escore Geral (0-100)", fill = "Cargo") +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position = "top") +
+    geom_hline(yintercept = 75, linetype = "dashed", color = "green", size = 1) +
+    geom_hline(yintercept = 50, linetype = "dashed", color = "orange", size = 1)
+} else {
+  cat("Variáveis PORTE_IBGE ou Cargo não encontradas para o gráfico.")
+}
+```
+
+Analisando o cruzamento entre Porte do Município e Cargo (Tabela @tbl-escore-por-porte-cargo e Figura @fig-boxplot-porte-cargo), observa-se que Auxiliares de Enfermagem consistentemente apresentam médias e medianas elevadas em municípios de Pequeno Porte (Média=77,6) e Médio Porte (Média=75,0, N=1). Técnicos em Enfermagem também demonstram boa percepção, especialmente em municípios de Médio Porte (Média=77,6) e Pequeno Porte (Média=76,0). Enfermeiros(as) tendem a ter médias ligeiramente mais baixas em todos os portes, variando de 70,6 (Médio Porte) a 73,9 (Grande Porte). Em municípios de Médio Porte, Enfermeiros(as) tiveram o menor percentual de clima positivo (32,4%). O boxplot ilustra que, em geral, as medianas para Auxiliares e Técnicos são mais altas que para Enfermeiros, independentemente do porte, embora com sobreposição dos intervalos e maior variabilidade nos escores dos Enfermeiros em municípios de médio porte.
+
+# 4. Análise Univariada dos Fatores Associados ao Clima de Segurança
+
+Nesta seção, investigamos a associação entre as características sociodemográficas, profissionais e contextuais e o escore geral do clima de segurança do paciente (`clima_seguranca_total`). Foram aplicados testes de hipóteses para verificar se existem diferenças estatisticamente significativas nas médias ou medianas do escore entre os diferentes grupos ou se há correlação com variáveis contínuas. Adotou-se um nível de significância de p \< 0,05.
+
+```{r setup-univariada, collapse=TRUE}
+#| code-summary: "Configurações e Funções Auxiliares para Análise Univariada"
+
+# Opção para evitar notação científica nos p-valores
+options(scipen = 999)
+
+# Função auxiliar para formatar p-valores
+formatar_p <- function(p_valor) {
+  if (is.na(p_valor)) return("NA")
+  if (p_valor < 0.001) return("< 0,001")
+  if (p_valor < 0.01) return(formatC(p_valor, format = "f", digits = 4))
+  return(formatC(p_valor, format = "f", digits = 4)) # Arredonda para 4 casas se >= 0.01
+}
+
+# Função SIMPLIFICADA para realizar APENAS o teste de Kruskal-Wallis
+# Retorna uma lista com o p-valor e uma mensagem textual
+analise_kruskal <- function(data, formula) {
+  var_indep_name <- all.vars(formula)[2] # Pega o nome da variável independente
+  var_dep_name <- all.vars(formula)[1]   # Pega o nome da variável dependente
+
+  # Verificar se as variáveis existem
+  if (!var_indep_name %in% names(data) || !var_dep_name %in% names(data)) {
+     return(list(p_value = NA, resultado_texto = "Variável dependente ou independente não encontrada."))
+  }
+  
+  # Filtrar NAs nas variáveis da fórmula para contagem de níveis e grupos
+  # Ensure dplyr is loaded or use data.frame specific functions if not using tidyverse here
+  # For safety, assuming data is a data.frame and using base R style for filtering if dplyr isn't guaranteed
+  cols_to_check <- c(var_dep_name, var_indep_name)
+  data_complete_cases <- data[complete.cases(data[, cols_to_check]), ]
+
+
+  # Verificar se a variável independente tem pelo menos 2 níveis com dados
+  n_levels <- length(unique(data_complete_cases[[var_indep_name]]))
+  if (n_levels < 2) {
+    return(list(p_value = NA, resultado_texto = paste0("Variável independente '", var_indep_name, "' com menos de 2 níveis válidos após remover NAs.")))
+  }
+  
+  # Verificar se há pelo menos 2 grupos com mais de 1 observação
+  group_counts <- table(data_complete_cases[[var_indep_name]])
+  valid_groups <- sum(group_counts > 1)
+  if (valid_groups < 2) {
+    return(list(p_value = NA, resultado_texto = paste0("Menos de 2 grupos com observações suficientes para o teste em '", var_indep_name,"' após remover NAs.")))
+  }
+  
+  # Realizar teste Kruskal-Wallis
+  kw_test <- tryCatch({
+    kruskal.test(formula, data = data) # kruskal.test handles NAs by default (listwise deletion based on formula)
+  }, error = function(e) {
+    warning(paste("Erro no Kruskal-Wallis para", var_indep_name, ":", e$message))
+    return(NULL)
+  })
+  
+  if (is.null(kw_test)) {
+    return(list(p_value = NA, resultado_texto = "Erro ao executar Kruskal-Wallis."))
+  }
+
+  p_kw <- kw_test$p.value
+  resultado <- paste0("Teste de Kruskal-Wallis: p = ", formatar_p(p_kw), ".")
+  
+  if (p_kw < 0.05) {
+    resultado <- paste0(resultado, " Diferença estatisticamente significativa encontrada entre os grupos.")
+  } else {
+    resultado <- paste0(resultado, " Não foi encontrada diferença estatisticamente significativa entre os grupos.")
+  }
+  
+  return(list(p_value = p_kw, resultado_texto = resultado))
+}
+
+# Função para realizar teste de Mann-Whitney (permanece a mesma)
+analise_mann_whitney <- function(data, var_outcome, var_group) {
+  # Limpar nomes de variáveis
+  var_outcome_clean <- trimws(gsub("`", "", var_outcome))
+  var_group_clean <- trimws(gsub("`", "", var_group))
+  
+  # Verificar se as variáveis existem no dataframe
+  if (!var_outcome_clean %in% names(data) || !var_group_clean %in% names(data)) {
+    return(paste0("Uma ou ambas as variáveis não foram encontradas no dataframe: ", 
+                  var_outcome_clean, ", ", var_group_clean))
+  }
+  
+  # Verificar níveis da variável independente
+  # Ensure dplyr is loaded for this syntax or adapt
+  data_filtered_mw <- data[!is.na(data[[var_group_clean]]) & !is.na(data[[var_outcome_clean]]), ]
+  levels_info <- unique(data_filtered_mw[[var_group_clean]])
+  
+  if (length(levels_info) != 2) {
+    return(paste0("Variável independente '", var_group_clean, "' não possui exatamente 2 níveis válidos após remover NAs."))
+  }
+  
+  # Verificar observações por grupo
+  group_counts_mw <- as.data.frame(table(data_filtered_mw[[var_group_clean]]))
+  
+  if (any(group_counts_mw$Freq < 2)) { # Check Freq column from table
+    return(paste0("Número insuficiente de observações em um ou ambos os grupos para '", var_group_clean, "' após remover NAs."))
+  }
+  
+  # Construir a fórmula usando paste0 e as.formula (método que funcionou)
+  formula_str <- paste0("`",var_outcome_clean, "` ~ `", var_group_clean, "`") # Ensure backticks for safety
+  formula_obj <- as.formula(formula_str)
+  
+  # Executar Mann-Whitney
+  mw_result <- tryCatch({
+    wilcox.test(formula_obj, data = data) # wilcox.test handles NAs based on formula
+  }, error = function(e) {
+    message <- paste("Erro no Mann-Whitney para", var_group_clean, ":", e$message)
+    warning(message)
+    return(NULL)
+  })
+  
+  # Se o teste falhou, retornar mensagem de erro
+  if (is.null(mw_result)) {
+    return(paste0("Erro ao executar Mann-Whitney para '", var_group_clean, "'."))
+  }
+  
+  # Preparar resultado
+  p_value <- mw_result$p.value
+  resultado <- paste0("Teste de Mann-Whitney: p = ", formatar_p(p_value), ".")
+  
+  if (p_value < 0.05) {
+    resultado <- paste0(resultado, " Diferença estatisticamente significativa encontrada.")
+  } else {
+    resultado <- paste0(resultado, " Não foi encontrada diferença estatisticamente significativa.")
+  }
+  
+  return(resultado)
+}
+
+# Função para realizar teste de correlação de Spearman (permanece a mesma)
+analise_cor_spearman <- function(data, var1, var2) {
+  # Limpar nomes de variáveis
+  var1_clean <- trimws(gsub("`", "", var1))
+  var2_clean <- trimws(gsub("`", "", var2))
+  
+  if (!var1_clean %in% names(data) || !var2_clean %in% names(data)) {
+    return("Uma ou ambas as variáveis não encontradas nos dados.")
+  }
+  
+  # Check for sufficient non-NA pairs
+  complete_cases_cor <- complete.cases(data[[var1_clean]], data[[var2_clean]])
+  if(sum(complete_cases_cor) < 3) { # Min observations for cor.test
+      return(paste0("Não há observações suficientes (pares completos sem NA) para calcular a correlação entre '", var1_clean, "' e '", var2_clean, "'."))
+  }
+
+  cor_test <- tryCatch({
+     cor.test(data[[var1_clean]], data[[var2_clean]], method = "spearman", exact = FALSE) # exact=FALSE para evitar warnings com empates
+  }, error = function(e) {
+     warning(paste("Erro na correlação de Spearman entre", var1_clean, "e", var2_clean, ":", e$message))
+     return(NULL)
+  })
+  
+  if(is.null(cor_test)){
+      return(paste0("Erro ao calcular correlação para '", var1_clean, "' e '", var2_clean, "'."))
+  }
+
+  rho <- cor_test$estimate
+  p_cor <- cor_test$p.value
+  resultado <- paste0("Correlação de Spearman (rho): ", round(rho, 3), ", p = ", formatar_p(p_cor), ".")
+  if (p_cor < 0.05) {
+    resultado <- paste0(resultado, " Correlação estatisticamente significativa encontrada.")
+  } else {
+    resultado <- paste0(resultado, " Não foi encontrada correlação estatisticamente significativa.")
+  }
+  return(resultado)
+}
+```
+
+## 4.1. Associação com Características Sociodemográficas e Profissionais
+
+### 4.1.1. Cargo
+
+Para verificar se existe diferença significativa no escore geral do clima de segurança entre os diferentes cargos (Auxiliar de Enfermagem, Técnico em Enfermagem, Enfermeiro(a)), foi realizado o teste de Kruskal-Wallis. Se significativa, comparações par a par foram feitas usando o teste de Wilcoxon (Mann-Whitney) com ajuste de Bonferroni.
+
+```{r teste-cargo-kw, collapse=TRUE}
+#| code-summary: "Teste de Hipótese - Cargo (Kruskal-Wallis)"
+
+# Executar o teste de Kruskal-Wallis
+# Construir a fórmula dinamicamente para Kruskal-Wallis
+formula_cargo <- as.formula(paste0("`", var_clima_total, "` ~ `", var_cargo, "`"))
+resultado_kw_cargo <- analise_kruskal(dados_analise, formula_cargo) 
+
+# Exibir o resultado textual do Kruskal-Wallis
+print(resultado_kw_cargo$resultado_texto)
+```
+
+```{r teste-cargo-pairwise, collapse=TRUE, eval=TRUE, results='asis'}
+#| code-summary: "Teste Post-hoc - Cargo (Pairwise Wilcoxon)"
+
+# Executar pairwise.wilcox.test APENAS se Kruskal-Wallis foi significativo
+if (!is.na(resultado_kw_cargo$p_value) && resultado_kw_cargo$p_value < 0.05) {
+  cat("
+**Comparações Post-hoc (Pairwise Wilcoxon com ajuste de Bonferroni):**
+")
+  
+  # Garantir que a variável de grupo seja um fator e remover NAs que afetariam o pairwise.wilcox.test
+  # Pairwise wilcox test precisa de vetores sem NA ou de um data.frame onde a formula pode ser aplicada
+  # e os NAs são tratados consistentemente (geralmente removendo linhas com NA na var dependente ou independente)
+  dados_analise_filtered_cargo <- dados_analise %>%
+    filter(!is.na(.data[[var_clima_total]]) & !is.na(.data[[var_cargo]])) %>%
+    mutate(!!sym(var_cargo) := factor(.data[[var_cargo]])) # Convertendo para fator
+      
+  pairwise_result_cargo <- pairwise.wilcox.test(
+    dados_analise_filtered_cargo[[var_clima_total]], 
+    dados_analise_filtered_cargo[[var_cargo]], 
+    p.adjust.method = "bonferroni" 
+  )
+  
+  # Imprimir a matriz de p-valores ajustados
+  print(pairwise_result_cargo)
+  
+  cat("
+*Interpretação: Valores na tabela são os p-valores ajustados. Valores < 0,05 indicam diferença significativa entre os pares de grupos correspondentes.*")
+  
+} else if (!is.na(resultado_kw_cargo$p_value)) {
+  # Se não foi significativo, apenas informar
+  cat("
+Como o teste de Kruskal-Wallis não foi significativo (p >= 0,05), comparações post-hoc não foram realizadas.")
+}
+# Se houve erro no Kruskal, a mensagem de erro já foi exibida no chunk anterior
+```
+
+O teste de Kruskal-Wallis indicou uma diferença estatisticamente significativa no escore geral do clima de segurança entre os diferentes cargos (p = 0.0021). As comparações post-hoc (Pairwise Wilcoxon com ajuste de Bonferroni) revelaram que Técnicos em Enfermagem apresentaram escores significativamente diferentes (mais altos, conforme Tabela @tbl-escore-por-cargo Média=76,0) em comparação com Enfermeiros(as) (Média=73,4) (p.adj = 0.0027). Não foram encontradas diferenças significativas entre Auxiliares de Enfermagem e os demais cargos nas comparações par a par ajustadas (p.adj \> 0.05).
+
+### 4.1.2. Formação
+
+Analisou-se a associação entre o nível de formação e o escore geral do clima de segurança utilizando o teste de Kruskal-Wallis. Se significativa, comparações par a par foram feitas.
+
+```{r teste-formacao-kw, collapse=TRUE}
+#| code-summary: "Teste de Hipótese - Formação (Kruskal-Wallis)"
+formula_formacao <- as.formula(paste0("`", var_clima_total, "` ~ `", var_formacao, "`"))
+resultado_kw_formacao <- analise_kruskal(dados_analise, formula_formacao)
+print(resultado_kw_formacao$resultado_texto)
+```
+
+```{r teste-formacao-pairwise, collapse=TRUE, eval=TRUE, results='asis'}
+#| code-summary: "Teste Post-hoc - Formação (Pairwise Wilcoxon)"
+if (!is.na(resultado_kw_formacao$p_value) && resultado_kw_formacao$p_value < 0.05) {
+  cat("
+**Comparações Post-hoc (Pairwise Wilcoxon com ajuste de Bonferroni):**
+")
+  dados_analise_filtered_formacao <- dados_analise %>%
+    filter(!is.na(.data[[var_clima_total]]) & !is.na(.data[[var_formacao]])) %>%
+    mutate(!!sym(var_formacao) := factor(.data[[var_formacao]]))
+      
+  pairwise_result_formacao <- pairwise.wilcox.test(
+    dados_analise_filtered_formacao[[var_clima_total]], 
+    dados_analise_filtered_formacao[[var_formacao]], 
+    p.adjust.method = "bonferroni"
+  )
+  print(pairwise_result_formacao)
+  cat("
+*Interpretação: Valores na tabela são os p-valores ajustados. Valores < 0,05 indicam diferença significativa entre os pares de grupos correspondentes.*")
+} else if (!is.na(resultado_kw_formacao$p_value)) {
+  cat("
+Como o teste de Kruskal-Wallis não foi significativo (p >= 0,05), comparações post-hoc não foram realizadas.")
+}
+```
+
+Encontrou-se uma associação estatisticamente significativa entre o nível de formação e o escore geral do clima de segurança (Kruskal-Wallis, p = 0.0165). O teste post-hoc (Pairwise Wilcoxon com ajuste de Bonferroni) indicou que profissionais com Ensino Técnico apresentaram escores significativamente mais altos (Média=76,1, conforme Tabela @tbl-escore-por-formacao) do que aqueles com Especialização Lato Sensu (Média=72,6) (p.adj = 0.0056). As demais comparações par a par não mostraram diferenças estatisticamente significativas.
+
+### 4.1.3. Faixa Etária
+
+Verificou-se se havia diferença no escore geral do clima de segurança entre as faixas etárias definidas, utilizando o teste de Kruskal-Wallis. Se significativa, comparações par a par foram feitas.
+
+```{r teste-faixa-etaria-kw, collapse=TRUE}
+#| code-summary: "Teste de Hipótese - Faixa Etária (Kruskal-Wallis)"
+# Usar dados_analise_faixa que já tem 'faixa_etaria_qmd'
+if (!exists("dados_analise_faixa")) {
+    dados_analise_faixa <- dados_analise %>%
+      mutate(
+        faixa_etaria_qmd = case_when(
+          idade_num < 20 ~ "< 20 anos",
+          idade_num >= 20 & idade_num <= 30 ~ "20-30 anos",
+          idade_num >= 31 & idade_num <= 40 ~ "31-40 anos",
+          idade_num >= 41 & idade_num <= 50 ~ "41-50 anos",
+          idade_num >= 51 & idade_num <= 60 ~ "51-60 anos",
+          idade_num > 60 ~ "> 60 anos",
+          TRUE ~ "Não informado"
+        ),
+        faixa_etaria_qmd = factor(faixa_etaria_qmd, 
+                              levels = c("< 20 anos", "20-30 anos", "31-40 anos", 
+                                          "41-50 anos", "51-60 anos", "> 60 anos", 
+                                          "Não informado"))
+      )
+}
+formula_faixa_etaria <- as.formula(paste0("`", var_clima_total, "` ~ faixa_etaria_qmd")) # faixa_etaria_qmd não precisa de crases se for nome válido
+resultado_kw_faixa_etaria <- analise_kruskal(dados_analise_faixa, formula_faixa_etaria)
+print(resultado_kw_faixa_etaria$resultado_texto)
+```
+
+```{r teste-faixa-etaria-pairwise, collapse=TRUE, eval=TRUE, results='asis'}
+#| code-summary: "Teste Post-hoc - Faixa Etária (Pairwise Wilcoxon)"
+if (!is.na(resultado_kw_faixa_etaria$p_value) && resultado_kw_faixa_etaria$p_value < 0.05) {
+  cat("
+**Comparações Post-hoc (Pairwise Wilcoxon com ajuste de Bonferroni):**
+")
+  # dados_analise_faixa já tem faixa_etaria_qmd como fator e NAs em idade_num tratados para criar a faixa
+  # Filtrar NAs para o teste pairwise nas variáveis relevantes (clima_seguranca_total e faixa_etaria_qmd)
+  dados_analise_faixa_filtered <- dados_analise_faixa %>%
+      filter(!is.na(.data[[var_clima_total]]) & !is.na(faixa_etaria_qmd) & faixa_etaria_qmd != "Não informado")
+      # faixa_etaria_qmd já é fator
+      
+  pairwise_result_faixa_etaria <- pairwise.wilcox.test(
+    dados_analise_faixa_filtered[[var_clima_total]], 
+    dados_analise_faixa_filtered$faixa_etaria_qmd, # Já é fator
+    p.adjust.method = "bonferroni"
+  )
+  print(pairwise_result_faixa_etaria)
+  cat("
+*Interpretação: Valores na tabela são os p-valores ajustados. Valores < 0,05 indicam diferença significativa entre os pares de grupos correspondentes.*")
+} else if (!is.na(resultado_kw_faixa_etaria$p_value)) {
+  cat("
+Como o teste de Kruskal-Wallis não foi significativo (p >= 0,05), comparações post-hoc não foram realizadas.")
+}
+```
+
+Verificou-se uma diferença estatisticamente significativa no escore geral do clima de segurança entre as diferentes faixas etárias (Kruskal-Wallis, p = 0.0230). As comparações post-hoc (Pairwise Wilcoxon com ajuste de Bonferroni) mostraram que profissionais com mais de 60 anos apresentaram escores significativamente mais altos (Média=84,3, conforme Tabela @tbl-escore-por-faixa-etaria) em comparação com as faixas etárias de 20-30 anos (Média=73,9, p.adj = 0.047), 31-40 anos (Média=74,9, p.adj = 0.020) e 41-50 anos (Média=74,3, p.adj = 0.012). Outras comparações não foram estatisticamente significativas.
+
+### 4.1.4. Sexo
+
+Para comparar o escore geral do clima de segurança entre os sexos feminino e masculino, foi utilizado o teste de Mann-Whitney.
+
+```{r teste-sexo, collapse=TRUE}
+#| code-summary: "Teste de Hipótese - Sexo"
+resultado_sexo <- analise_mann_whitney(dados_analise, var_clima_total, var_sexo)
+print(resultado_sexo)
+```
+
+Não foi encontrada diferença estatisticamente significativa no escore geral do clima de segurança entre os sexos feminino e masculino (Mann-Whitney, p = 0.2719).
+
+### 4.1.5. Tempo de Experiência
+
+Analisou-se a associação entre as categorias de tempo de experiência (Total, na APS e em Sala de Vacinação) e o escore geral do clima de segurança usando o teste de Kruskal-Wallis. Se significativa, comparações par a par foram feitas.
+
+```{r teste-exp-total-kw, collapse=TRUE}
+#| code-summary: "Teste de Hipótese - Experiência Total (Kruskal-Wallis)"
+formula_exp_total <- as.formula(paste0("`", var_clima_total, "` ~ `", var_exp_total_cat, "`"))
+resultado_kw_exp_total <- analise_kruskal(dados_analise, formula_exp_total)
+print(paste("Tempo de Experiência Total:", resultado_kw_exp_total$resultado_texto))
+```
+
+```{r teste-exp-total-pairwise, collapse=TRUE, eval=TRUE, results='asis'}
+#| code-summary: "Teste Post-hoc - Experiência Total (Pairwise Wilcoxon)"
+if (!is.na(resultado_kw_exp_total$p_value) && resultado_kw_exp_total$p_value < 0.05) {
+  cat("
+**Tempo de Experiência Total - Comparações Post-hoc (Pairwise Wilcoxon com ajuste de Bonferroni):**
+")
+  dados_analise_filtered_exp_total <- dados_analise %>%
+    filter(!is.na(.data[[var_clima_total]]) & !is.na(.data[[var_exp_total_cat]])) %>%
+    mutate(!!sym(var_exp_total_cat) := factor(.data[[var_exp_total_cat]]))
+      
+  pairwise_result_exp_total <- pairwise.wilcox.test(
+    dados_analise_filtered_exp_total[[var_clima_total]], 
+    dados_analise_filtered_exp_total[[var_exp_total_cat]], 
+    p.adjust.method = "bonferroni"
+  )
+  print(pairwise_result_exp_total)
+  cat("
+*Interpretação: Valores na tabela são os p-valores ajustados. Valores < 0,05 indicam diferença significativa entre os pares de grupos correspondentes.*")
+} else if (!is.na(resultado_kw_exp_total$p_value)) {
+  cat("
+Tempo de Experiência Total: Como o teste de Kruskal-Wallis não foi significativo (p >= 0,05), comparações post-hoc não foram realizadas.")
+}
+```
+
+Não houve associação estatisticamente significativa entre o tempo de experiência total como profissional da enfermagem e o escore geral do clima de segurança (Kruskal-Wallis, p = 0.3893). Comparações post-hoc não foram realizadas.
+
+```{r teste-exp-aps-kw, collapse=TRUE}
+#| code-summary: "Teste de Hipótese - Experiência APS (Kruskal-Wallis)"
+formula_exp_aps <- as.formula(paste0("`", var_clima_total, "` ~ `", var_exp_aps_cat, "`"))
+resultado_kw_exp_aps <- analise_kruskal(dados_analise, formula_exp_aps)
+print(paste("Tempo de Experiência na APS:", resultado_kw_exp_aps$resultado_texto))
+```
+
+```{r teste-exp-aps-pairwise, collapse=TRUE, eval=TRUE, results='asis'}
+#| code-summary: "Teste Post-hoc - Experiência APS (Pairwise Wilcoxon)"
+if (!is.na(resultado_kw_exp_aps$p_value) && resultado_kw_exp_aps$p_value < 0.05) {
+  cat("
+**Tempo de Experiência na APS - Comparações Post-hoc (Pairwise Wilcoxon com ajuste de Bonferroni):**
+")
+  dados_analise_filtered_exp_aps <- dados_analise %>%
+    filter(!is.na(.data[[var_clima_total]]) & !is.na(.data[[var_exp_aps_cat]])) %>%
+    mutate(!!sym(var_exp_aps_cat) := factor(.data[[var_exp_aps_cat]]))
+      
+  pairwise_result_exp_aps <- pairwise.wilcox.test(
+    dados_analise_filtered_exp_aps[[var_clima_total]], 
+    dados_analise_filtered_exp_aps[[var_exp_aps_cat]], 
+    p.adjust.method = "bonferroni"
+  )
+  print(pairwise_result_exp_aps)
+  cat("
+*Interpretação: Valores na tabela são os p-valores ajustados. Valores < 0,05 indicam diferença significativa entre os pares de grupos correspondentes.*")
+} else if (!is.na(resultado_kw_exp_aps$p_value)) {
+  cat("
+Tempo de Experiência na APS: Como o teste de Kruskal-Wallis não foi significativo (p >= 0,05), comparações post-hoc não foram realizadas.")
+}
+```
+
+Não se observou associação estatisticamente significativa entre o tempo de experiência na Atenção Primária à Saúde e o escore geral do clima de segurança (Kruskal-Wallis, p = 0.3257). Comparações post-hoc não foram realizadas.
+
+```{r teste-exp-vac-kw, collapse=TRUE}
+#| code-summary: "Teste de Hipótese - Experiência Sala Vacinação (Kruskal-Wallis)"
+formula_exp_vac <- as.formula(paste0("`", var_clima_total, "` ~ `", var_exp_vac_cat, "`"))
+resultado_kw_exp_vac <- analise_kruskal(dados_analise, formula_exp_vac)
+print(paste("Tempo de Experiência em Sala de Vacinação:", resultado_kw_exp_vac$resultado_texto))
+```
+
+```{r teste-exp-vac-pairwise, collapse=TRUE, eval=TRUE, results='asis'}
+#| code-summary: "Teste Post-hoc - Experiência Sala Vacinação (Pairwise Wilcoxon)"
+if (!is.na(resultado_kw_exp_vac$p_value) && resultado_kw_exp_vac$p_value < 0.05) {
+  cat("
+**Tempo de Experiência em Sala de Vacinação - Comparações Post-hoc (Pairwise Wilcoxon com ajuste de Bonferroni):**
+")
+  dados_analise_filtered_exp_vac <- dados_analise %>%
+    filter(!is.na(.data[[var_clima_total]]) & !is.na(.data[[var_exp_vac_cat]])) %>%
+    mutate(!!sym(var_exp_vac_cat) := factor(.data[[var_exp_vac_cat]]))
+      
+  pairwise_result_exp_vac <- pairwise.wilcox.test(
+    dados_analise_filtered_exp_vac[[var_clima_total]], 
+    dados_analise_filtered_exp_vac[[var_exp_vac_cat]], 
+    p.adjust.method = "bonferroni"
+  )
+  print(pairwise_result_exp_vac)
+  cat("
+*Interpretação: Valores na tabela são os p-valores ajustados. Valores < 0,05 indicam diferença significativa entre os pares de grupos correspondentes.*")
+} else if (!is.na(resultado_kw_exp_vac$p_value)) {
+  cat("
+Tempo de Experiência em Sala de Vacinação: Como o teste de Kruskal-Wallis não foi significativo (p >= 0,05), comparações post-hoc não foram realizadas.")
+}
+```
+
+O tempo de experiência específico em salas de vacinação não apresentou associação estatisticamente significativa com o escore geral do clima de segurança (Kruskal-Wallis, p = 0.3580). Comparações post-hoc não foram realizadas.
+
+## 4.2. Associação com Características Contextuais
+
+### 4.2.1. Porte do Município
+
+Verificou-se se o porte do município (Pequeno, Médio, Grande) estava associado ao escore geral do clima de segurança usando o teste de Kruskal-Wallis. Se significativa, comparações par a par foram feitas.
+
+```{r teste-porte-kw, collapse=TRUE}
+#| code-summary: "Teste de Hipótese - Porte do Município (Kruskal-Wallis)"
+formula_porte <- as.formula(paste0("`", var_clima_total, "` ~ `", var_porte_ibge, "`"))
+resultado_kw_porte <- analise_kruskal(dados_analise, formula_porte)
+print(resultado_kw_porte$resultado_texto)
+```
+
+```{r teste-porte-pairwise, collapse=TRUE, eval=TRUE, results='asis'}
+#| code-summary: "Teste Post-hoc - Porte do Município (Pairwise Wilcoxon)"
+if (!is.na(resultado_kw_porte$p_value) && resultado_kw_porte$p_value < 0.05) {
+  cat("
+**Comparações Post-hoc (Pairwise Wilcoxon com ajuste de Bonferroni):**
+")
+  dados_analise_filtered_porte <- dados_analise %>%
+    filter(!is.na(.data[[var_clima_total]]) & !is.na(.data[[var_porte_ibge]])) %>%
+    mutate(!!sym(var_porte_ibge) := factor(.data[[var_porte_ibge]], levels = c("Pequeno Porte", "Médio Porte", "Grande Porte"))) # Mantendo a ordem do fator
+      
+  pairwise_result_porte <- pairwise.wilcox.test(
+    dados_analise_filtered_porte[[var_clima_total]], 
+    dados_analise_filtered_porte[[var_porte_ibge]], 
+    p.adjust.method = "bonferroni"
+  )
+  print(pairwise_result_porte)
+  cat("
+*Interpretação: Valores na tabela são os p-valores ajustados. Valores < 0,05 indicam diferença significativa entre os pares de grupos correspondentes.*")
+} else if (!is.na(resultado_kw_porte$p_value)) {
+  cat("
+Como o teste de Kruskal-Wallis não foi significativo (p >= 0,05), comparações post-hoc não foram realizadas.")
+}
+```
+
+Não foi encontrada diferença estatisticamente significativa no escore geral do clima de segurança entre os diferentes portes de município (Pequeno, Médio, Grande) (Kruskal-Wallis, p = 0.3338). Comparações post-hoc não foram realizadas.
+
+### 4.2.2. Macrorregião de Saúde
+
+A associação entre a macrorregião de saúde da pesquisa e o escore geral do clima de segurança foi avaliada pelo teste de Kruskal-Wallis. Se significativa, comparações par a par foram feitas.
+
+```{r teste-macro-kw, collapse=TRUE}
+#| code-summary: "Teste de Hipótese - Macrorregião (Kruskal-Wallis)"
+formula_macro <- as.formula(paste0("`", var_clima_total, "` ~ `", var_macrorregiao, "`"))
+resultado_kw_macro <- analise_kruskal(dados_analise, formula_macro)
+print(resultado_kw_macro$resultado_texto)
+```
+
+```{r teste-macro-pairwise, collapse=TRUE, eval=TRUE, results='asis'}
+#| code-summary: "Teste Post-hoc - Macrorregião (Pairwise Wilcoxon)"
+if (!is.na(resultado_kw_macro$p_value) && resultado_kw_macro$p_value < 0.05) {
+  cat("
+**Comparações Post-hoc (Pairwise Wilcoxon com ajuste de Bonferroni):**
+")
+  dados_analise_filtered_macro <- dados_analise %>%
+    filter(!is.na(.data[[var_clima_total]]) & !is.na(.data[[var_macrorregiao]])) %>%
+    mutate(!!sym(var_macrorregiao) := factor(.data[[var_macrorregiao]]))
+      
+  pairwise_result_macro <- pairwise.wilcox.test(
+    dados_analise_filtered_macro[[var_clima_total]], 
+    dados_analise_filtered_macro[[var_macrorregiao]], 
+    p.adjust.method = "bonferroni"
+  )
+  print(pairwise_result_macro)
+  cat("
+*Interpretação: Valores na tabela são os p-valores ajustados. Valores < 0,05 indicam diferença significativa entre os pares de grupos correspondentes.*")
+} else if (!is.na(resultado_kw_macro$p_value)) {
+  cat("
+Como o teste de Kruskal-Wallis não foi significativo (p >= 0,05), comparações post-hoc não foram realizadas.")
+}
+```
+
+A análise indicou uma diferença estatisticamente significativa no escore geral do clima de segurança entre as macrorregiões de saúde da pesquisa (Kruskal-Wallis, p \< 0.001). As comparações post-hoc (Pairwise Wilcoxon com ajuste de Bonferroni) revelaram que a macrorregião SUL apresentou escores significativamente mais altos (Média=79,0, conforme Tabela @tbl-escore-por-macro) em comparação com a macrorregião NORTE (Média=70,2) (p.adj = 0.0037). A macrorregião TRIÂNGULO DO SUL (Média=85,1) também apresentou escores significativamente mais altos que a NORTE (p.adj = 0.0251). Outras comparações par a par não atingiram significância estatística com o ajuste de Bonferroni, embora a tabela de post-hoc apresente outros p-valores baixos que podem indicar tendências.
+
+### 4.2.3. Índice de Desenvolvimento Humano Municipal (IDHM 2010)
+
+Analisou-se a correlação entre o IDHM do município (referente a 2010) e o escore geral do clima de segurança utilizando o coeficiente de correlação de Spearman.
+
+```{r teste-idhm, collapse=TRUE}
+#| code-summary: "Teste de Hipótese - Correlação com IDHM"
+var_idhm <- "IDHM_2010" # Definindo a variável IDHM
+resultado_idhm <- analise_cor_spearman(dados_analise, "clima_seguranca_total", var_idhm)
+print(resultado_idhm)
+```
+
+Não foi encontrada correlação estatisticamente significativa entre o Índice de Desenvolvimento Humano Municipal (IDHM 2010) e o escore geral do clima de segurança (Spearman rho = 0.028, p = 0.4715).
+
+# 5. Conclusão
+
+Este estudo avaliou os fatores associados ao clima de segurança do paciente em salas de vacinação de Minas Gerais, a partir da percepção de 647 profissionais de enfermagem. As principais conclusões, baseadas nas análises descritivas e univariadas apresentadas, são:
+
+1.  **Percepção Geral do Clima:** O clima de segurança do paciente nas salas de vacinação estudadas tende a ser percebido como **positivo**, com a maioria dos profissionais (57,7%) classificando-o como tal e uma média geral de escore atingindo o limiar de positividade (75,0). Contudo, uma parcela considerável (39,7%) o percebe como neutro, indicando espaço para melhorias.
+
+2.  **Pontos Fortes nos Domínios:** Os domínios de **Satisfação no Trabalho** e **Clima de Trabalho em Equipe** destacam-se como os aspectos mais bem avaliados pelos profissionais, representando pontos fortes importantes para a manutenção de um ambiente de trabalho positivo e colaborativo. A abertura para comunicação sobre preocupações com o cuidado (indicada pela discordância com a Q2 NEG) também é um achado positivo relevante.
+
+3.  **Pontos Críticos e Áreas de Melhoria:** Existem fragilidades significativas que demandam atenção:
+
+    -   A **Percepção do Estresse** emergiu como o domínio mais crítico, com os profissionais reconhecendo amplamente o impacto negativo da sobrecarga de trabalho, cansaço e situações tensas no seu desempenho e na probabilidade de erros.
+    -   A **Percepção da Gestão** revelou preocupações sérias, particularmente em relação ao comprometimento percebido da coordenação com a segurança do paciente, ao tratamento de profissionais problemáticos e à adequação do quadro de pessoal.
+    -   No **Clima de Segurança**, apesar da sensação de segurança pessoal, persistem barreiras na comunicação aberta sobre erros e fragilidades no feedback sobre desempenho e aprendizado com erros.
+    -   Nas **Condições de Trabalho**, a supervisão de estagiários e o treinamento de novos membros foram apontados como aspectos problemáticos.
+
+4.  **Fatores Associados ao Clima de Segurança (Análise Univariada):**
+
+    -   O **Cargo** mostrou associação significativa, com Enfermeiros(as) apresentando percepção do clima de segurança significativamente inferior à dos Técnicos de Enfermagem.
+    -   O nível de **Formação** também se associou ao clima, com profissionais de nível Técnico reportando escores mais altos que aqueles com Especialização Lato Sensu.
+    -   A **Faixa Etária** apresentou uma associação significativa, com profissionais acima de 60 anos reportando um clima significativamente mais positivo do que aqueles em faixas etárias intermediárias (20 a 50 anos).
+    -   A **Macrorregião** de saúde da pesquisa mostrou ser um fator contextualmente relevante, com diferenças significativas entre as regiões (e.g., SUL e TRIÂNGULO DO SUL com escores mais altos que a NORTE).
+    -   **Não foram encontradas associações estatisticamente significativas** na análise univariada entre o escore geral do clima de segurança e as variáveis: **Sexo**, **Tempo de Experiência** (Total, APS ou Sala de Vacinação), **Porte do Município** e **IDHM (2010)**.
+
+Em síntese, embora o clima de segurança seja razoavelmente positivo em média, existem desafios importantes relacionados ao estresse ocupacional, aspectos da gestão, comunicação sobre erros e condições de trabalho específicas (treinamento/supervisão). Fatores como cargo, formação, idade e a macrorregião de atuação parecem influenciar a percepção desse clima. Estes achados fornecem um diagnóstico valioso para direcionar intervenções focadas na melhoria contínua da segurança do paciente nas salas de vacinação em Minas Gerais.

@@ -29,6 +29,7 @@ library(tidyverse)
 library(psych)      # Para análises estatísticas descritivas
 library(gtsummary)  # Para tabelas de resumo
 library(stringr)    # Para manipulação de strings
+library(writexl)    # Adicionado aqui para salvar dados limpos
 
 # Verificar e instalar webshot2 se necessário (para gtsave com PNG)
 if (!require("webshot2")) {
@@ -98,11 +99,11 @@ tryCatch({
       PIB_PER_CAPITA_2020 = 15
     )
 
-  # Selecionar e limpar colunas relevantes
+  # Selecionar e limpar colunas relevantes (INCLUINDO IDHM_2010)
   df_municipios_info <- df_municipios_amostra %>% 
-    select(MUNICIPIO, MACRORREGIOES, URS, PORTE_IBGE) %>% 
+    select(MUNICIPIO, MACRORREGIOES, URS, PORTE_IBGE, IDHM_2010) %>% 
     mutate(
-      # <<< REMOVER CÓDIGO NUMÉRICO DO NOME DO MUNICÍPIO >>>
+      # Remover código numérico do nome do município
       MUNICIPIO = str_replace(MUNICIPIO, "^[0-9]+-", ""),
       # Limpar nome do município para junção (agora sem o código)
       Municipio_join = limpar_nomes(MUNICIPIO), 
@@ -115,7 +116,8 @@ tryCatch({
     distinct(Municipio_join, .keep_all = TRUE)
 
   cat("Informações de municípios carregadas e limpas com sucesso.\n")
-  # glimpse(df_municipios_info) # Descomentar para verificar a estrutura
+  # Verificar estrutura para confirmar que IDHM está incluído
+  cat("Verificando se IDHM_2010 está presente:", "IDHM_2010" %in% names(df_municipios_info), "\n")
 
 }, error = function(e) {
   warning(paste("Erro ao carregar ou processar a planilha 'AMOSTRA' do arquivo de municípios:", e$message))
@@ -432,6 +434,11 @@ cat(paste0("\\nFiltragem adicional: Removidas ", linhas_removidas_exp_vac,
            " linhas onde ", col_exp_vac_cat, " era 'Menos de 6 meses', 'Não aplicável' ou NA.\\n",
            "Linhas restantes: ", linhas_apos_filtro_exp_vac, "\\n"))
 
+# >>> SALVAR DADOS LIMPOS PARA USO NO QMD LIKERT <<<
+caminho_saida_limpos_xlsx <- file.path(output_dir, "dados_limpos_para_likert.xlsx")
+write_xlsx(dados_limpos, path = caminho_saida_limpos_xlsx)
+cat("DataFrame 'dados_limpos' (para Likert) exportado com sucesso para:", caminho_saida_limpos_xlsx, "\\n")
+
 # ==============================================================================
 # 5. CÁLCULO DE ESCORES (DOMÍNIOS E TOTAL)
 # ==============================================================================
@@ -585,21 +592,18 @@ if (!is.null(df_municipios_info)) {
   
   # Realizar a junção (left_join para manter todos os respondentes)
   dados_mapeados <- left_join(dados_mapeados, 
-                              df_municipios_info %>% select(Municipio_join, MACRORREGIOES, URS, PORTE_IBGE), 
-                              by = "Municipio_join")
+                             df_municipios_info %>% select(Municipio_join, MACRORREGIOES, URS, PORTE_IBGE, IDHM_2010), 
+                             by = "Municipio_join")
   
   # Verificar quantos NAs foram introduzidos (municípios sem correspondência na planilha)
   nas_macro <- sum(is.na(dados_mapeados$MACRORREGIOES))
   nas_porte <- sum(is.na(dados_mapeados$PORTE_IBGE))
+  nas_idhm <- sum(is.na(dados_mapeados$IDHM_2010))
+  
   cat(paste("\nApós junção com dados municipais:", 
             nas_macro, "registros sem MACRORREGIOES,",
-            nas_porte, "registros sem PORTE_IBGE.\n"))
-  
-  # Remover coluna auxiliar de junção, se desejar
-  # dados_mapeados <- dados_mapeados %>% select(-Municipio_join)
-  
-} else {
-  warning("Não foi possível realizar a junção com os dados dos municípios devido a erro no carregamento.")
+            nas_porte, "registros sem PORTE_IBGE,",
+            nas_idhm, "registros sem IDHM_2010.\n"))
 }
 
 # Apresentar resultados da classificação e das pontuações finais em tabelas formatadas
